@@ -1,5 +1,12 @@
 import UIKit
 
+
+/*
+	Coordinator 这个类, 主要的目的在于, 管理 VC 之间的跳转.
+	将 VC 之间的互动, 从各个 VC 类的内部, 转移到了 Coordinator 类中.
+	这样, 不同的 VC 之间, 其实是没有强依赖的. 统一由 Coordinator 来接管, 跳转逻辑.
+	代价是, 不同的 VC 都要有自己的 protocol, Coordinator 要实现所有的这些方法.
+*/
 final class Coordinator {
 	let splitViewController: UISplitViewController
 	let storyboard = UIStoryboard(name: "Main", bundle: nil)

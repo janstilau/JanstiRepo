@@ -7,6 +7,7 @@ import Foundation
  with this internal object, however this is still part of the public interface.
  Sadly. Please don’t use it.
 */
+
 @objc(__AnyPromise) public class __AnyPromise: NSObject {
     fileprivate let box: Box<Any?>
 

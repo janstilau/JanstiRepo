@@ -25,6 +25,9 @@ class FolderViewModel {
 			}.share(replay: 1)
 	}
 	
+	/*
+		所有的, 对于 Folder 的改变, 都会使得 folderUntilDeleted 发出信号.
+	*/
 	func create(folderNamed name: String?) {
 		guard let s = name else { return }
 		let newFolder = Folder(name: s, uuid: UUID())
@@ -35,6 +38,7 @@ class FolderViewModel {
 		folder.value.remove(item)
 	}
 	
+	// 
 	var navigationTitle: Observable<String> {
 		return folderUntilDeleted.map { folder in
 			guard let f = folder else { return "" }
