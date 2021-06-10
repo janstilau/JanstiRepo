@@ -13,6 +13,12 @@ class Recording: Item, Codable {
 		super.deleted()
 	}
 	
+	/*
+				 "recording": {
+										 "name": "1",
+										 "uuid": "D8FF4CA9-1C01-47B8-BB3E-0BE2D0816BD6"
+									}
+	*/
 	enum RecordingKeys: CodingKey { case name, uuid }
 	
 	required init(from decoder: Decoder) throws {

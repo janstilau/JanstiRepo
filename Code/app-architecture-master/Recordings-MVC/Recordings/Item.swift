@@ -20,7 +20,10 @@ class Item {
 		name = newName
 		if let p = parent {
 			let (oldIndex, newIndex) = p.reSort(changedItem: self)
-			store?.save(self, userInfo: [Item.changeReasonKey: Item.renamed, Item.oldValueKey: oldIndex, Item.newValueKey: newIndex, Item.parentFolderKey: p])
+			store?.save(self, userInfo: [Item.changeReasonKey: Item.renamed,
+												  Item.oldValueKey: oldIndex,
+												  Item.newValueKey: newIndex,
+												  Item.parentFolderKey: p])
 		}
 	}
 	
@@ -45,6 +48,7 @@ extension Item {
 	static let newValueKey = "newValue"
 	static let oldValueKey = "oldValue"
 	static let parentFolderKey = "parentFolder"
+	
 	static let renamed = "renamed"
 	static let added = "added"
 	static let removed = "removed"

@@ -1,6 +1,7 @@
 import UIKit
 
 class FolderViewController: UITableViewController {
+	
 	var folder: Folder = Store.shared.rootFolder {
 		// 属性观察器, 是为了类型设计者, 更好的管理代码的机制.
 		didSet {
@@ -25,7 +26,8 @@ class FolderViewController: UITableViewController {
 	// 在这里, 才实际对 View 进行了改变
 	@objc func handleChangeNotification(_ notification: Notification) {
 		// Handle changes to the current folder
-		if let item = notification.object as? Folder, item === folder {
+		if let item = notification.object as? Folder,
+			item === folder {
 			let reason = notification.userInfo?[Item.changeReasonKey] as? String
 			if reason == Item.removed, let nc = navigationController {
 				nc.setViewControllers(nc.viewControllers.filter { $0 !== self }, animated: false)
@@ -150,6 +152,9 @@ class FolderViewController: UITableViewController {
 	}
 }
 
+
+// 通过 FilePrivate, 将 String 固定在类型内.
+// 可以当做 FolderViewController 的静态变量来使用.
 fileprivate extension String {
 	static let uuidPathKey = "uuidPath"
 	static let showRecorder = "showRecorder"
