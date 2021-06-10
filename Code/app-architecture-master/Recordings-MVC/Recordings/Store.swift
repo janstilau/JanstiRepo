@@ -2,15 +2,15 @@ import Foundation
 
 
 /*
-	存储层工具类, 算作是 Model 的一部分.
+存储层工具类, 算作是 Model 的一部分.
 */
 final class Store {
 	
 	static let shared = Store(url: documentDirectory)
 	
 	/*
-		Notification.Name 专门的一个类型, 作为通知名.
-		其实就是对于 String 的包装.
+	Notification.Name 专门的一个类型, 作为通知名.
+	其实就是对于 String 的包装.
 	*/
 	static let changedNotification = Notification.Name("StoreChanged")
 	static private let documentDirectory = try! FileManager.default.url(for: .libraryDirectory, in: .userDomainMask, appropriateFor: nil, create: true)

@@ -2,7 +2,7 @@ import UIKit
 import AVFoundation
 
 /*
-	VC 直接和 View 进行关联.
+VC 直接和 View 进行关联.
 */
 class PlayViewController: UIViewController, UITextFieldDelegate, AVAudioPlayerDelegate {
 	
@@ -28,18 +28,18 @@ class PlayViewController: UIViewController, UITextFieldDelegate, AVAudioPlayerDe
 		navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
 		navigationItem.leftItemsSupplementBackButton = true
 		updateViews()
-
+		
 		NotificationCenter.default.addObserver(self, selector: #selector(storeChanged(notification:)), name: Store.changedNotification, object: nil)
 	}
-
+	
 	@objc func storeChanged(notification: Notification) {
 		guard let item = notification.object as? Item, item === recording else { return }
 		updateViews()
 	}
 	
 	/*
-		View 的展示逻辑, 都在此方法内, 是 UI 展示的终点.
-		
+	View 的展示逻辑, 都在此方法内, 是 UI 展示的终点.
+	
 	*/
 	func updateViews() {
 		if let r = recording, let url = r.fileURL {
@@ -88,8 +88,8 @@ class PlayViewController: UIViewController, UITextFieldDelegate, AVAudioPlayerDe
 	}
 	
 	/*
-		ViewAction, VC 进行 Model 层改动, 然后 Model 修改之后发出通知, VC 接受通知, 进行整个 View 的 Update
-		目前该 App 是单项数据留
+	ViewAction, VC 进行 Model 层改动, 然后 Model 修改之后发出通知, VC 接受通知, 进行整个 View 的 Update
+	目前该 App 是单项数据留
 	*/
 	func textFieldDidEndEditing(_ textField: UITextField) {
 		if let r = recording, let text = textField.text {

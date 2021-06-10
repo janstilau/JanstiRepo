@@ -14,7 +14,7 @@ class Player: NSObject, AVAudioPlayerDelegate {
 		} catch {
 			return nil
 		}
-
+		
 		if let player = try? AVAudioPlayer(contentsOf: url) {
 			audioPlayer = player
 			self.update = update
@@ -48,7 +48,7 @@ class Player: NSObject, AVAudioPlayerDelegate {
 	func setProgress(_ time: TimeInterval) {
 		audioPlayer.currentTime = time
 	}
-
+	
 	func audioPlayerDidFinishPlaying(_ pl: AVAudioPlayer, successfully flag: Bool) {
 		timer?.invalidate()
 		timer = nil

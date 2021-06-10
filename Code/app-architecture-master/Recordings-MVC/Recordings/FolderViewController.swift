@@ -95,8 +95,8 @@ class FolderViewController: UITableViewController {
 			recordVC.folder = folder
 		} else if identifier == .showPlayer {
 			guard
-			let playVC = (segue.destination as? UINavigationController)?.topViewController as? PlayViewController,
-			let recording = selectedItem as? Recording
+				let playVC = (segue.destination as? UINavigationController)?.topViewController as? PlayViewController,
+				let recording = selectedItem as? Recording
 			else { fatalError() }
 			playVC.recording = recording
 			if let indexPath = tableView.indexPathForSelectedRow {
