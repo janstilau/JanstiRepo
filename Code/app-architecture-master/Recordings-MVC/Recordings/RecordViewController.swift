@@ -4,7 +4,7 @@ import AVFoundation
 final class RecordViewController: UIViewController, AVAudioRecorderDelegate {
 	@IBOutlet var timeLabel: UILabel!
 	@IBOutlet var stopButton: UIButton!
-	
+    
 	var audioRecorder: Recorder?
 	var folder: Folder? = nil
 	var recording = Recording(name: "", uuid: UUID())
