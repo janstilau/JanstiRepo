@@ -107,7 +107,7 @@ public func when<U: Thenable, V: Thenable, W: Thenable, X: Thenable, Y: Thenable
     return _when([pu.asVoid(), pv.asVoid(), pw.asVoid(), px.asVoid(), py.asVoid()]).map(on: nil) { (pu.value!, pv.value!, pw.value!, px.value!, py.value!) }
 }
 
-/**
+/*
  Generate promises at a limited rate and wait for all to fulfill.
 
  For example:

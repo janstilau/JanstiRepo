@@ -7,21 +7,19 @@ import Dispatch
     而 pipe 里面, 是真正的对于数据的管理.
  */
 
-// Thenable 和核心概念, 就是给自己添加一个回调函数. 也就是 pipe 函数.
-// Thenable 表示的结果, 为一个 Result.
+// Thenable 核心概念:
+// 给自己添加一个回调函数. 也就是 pipe 函数.
+// 自己能够表现一个结果, Result 类型的, T 的实际数据类型.
 public protocol Thenable: AnyObject {
-    /// The type of the wrapped value
-    // Thenable 表示的结果中, success 会产出的值的类型.
+    // The type of the wrapped value
+    // Result 为 Fulfilled 的时候, 实际存储的类型.
     associatedtype T
 
-    /// `pipe` is immediately executed when this `Thenable` is resolved
-    
     // 使用这个函数, 为 Thenable 增加一个回调函数.
     // 如果, 已经是 resolved 的状态, 就将存储的结果, 传递进去立马调用
     // 如果, 还是在 pending 的状态, 就存储这个回调, 在自己变为 resolved 的状态之后, 会逐个调用存储的闭包.
     func pipe(to: @escaping(Result<T>) -> Void)
 
-    /// The resolved result or nil if pending.
     // 当前的 Thenable 的结果.
     var result: Result<T>? { get }
 }
@@ -30,11 +28,7 @@ public extension Thenable {
     /*
      The provided closure executes when this promise is fulfilled.
      
-     当 Promise Resolved 之后, 并且状态为 Fullfil 之后, 就会执行通过 then 添加上去的各种回调.
-     这些回调, 接受 T 为参数.
-     
      This allows chaining promises. The promise returned by the provided closure is resolved before the promise returned by this closure resolves.
-     body 返回的 Promise 先触发, 它用来设置 返回值的 Promise. 然后返回值的 Promise, 用来触发后续的操作.
      - Parameter on: The queue to which the provided closure dispatches.
      - Parameter body: The closure that executes when this promise is fulfilled. It must return a promise.
      - Returns: A new promise that resolves when the promise returned from the provided closure resolves. For example:
@@ -47,20 +41,24 @@ public extension Thenable {
                //…
            }
      */
-    
     /*
-        自己变为 Resolved 状态, 会触发 pipe 里面的操作.
-        触发的时候, 可能会引起 DispatchQueue 的调用.
-        这个时候, 才会触发 Body 调用, 生成一个新的 Promise.
-        这个新生成的 Promise, 可能是一个异步操作结果的封装. 所以 Body 里面, 很有可能还是一个异步操作. 这个异步操作到最后, 才会修改 Promise 的值.
-        这个 Promise 的状态改变, 才会触发返回值 Promise 的状态改变.
-        而返回值 Promise 状态改变之后, 才会触发后面的 then 添加的回调.
+        Thenable 就是来执行异步操作的.
+        所以才会有 queue 的设置.
      */
     func then<U: Thenable>(on: DispatchQueue? = conf.Q.map,
                            flags: DispatchWorkItemFlags? = nil,
                            _ body: @escaping(T) throws -> U) -> Promise<U.T> {
-        // 对于返回值 RP 来说, 他应该是 U.T 的, 这样, body 的结果, 才能直接传递到 RP 里面.
-        // rv.pipe(to: rp.box.seal) 能够执行的基础, 也是他们的类型是一致的.
+        // 当前的 Thenable 的 Result Type 是 T, 所以 Body 里面参数类型是 T.
+        // Body 必须返回一个 Promise.
+        // Body 更多的是开启一个异步任务. 在异步任务开启前, 设置一个 Promise, 然后在异步任务的回调里面, 将 Promise 的值进行 resolve.
+        // Body 返回的就是这个 Promise
+        // 在 Then 里面, 是调用 Body. 只有自己 Resolved 之后, 才会去在 on queue 里面, 调用 Body 开启异步任务.
+        // 这里做的和 Body 里面没有太大的区别.
+        // Promise 作为结果的存储器, 是最终的 return 的值.
+        // 而 Return promise 的值, 是需要被 resolved 的, 这个过程, 要到
+        // 1. self resolved 之后, 判断当前的状态, 调用 Body 开启一个新的异步任务.
+        // 2. 新的异步任务, resolve 之后, 才会调用 return promise 的 resolve 方法.
+        
         let rp = Promise<U.T>(.pending)
         pipe {
             switch $0 {
@@ -104,8 +102,8 @@ public extension Thenable {
            }
      */
     /*
-        相比较于, Then 可能开启一个新的异步任务, MAP 是拿到结果之后, 直接进行 transform 的数据变化.
-        然后将变化后的数据, 添加到 rp 的 box 里面.
+        相比较于 Then 里面, 开启了一个新的异步任务, 这里在 Self resolved 之后, 直接使用 transform 来获取变换的值.
+        然后将这个值, 当做 Return Promise 的值进行了 seal.
      */
     func map<U>(on: DispatchQueue? = conf.Q.map,
                 flags: DispatchWorkItemFlags? = nil,
@@ -139,9 +137,6 @@ public extension Thenable {
     func map<U>(on: DispatchQueue? = conf.Q.map,
                 flags: DispatchWorkItemFlags? = nil,
                 _ keyPath: KeyPath<T, U>) -> Promise<U> {
-        // 就是一个特殊的 Map 的方式.
-        // 从 (U)-> T
-        // 变为了从 U 上, 使用特殊的 KeyPath 取 T .
         let rp = Promise<U>(.pending)
         pipe {
             switch $0 {
@@ -301,6 +296,9 @@ public extension Thenable {
     func get(on: DispatchQueue? = conf.Q.return,
              flags: DispatchWorkItemFlags? = nil,
              _ body: @escaping (T) throws -> Void) -> Promise<T> {
+        // 使用了 Map.
+        // 也就是原来的 Result 值, 原封不动的传递. 在这个过程中, 执行了 Body 方法.
+        // 一个中转的 Promise
         return map(on: on,
                    flags: flags) {
             try body($0)
@@ -319,13 +317,13 @@ public extension Thenable {
 
      promise.tap{ print($0) }.then{ /*…*/ }
      */
+    
+    // Get 获取的是 fullfil 下的 value 值. 而 Tap 则是获取的 Result 值.
     func tap(on: DispatchQueue? = conf.Q.map,
              flags: DispatchWorkItemFlags? = nil,
              _ body: @escaping(Result<T>) -> Void) -> Promise<T> {
         // Promise 通过一个操作 Resolver 的闭包进行初始化.
         return Promise { seal in
-            // seal 目前, 操作的就是新生成的 Promise 的 Box.
-            // pipe 表明了, 只有 Self Resolved 之后, seal 才会修改当前生成的 Promise 的 Box. 才会触发后续的操作.
             pipe { result in
                 on.async(flags: flags) {
                     body(result)
@@ -337,6 +335,7 @@ public extension Thenable {
 
     // - Returns: a new promise chained off this promise but with its value discarded.
     // AsVoid, 就是生成一个新的 Promise, 这个 Promise 会在原有的 Promise Fulfilled 之后调用 transform, 但是 value 是 Void.
+    // 这个在 When 的实现里面, 使用的特别多.
     func asVoid() -> Promise<Void> {
         return map(on: nil) { _ in }
     }

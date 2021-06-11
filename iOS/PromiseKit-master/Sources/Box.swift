@@ -44,6 +44,8 @@ class EmptyBox<T>: Box<T> {
     /*
      concurrent:
      If this attribute is not present, the queue schedules tasks serially in first-in, first-out (FIFO) order.
+     
+     这里, 使用 concurrent queue 是因为, 后面要使用 barrier 的 option, 而 barrier 是必须用在 concurrent queue 上.
      */
     private let barrier = DispatchQueue(label: "org.promisekit.barrier", attributes: .concurrent)
 
@@ -51,6 +53,7 @@ class EmptyBox<T>: Box<T> {
     override func seal(_ value: T) {
         var handlers: Handlers<T>!
         barrier.sync(flags: .barrier) {
+            // 这是一个模式匹配的过程, 所以要写全 caes 的模式.
             guard case .pending(let _handlers) = self.sealant else {
                 return  // already fulfilled!
             }
@@ -64,6 +67,7 @@ class EmptyBox<T>: Box<T> {
         }
     }
 
+    // get 方法. 用 sync.
     override func inspect() -> Sealant<T> {
         var rv: Sealant<T>!
         barrier.sync {
@@ -74,9 +78,8 @@ class EmptyBox<T>: Box<T> {
 
     // 这里, 类似于 with 函数.
     // with 函数是取得自身的某个值, 然后将这个值传递到闭包里面调用.
-    // 这里, inspect 是取得自己的 sealant 的值, 然后传到 body 里面被使用.
-    // 这里, body 的调用, 是在线程安全的情况下.
-    // 所以, body 是在锁的环境下执行的.
+    // 使用传入闭包的方式, 保证了一件事. 就是 body 在被调用的过程中, 一定是在锁安全的情况下.
+    // 之前返回值的方式, 是没有办法保证这个事情的, 需要外界的使用者, 强制进行保证. 这里, 类提供了这个方法, 才能保证自己的成员变量, 在安全的环境下被使用.
     override func inspect(_ body: (Sealant<T>) -> Void) {
         var sealed = false
         barrier.sync(flags: .barrier) {

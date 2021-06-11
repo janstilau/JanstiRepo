@@ -44,8 +44,10 @@ public final class Promise<T>: Thenable, CatchMixin {
         bridge.pipe(to: box.seal)
     }
 
-    // 使用这个方法, 来开启一个异步操作. 在异步操作的合适的位置, 调用 resolver 的 fullfil 或者 reject 方法.
-    // 从实现我们看出, 是将数据, 从 body 之外准备好, 然后在 body 内修改这些数据, 数据本身是 Box 相关的, 这样, box 改变状态之后, 触发自己存储的回调.
+    /*
+        这是, 最普遍使用的创建 Promise 的方法了.
+        在 Body 里面, 去写开启异步任务的业务代码, 然后在业务代码里面, 在合适的位置, 调用 Resolver 的方法, 进行 Promise 的值的确定.
+     */
     public init(resolver body: (Resolver<T>) throws -> Void) {
         // Resolver 其实就是对于 Box 操作的封装, body 对于 Resolver 的操作, 其实就是对于 Box 的操作.
         // Box 又是 Promise 的成员变量状态值, 所以, body 里面, 能够直接影响到 Promiese.
@@ -65,11 +67,6 @@ public final class Promise<T>: Thenable, CatchMixin {
         return { ($0, Resolver($0.box)) }(Promise<T>(.pending))
     }
 
-    /*
-        Pipe 的主要意图是, 记录后续的任务.
-        如果, 自己的状态, 从 Pending 转化为 Fullfilled 的话, 就调用记录的 block.
-     */
-    
     /*
         这是一个核心的方法, 因为 PromiseKit 运行机制, 其实就是找一个对象存储回调.
      */
@@ -132,6 +129,8 @@ public extension Promise {
             let group = DispatchGroup()
             group.enter()
             // 如果, 自己的状态从 Pending 到 Resolved 之后,
+            // 这里就很像 condition_wait 的操作.
+            //
             pipe {
                 result = $0
                 group.leave()
@@ -179,16 +178,16 @@ public extension DispatchQueue {
      */
     @available(macOS 10.10, iOS 8.0, tvOS 9.0, watchOS 2.0, *)
     
-    /*
-        DispatchQueue的扩展, 通过一个特殊类型的变量, 复用了原有的 async 方法.
-        PMKNamespacer 就如同 type traits 一样, 仅仅是为了方法分发用的. 这个类型, 没有任何的意义.
-     */
+    // 非常好的一个扩展的方式, 很像是 C++ 的 TypeTraits.
+    // 通过编译器, 来调用到合适方法, 而这个合适的方法, 使用起来, 又和原生的方法几乎一模一样.
     final func async<T>(_: PMKNamespacer,
                         group: DispatchGroup? = nil,
                         qos: DispatchQoS = .default,
                         flags: DispatchWorkItemFlags = [],
                         execute body: @escaping () throws -> T) -> Promise<T> {
 
+        // 这里, 就是自己创建一个 Promise 的方式.
+        // 生成一个 Promise, 然后在合适的时候, 进行 promise 的值的修改.
         let promise = Promise<T>(.pending)
         async(group: group, qos: qos, flags: flags) {
             do {

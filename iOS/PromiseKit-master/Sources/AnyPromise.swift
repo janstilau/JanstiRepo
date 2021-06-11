@@ -12,10 +12,14 @@ import Foundation
 @objc(__AnyPromise) public class __AnyPromise: NSObject {
     fileprivate let box: Box<Any?>
     
-    // 在这里, body 被使用了.
+    /*
+     在 __AnyPromise 初始化的过程中, body 被实际调用了
+     body 里面, 应该是实际开启异步任务的代码. 传递给这块代码的, 是一个闭包. 这个闭包被调用, 可以将 __AnyPromise 的状态进行 resolve.
+     */
     @objc public init(resolver body: (@escaping (Any?) -> Void) -> Void) {
         box = EmptyBox<Any?>()
         super.init()
+        
         // Body 提供了参数, 将 Seal 的逻辑封装了起来.
         body {
             if let p = $0 as? AnyPromise {
@@ -27,18 +31,18 @@ import Foundation
     }
     
     @objc public func __thenOn(_ q: DispatchQueue, execute: @escaping (Any?) -> Any?) -> AnyPromise {
-        return AnyPromise(__D: __AnyPromise(resolver: { resolve in
-            
+        let innerPromise = __AnyPromise(resolver: { resolve in
             self.__pipe { obj in
-                if !(obj is NSError) {
+                if obj is NSError {
+                    resolve(obj)
+                } else {
                     q.async {
                         resolve(execute(obj))
                     }
-                } else {
-                    resolve(obj)
                 }
             }
-        }))
+        })
+        return AnyPromise(__D: innerPromise)
     }
     
     @objc public func __catchOn(_ q: DispatchQueue, execute: @escaping (Any?) -> Any?) -> AnyPromise {
@@ -88,6 +92,7 @@ import Foundation
     
     // Internal, do not use! Some behaviors undefined.
     @objc public func __pipe(_ to: @escaping (Any?) -> Void) {
+        
         let to = { (obj: Any?) -> Void in
             if obj is NSError {
                 to(obj)  // or we cannot determine if objects are errors in objc land
@@ -95,12 +100,14 @@ import Foundation
                 to(obj)
             }
         }
+        
         switch box.inspect() {
         case .pending:
             box.inspect {
                 switch $0 {
                 case .pending(let handlers):
-                    handlers.append { obj in
+                    handlers.append {
+                        obj in
                         to(obj)
                     }
                 case .resolved(let obj):

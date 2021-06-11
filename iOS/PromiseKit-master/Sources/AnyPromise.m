@@ -9,6 +9,12 @@
 
 NSString *const PMKErrorDomain = @"PMKErrorDomain";
 
+/*
+    AnyPromise 是一个漂亮的包装体, 它存在的意义在于. OC 的 . 方法, 是一个 get 方法, 必须返回一个闭包, 才可以直接使用.
+    真正的 Promise, 是 d.
+    所以, 各种 then, 都是返回一个闭包, 里面是使用了 d 的方法, 返回了一个新的 AnyPromise 对象.
+    而这个新的 AnyPromise 对象, 才能调用 then, 这些方法, 继续链式的调用.
+ */
 
 @implementation AnyPromise {
     __AnyPromise *d;
@@ -52,12 +58,6 @@ NSString *const PMKErrorDomain = @"PMKErrorDomain";
     return d;
 }
 
-/*
-    在 OC 里面, .then 要返回一个闭包, 这个闭包实际调用的时候, 才返回需要的对象.
-    在这里, .then() 实际调用的时候, 是执行了 self->d __thenOn 的逻辑.
- 
-    then 的逻辑是, 当前一个 promise seal 之后, 会将 seal 的状态值, 传递到 then 的参数闭包.
- */
 - (AnyPromise *(^)(id))then {
     return ^(id block) {
         return [self->d __thenOn:dispatch_get_main_queue() execute:^(id obj) {

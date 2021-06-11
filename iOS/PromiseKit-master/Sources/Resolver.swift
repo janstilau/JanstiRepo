@@ -1,6 +1,7 @@
 
 
 // Resolver 就是对于 box 操作的封装.
+// Promise 下有一个 Box, Promise 将自己的 Box 传递给 Resolver. 这样, Resolver 调用方法, 就是在改变 Promise 的状态了.
 
 public final class Resolver<T> {
     // 这里, Box 里面的 T 的类型, 是 Result<T>
@@ -102,12 +103,16 @@ extension Resolver {
 }
 #endif
 
-// Result 表示, Promise 想要的结果. 要么是一个 成功状态下的 T, 要么是一个失败状态下的 Error.
+// 这是一个核心的数据类型.
+// Sealant 用来, 1 保管闭包回调, 2 保管最终的值.
+// 而最终的值, 有 success 和 faile 两种状态.
+// Result 就是用来展示着两种状态的.
 public enum Result<T> {
     case fulfilled(T)
     case rejected(Error)
 }
 
+// Enum 里面, 仅仅留成员变量. 方法定义在 Extension 里面.
 public extension PromiseKit.Result {
     var isFulfilled: Bool {
         switch self {
