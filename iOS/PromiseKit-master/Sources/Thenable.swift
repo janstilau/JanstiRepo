@@ -103,6 +103,10 @@ public extension Thenable {
                //…
            }
      */
+    /*
+        相比较于, Then 可能开启一个新的异步任务, MAP 是拿到结果之后, 直接进行 transform 的数据变化.
+        然后将变化后的数据, 添加到 rp 的 box 里面.
+     */
     func map<U>(on: DispatchQueue? = conf.Q.map,
                 flags: DispatchWorkItemFlags? = nil,
                 _ transform: @escaping(T) throws -> U) -> Promise<U> {
@@ -245,12 +249,13 @@ public extension Thenable {
                print(response.data)
            }
      */
+    /*
+        Done 是一个特殊的 Then. 接受的闭包, 不在对数据进行操作, 而是最终执行一个操作, 返回 Void.
+        pipe 的参数, 会被存到 handler 里面. Body 仅仅是参数的一部分.
+     */
     func done(on: DispatchQueue? = conf.Q.return,
               flags: DispatchWorkItemFlags? = nil,
               _ body: @escaping(T) throws -> Void) -> Promise<Void> {
-        // 当, Self Promise 的值改变之后, 会触发 pipe 的回调.
-        // 这个回调, 就是调用 body 函数, 调用完之后, 就改变 rp 的值, 里面封装一个 ().
-        // 这样, rp 的值改变, 就能触发后面的操作了.
         let rp = Promise<Void>(.pending)
         pipe {
             switch $0 {
@@ -330,7 +335,8 @@ public extension Thenable {
         }
     }
 
-    /// - Returns: a new promise chained off this promise but with its value discarded.
+    // - Returns: a new promise chained off this promise but with its value discarded.
+    // AsVoid, 就是生成一个新的 Promise, 这个 Promise 会在原有的 Promise Fulfilled 之后调用 transform, 但是 value 是 Void.
     func asVoid() -> Promise<Void> {
         return map(on: nil) { _ in }
     }

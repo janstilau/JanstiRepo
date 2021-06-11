@@ -11,7 +11,6 @@ import Foundation
 struct CurrentLocationViewModel {
     var location: Location
     
-    
     var city: String {
         return location.name
     }

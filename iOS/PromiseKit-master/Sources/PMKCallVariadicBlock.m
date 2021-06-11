@@ -10,11 +10,13 @@
 #define PMKLog NSLog
 #endif
 
-@interface PMKArray : NSObject {
+@interface PMKArray : NSObject
+{
 @public
     id objs[3];
     NSUInteger count;
-} @end
+}
+@end
 
 @implementation PMKArray
 

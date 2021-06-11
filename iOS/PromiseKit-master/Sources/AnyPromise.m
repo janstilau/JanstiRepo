@@ -1,7 +1,7 @@
 #if __has_include("PromiseKit-Swift.h")
-    #import "PromiseKit-Swift.h"
+#import "PromiseKit-Swift.h"
 #else
-    #import <PromiseKit/PromiseKit-Swift.h>
+#import <PromiseKit/PromiseKit-Swift.h>
 #endif
 #import "PMKCallVariadicBlock.m"
 #import "AnyPromise+Private.h"
@@ -52,6 +52,12 @@ NSString *const PMKErrorDomain = @"PMKErrorDomain";
     return d;
 }
 
+/*
+    在 OC 里面, .then 要返回一个闭包, 这个闭包实际调用的时候, 才返回需要的对象.
+    在这里, .then() 实际调用的时候, 是执行了 self->d __thenOn 的逻辑.
+ 
+    then 的逻辑是, 当前一个 promise seal 之后, 会将 seal 的状态值, 传递到 then 的参数闭包.
+ */
 - (AnyPromise *(^)(id))then {
     return ^(id block) {
         return [self->d __thenOn:dispatch_get_main_queue() execute:^(id obj) {
@@ -130,7 +136,7 @@ NSString *const PMKErrorDomain = @"PMKErrorDomain";
 
 - (id)value {
     id obj = [d __value];
-
+    
     if ([obj isKindOfClass:[PMKArray class]]) {
         return obj[0];
     } else {
