@@ -40,7 +40,8 @@ class PlayViewModel: NSObject {
 		updateForChangedRecording()
 	}
 	
-	// 将所有的基于 View 的数据抽取的工作, 全部放到了这里.
+	// 当数据发生变化之后, 更新所有的 View 需要的属性.
+	// 这种主动更新, 才会触发 KVO, 外界直接进行 KVO 检测, 在闭包里面, 将检测到的 newvalue 设置到自己的属性上来.
 	private func updateForChangedRecording() {
 		if let r = recording, let url = r.fileURL {
 			audioPlayer = Player(url: url) { [weak self] state in

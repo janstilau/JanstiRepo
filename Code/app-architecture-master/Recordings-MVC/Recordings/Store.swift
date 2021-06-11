@@ -2,18 +2,16 @@ import Foundation
 
 
 /*
-	存储层工具类, 算作是 Model 的一部分.
+序列话层的工具类.
 */
 final class Store {
 	
 	static let shared = Store(url: documentDirectory)
-	
-	/*
-		Notification.Name 专门的一个类型, 作为通知名.
-		其实就是对于 String 的包装.
-	*/
 	static let changedNotification = Notification.Name("StoreChanged")
-	static private let documentDirectory = try! FileManager.default.url(for: .libraryDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+	static private let documentDirectory = try! FileManager.default.url(for: .libraryDirectory,
+																							  in: .userDomainMask,
+																							  appropriateFor: nil,
+																							  create: true)
 	
 	let baseURL: URL?
 	var placeholder: URL?
@@ -33,16 +31,21 @@ final class Store {
 		}
 		
 		self.rootFolder.store = self
+		
+		print(Store.documentDirectory)
 	}
 	
+	// 所有的录音文件, 其实是放到了一起的.
+	// 目录关系, 是按照 state.json 里面的 json 结构完成的.
+	// 想要拿到真正的录音文件的位置, 直接使用 baseURL, 拼接 uuid 和后缀名就可以.
 	func fileURL(for recording: Recording) -> URL? {
 		return baseURL?.appendingPathComponent(recording.uuid.uuidString + ".m4a") ?? placeholder
 	}
 	
 	func save(_ updated: Item, userInfo: [AnyHashable: Any]) {
-		if let url = baseURL, let data = try? JSONEncoder().encode(rootFolder) {
+		if let url = baseURL,
+			let data = try? JSONEncoder().encode(rootFolder) {
 			try! data.write(to: url.appendingPathComponent(.storeLocation))
-			// error handling ommitted
 		}
 		NotificationCenter.default.post(name: Store.changedNotification, object: updated, userInfo: userInfo)
 	}
@@ -52,7 +55,8 @@ final class Store {
 	}
 	
 	func removeFile(for recording: Recording) {
-		if let url = fileURL(for: recording), url != placeholder {
+		if let url = fileURL(for: recording),
+			url != placeholder {
 			_ = try? FileManager.default.removeItem(at: url)
 		}
 	}

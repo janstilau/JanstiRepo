@@ -13,24 +13,37 @@ class Folder: Item, Codable {
 		super.init(name: name, uuid: uuid)
 	}
 	
-	enum FolderKeys: CodingKey { case name, uuid, contents }
-	enum FolderOrRecording: CodingKey { case folder, recording }
+	enum FolderKeys: CodingKey {
+		case name,
+			  uuid,
+			  contents
+	}
+	enum FolderOrRecording: CodingKey {
+		case folder,
+			  recording
+	}
 	
 	required init(from decoder: Decoder) throws {
+		// 把 storage 里面顶层的 container 当做 NSDict 返回
 		let c = try decoder.container(keyedBy: FolderKeys.self)
+		
 		contents = [Item]()
+		// 取出 NSDict 里面 contents 对应的 value, 当做一个 NSArray
 		var nested = try c.nestedUnkeyedContainer(forKey: .contents)
 		while true {
+			// 取出 NSArray 里面的一个值, 当做一个 NSDict 对待.
 			let wrapper = try nested.nestedContainer(keyedBy: FolderOrRecording.self)
+			// 使用 NSDict, 尝试将 folder 对应的 value, 反序列化成为 Folder
 			if let f = try wrapper.decodeIfPresent(Folder.self, forKey: .folder) {
 				contents.append(f)
+				// 使用 NSDict, 尝试将 recording 对应的 value, 反序列化成为 Recording
 			} else if let r = try wrapper.decodeIfPresent(Recording.self, forKey: .recording) {
 				contents.append(r)
 			} else {
 				break
 			}
 		}
-
+		
 		let uuid = try c.decode(UUID.self, forKey: .uuid)
 		let name = try c.decode(String.self, forKey: .name)
 		super.init(name: name, uuid: uuid)
@@ -39,16 +52,23 @@ class Folder: Item, Codable {
 			c.parent = self
 		}
 	}
-
+	
 	func encode(to encoder: Encoder) throws {
+		// 新建一个 NSDict, 当做顶层对象.
 		var c = encoder.container(keyedBy: FolderKeys.self)
+		// 将 name 序列化到 NSDict 里面, name 所对应的 key 的位置.
 		try c.encode(name, forKey: .name)
+		// 将 uuid 序列化到 NSDict 里面, uuid 所对应的 key 的位置.
 		try c.encode(uuid, forKey: .uuid)
+		// 新建一个 NSArray, 最后会将 NSArray 序列化到, contents 所对应的 key 的位置.
 		var nested = c.nestedUnkeyedContainer(forKey: .contents)
 		for c in contents {
+			// 新建一个 NSDict, 插入到 NSArray 的最后.
 			var wrapper = nested.nestedContainer(keyedBy: FolderOrRecording.self)
 			switch c {
+			// 将 f 序列化到 NSDict 中, folder 所在的位置.
 			case let f as Folder: try wrapper.encode(f, forKey: .folder)
+			// 将 r 序列化到 NSDict 中, recording 所在的位置.
 			case let r as Recording: try wrapper.encode(r, forKey: .recording)
 			default: break
 			}
@@ -93,7 +113,7 @@ class Folder: Item, Codable {
 			Item.parentFolderKey: self
 		])
 	}
-
+	
 	override func item(atUUIDPath path: ArraySlice<UUID>) -> Item? {
 		guard path.count > 1 else { return super.item(atUUIDPath: path) }
 		guard path.first == uuid else { return nil }

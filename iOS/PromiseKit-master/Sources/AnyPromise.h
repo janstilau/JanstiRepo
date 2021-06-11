@@ -12,7 +12,7 @@ typedef void (^PMKResolver)(id __nullable) NS_REFINED_FOR_SWIFT;
 /// An Objective-C implementation of the promise pattern.
 @interface AnyPromise: NSObject
 
-/**
+/*
  Create a new promise that resolves with the provided block.
 
  Use this method when wrapping asynchronous code that does *not* use promises so that this code can be used in promise chains.

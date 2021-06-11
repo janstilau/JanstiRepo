@@ -66,10 +66,19 @@ public final class Promise<T>: Thenable, CatchMixin {
     }
 
     /*
-        Pipe, 如果自己的状态改变了, 应该调用什么 Block.
+        Pipe 的主要意图是, 记录后续的任务.
+        如果, 自己的状态, 从 Pending 转化为 Fullfilled 的话, 就调用记录的 block.
+     */
+    
+    /*
+        这是一个核心的方法, 因为 PromiseKit 运行机制, 其实就是找一个对象存储回调.
      */
     public func pipe(to: @escaping(Result<T>) -> Void) {
-        // 这里有一个 double check.
+        
+        /*
+            这里有一个 Double Check.
+            最终结果是, 如果还在 Pending 状态, 就将 to action 存储起来, 否则直接调用.
+         */
         switch box.inspect() {
         case .pending:
             box.inspect {

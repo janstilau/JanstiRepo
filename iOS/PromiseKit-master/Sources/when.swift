@@ -1,6 +1,10 @@
 import Foundation
 import Dispatch
 
+/*
+    这里, Result Promise 的 T 是 Void, 也就是说, 这个 Promise, 仅仅是一个触发器.
+    他没有办法, 也没有默认的逻辑, 来处理一个序列的 Result 的值.
+ */
 private func _when<U: Thenable>(_ thenables: [U]) -> Promise<Void> {
     var countdown = thenables.count
     guard countdown > 0 else {
@@ -9,13 +13,9 @@ private func _when<U: Thenable>(_ thenables: [U]) -> Promise<Void> {
 
     let rp = Promise<Void>(.pending)
 
-#if PMKDisableProgress || os(Linux)
-    var progress: (completedUnitCount: Int, totalUnitCount: Int) = (0, 0)
-#else
     let progress = Progress(totalUnitCount: Int64(thenables.count))
     progress.isCancellable = false
     progress.isPausable = false
-#endif
 
     let barrier = DispatchQueue(label: "org.promisekit.barrier.when", attributes: .concurrent)
 
@@ -43,7 +43,7 @@ private func _when<U: Thenable>(_ thenables: [U]) -> Promise<Void> {
     return rp
 }
 
-/**
+/*
  Wait for all promises in a set to fulfill.
 
  For example:
@@ -67,6 +67,7 @@ private func _when<U: Thenable>(_ thenables: [U]) -> Promise<Void> {
  - SeeAlso: `when(resolved:)`
 */
 public func when<U: Thenable>(fulfilled thenables: [U]) -> Promise<[U.T]> {
+    // _when 传回的 Promise 就是 Void. Map 在 Promise<Void> resolve 之后, 将 thenables 的所有值都取出来, 组成一个数组.
     return _when(thenables).map(on: nil) { thenables.map{ $0.value! } }
 }
 
@@ -81,9 +82,15 @@ public func when<U: Thenable>(fulfilled promises: [U]) -> Promise<Void> where U.
 }
 
 /// Wait for all promises in a set to fulfill.
+// asVoid 的目的, 是使得 Promise 的类型相同. 这样才能被 When 使用.
+// 在 When 返回的 Promise Fulfilled 之后, 再去各自的 Thenable 里面取值.
 public func when<U: Thenable, V: Thenable>(fulfilled pu: U, _ pv: V) -> Promise<(U.T, V.T)> {
     return _when([pu.asVoid(), pv.asVoid()]).map(on: nil) { (pu.value!, pv.value!) }
 }
+
+/*
+    各种, 个数之间的差异造成的函数, 都要明显的写出来实现.
+ */
 
 /// Wait for all promises in a set to fulfill.
 public func when<U: Thenable, V: Thenable, W: Thenable>(fulfilled pu: U, _ pv: V, _ pw: W) -> Promise<(U.T, V.T, W.T)> {

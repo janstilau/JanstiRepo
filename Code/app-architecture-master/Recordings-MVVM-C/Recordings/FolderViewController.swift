@@ -21,7 +21,7 @@ class FolderViewController: UITableViewController {
 		将 ViewModel 的 UI 相关的事件, 绑定到了 View 上.
 		*/
 		viewModel.navigationTitle.bind(to: rx.title).disposed(by: disposeBag)
-		viewModel.folderContents.bind(to: tableView.rx.items(dataSource: dataSource)).disposed(by: disposeBag)
+//		viewModel.folderContents.bind(to: tableView.rx.items(dataSource: dataSource)).disposed(by: disposeBag)
 		tableView.rx.modelDeleted(Item.self)
 			.subscribe(onNext: { [unowned self] in self.viewModel.deleteItem($0) }).disposed(by: disposeBag)
 		tableView.rx.modelSelected(Item.self)
