@@ -1,5 +1,10 @@
 import UIKit
 
+/*
+	这是在不是一个很好地设计, 将 VC 的跳转交互, 全都放到了这样的一个类里面.
+	这应该是 Route 的一个概念.
+	VC 里面, 直接进行跳转的控制. 变为了, 由一个第三方的协调器, 来控制不同业务 VC 的跳转动作.
+*/
 final class Coordinator {
 	let splitViewController: UISplitViewController
 	let storyboard = UIStoryboard(name: "Main", bundle: nil)

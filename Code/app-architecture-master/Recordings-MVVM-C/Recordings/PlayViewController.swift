@@ -11,6 +11,7 @@ extension Reactive where Base: UISlider {
 }
 
 class PlayViewController: UIViewController, UITextFieldDelegate {
+	
 	@IBOutlet var nameTextField: UITextField!
 	@IBOutlet var playButton: UIButton!
 	@IBOutlet var progressLabel: UILabel!
@@ -39,6 +40,8 @@ class PlayViewController: UIViewController, UITextFieldDelegate {
 		viewModel.nameText.bind(to: nameTextField.rx.text).disposed(by: disposeBag)
 	}
 	
+	// Model 的改变, 交给 ViewModel 进行处理.
+	// View Model 在对 Model 进行变化之后, 会产生信号, 驱动 View 的变化.
 	func textFieldDidEndEditing(_ textField: UITextField) {
 		viewModel.nameChanged(textField.text)
 	}

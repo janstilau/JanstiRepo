@@ -4,12 +4,13 @@ import RxCocoa
 import AVFoundation
 
 class PlayViewModel {
+	
 	let recording: Variable<Recording?> = Variable(nil)
 	let playState: Observable<Player.State?>
 	let togglePlay = PublishSubject<()>()
 	let setProgress = PublishSubject<TimeInterval>()
 	
-
+	
 	private let recordingUntilDeleted: Observable<Recording?>
 	
 	init() {
@@ -19,14 +20,14 @@ class PlayViewModel {
 				guard let currentRecording = recording else { return Observable.just(nil) }
 				// Start by emitting the current recording
 				return Observable.just(nil)
-//				return
-//					Observable.just(currentRecording)
-//				// Re-emit the recording every time a non-delete change occurs
-//				.concat(currentRecording.changeObservable.map { _ in currentRecording })
-//				// Stop when a delete occurs
-//				.takeUntil(currentRecording.deletedObservable)
-//				// After a delete, set the current recording back to `nil`
-//				.concat(Observable.just(nil))
+				//				return
+				//					Observable.just(currentRecording)
+				//				// Re-emit the recording every time a non-delete change occurs
+				//				.concat(currentRecording.changeObservable.map { _ in currentRecording })
+				//				// Stop when a delete occurs
+				//				.takeUntil(currentRecording.deletedObservable)
+				//				// After a delete, set the current recording back to `nil`
+				//				.concat(Observable.just(nil))
 			}.share(replay: 1)
 		
 		playState = recordingUntilDeleted.flatMapLatest { [togglePlay, setProgress] recording throws -> Observable<Player.State?> in
@@ -59,10 +60,16 @@ class PlayViewModel {
 	
 	// 这里, 数据发生了变化, 但是不知道如何通知到 View 的变化.
 	func nameChanged(_ name: String?) {
-		guard let r = recording.value, let text = name else { return }
+		guard let r = recording.value,
+				let text = name else { return }
 		r.setName(text)
 	}
 	
+	
+	/*
+		ViewModel, 不应该暴露出对应的 View 应该需要的数据.
+		而是应该暴露出, 这些数据作为 Publisher 的信号源出去. 这样, 外界才能根据这个信号源, 自动监听变化.
+	*/
 	var navigationTitle: Observable<String> {
 		return recordingUntilDeleted.map { $0?.name ?? "" }
 	}
