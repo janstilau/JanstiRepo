@@ -1,36 +1,13 @@
-//
-//  SnapKit
-//
-//  Copyright (c) 2011-Present SnapKit Team - https://github.com/SnapKit
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
-
 #if os(iOS) || os(tvOS)
-    import UIKit
+import UIKit
 #else
-    import AppKit
+import AppKit
 #endif
 
 
 public class ConstraintDescription {
     
-    internal let item: LayoutConstraintItem
+    internal let item: LayoutConstraintItem // 可能是 View, 也可能是 layoutGuide
     internal var attributes: ConstraintAttributes
     internal var relation: ConstraintRelation? = nil
     internal var sourceLocation: (String, UInt)? = nil
@@ -39,6 +16,10 @@ public class ConstraintDescription {
     internal var multiplier: ConstraintMultiplierTarget = 1.0
     internal var constant: ConstraintConstantTarget = 0.0
     internal var priority: ConstraintPriorityTarget = 1000.0
+    
+    // 以上的信息, 在 closure 的每一行中, 其实都是将相关的数据, 收集到对应的成员属性里面.
+    
+    // 在调用 constraint 的时候, 是将对应的数据, 重新组织成为一个 Constraint 对象传递出去.
     internal lazy var constraint: Constraint? = {
         guard let relation = self.relation,
               let related = self.related,

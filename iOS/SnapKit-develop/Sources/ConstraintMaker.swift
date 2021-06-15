@@ -1,26 +1,3 @@
-//
-//  SnapKit
-//
-//  Copyright (c) 2011-Present SnapKit Team - https://github.com/SnapKit
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
-
 #if os(iOS) || os(tvOS)
     import UIKit
 #else
@@ -163,23 +140,33 @@ public class ConstraintMaker {
         return self.makeExtendableWithAttributes(.centerWithinMargins)
     }
     
-    private let item: LayoutConstraintItem
-    private var descriptions = [ConstraintDescription]()
-    
-    internal init(item: LayoutConstraintItem) {
-        self.item = item
-        self.item.prepare()
-    }
-    
+    // 创建一个 ConstraintDescription, 作为数据的盒子, 加到自己的 descriptions 内
+    // 然后后续的 ConstraintMakerExtendable 的各种操作, 是向 ConstraintDescription 盒子里面添加数据.
     internal func makeExtendableWithAttributes(_ attributes: ConstraintAttributes) -> ConstraintMakerExtendable {
         let description = ConstraintDescription(item: self.item, attributes: attributes)
         self.descriptions.append(description)
         return ConstraintMakerExtendable(description)
     }
     
+    private let item: LayoutConstraintItem
+    private var descriptions = [ConstraintDescription]()
+    
+    // 上面的各种属性, 就是 Closure 里面, 面向程序员的接口;
+    
+    
+    
+    internal init(item: LayoutConstraintItem) {
+        self.item = item
+        self.item.prepare()
+    }
+    
+    
     internal static func prepareConstraints(item: LayoutConstraintItem, closure: (_ make: ConstraintMaker) -> Void) -> [Constraint] {
         let maker = ConstraintMaker(item: item)
+        // 这里, 就是常用的 make 闭包. 传入了就是一个 ConstraintMaker
         closure(maker)
+        
+        // maker 里面, 不断的收集, 在 closure 里面添加到 item 上面的 constraint.
         var constraints: [Constraint] = []
         for description in maker.descriptions {
             guard let constraint = description.constraint else {

@@ -1,30 +1,7 @@
-//
-//  SnapKit
-//
-//  Copyright (c) 2011-Present SnapKit Team - https://github.com/SnapKit
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
-
 #if os(iOS) || os(tvOS)
-    import UIKit
+import UIKit
 #else
-    import AppKit
+import AppKit
 #endif
 
 
@@ -71,28 +48,28 @@ internal struct ConstraintAttributes : OptionSet, ExpressibleByIntegerLiteral {
     
     @available(iOS 8.0, OSX 10.11, *)
     internal static let firstBaseline: ConstraintAttributes = ConstraintAttributes(UInt(1) << 11)
-
+    
     @available(iOS 8.0, *)
     internal static let leftMargin: ConstraintAttributes = ConstraintAttributes(UInt(1) << 12)
-
+    
     @available(iOS 8.0, *)
     internal static let rightMargin: ConstraintAttributes = ConstraintAttributes(UInt(1) << 13)
-
+    
     @available(iOS 8.0, *)
     internal static let topMargin: ConstraintAttributes = ConstraintAttributes(UInt(1) << 14)
-
+    
     @available(iOS 8.0, *)
     internal static let bottomMargin: ConstraintAttributes = ConstraintAttributes(UInt(1) << 15)
-
+    
     @available(iOS 8.0, *)
     internal static let leadingMargin: ConstraintAttributes = ConstraintAttributes(UInt(1) << 16)
-
+    
     @available(iOS 8.0, *)
     internal static let trailingMargin: ConstraintAttributes = ConstraintAttributes(UInt(1) << 17)
-
+    
     @available(iOS 8.0, *)
     internal static let centerXWithinMargins: ConstraintAttributes = ConstraintAttributes(UInt(1) << 18)
-
+    
     @available(iOS 8.0, *)
     internal static let centerYWithinMargins: ConstraintAttributes = ConstraintAttributes(UInt(1) << 19)
     
@@ -106,15 +83,17 @@ internal struct ConstraintAttributes : OptionSet, ExpressibleByIntegerLiteral {
     internal static let directionalVerticalEdges: ConstraintAttributes = [.top, .bottom]
     internal static let size: ConstraintAttributes = [.width, .height]
     internal static let center: ConstraintAttributes = [.centerX, .centerY]
-
+    
     @available(iOS 8.0, *)
     internal static let margins: ConstraintAttributes = [.leftMargin, .topMargin, .rightMargin, .bottomMargin]
-
+    
     @available(iOS 8.0, *)
     internal static let directionalMargins: ConstraintAttributes = [.leadingMargin, .topMargin, .trailingMargin, .bottomMargin]
-
+    
     @available(iOS 8.0, *)
     internal static let centerWithinMargins: ConstraintAttributes = [.centerXWithinMargins, .centerYWithinMargins]
+    
+    
     
     internal var layoutAttributes:[LayoutAttribute] {
         var attrs = [LayoutAttribute]()
@@ -153,39 +132,41 @@ internal struct ConstraintAttributes : OptionSet, ExpressibleByIntegerLiteral {
         }
         
         #if os(iOS) || os(tvOS)
-            if (self.contains(ConstraintAttributes.firstBaseline)) {
-                attrs.append(.firstBaseline)
-            }
-            if (self.contains(ConstraintAttributes.leftMargin)) {
-                attrs.append(.leftMargin)
-            }
-            if (self.contains(ConstraintAttributes.rightMargin)) {
-                attrs.append(.rightMargin)
-            }
-            if (self.contains(ConstraintAttributes.topMargin)) {
-                attrs.append(.topMargin)
-            }
-            if (self.contains(ConstraintAttributes.bottomMargin)) {
-                attrs.append(.bottomMargin)
-            }
-            if (self.contains(ConstraintAttributes.leadingMargin)) {
-                attrs.append(.leadingMargin)
-            }
-            if (self.contains(ConstraintAttributes.trailingMargin)) {
-                attrs.append(.trailingMargin)
-            }
-            if (self.contains(ConstraintAttributes.centerXWithinMargins)) {
-                attrs.append(.centerXWithinMargins)
-            }
-            if (self.contains(ConstraintAttributes.centerYWithinMargins)) {
-                attrs.append(.centerYWithinMargins)
-            }
+        if (self.contains(ConstraintAttributes.firstBaseline)) {
+            attrs.append(.firstBaseline)
+        }
+        if (self.contains(ConstraintAttributes.leftMargin)) {
+            attrs.append(.leftMargin)
+        }
+        if (self.contains(ConstraintAttributes.rightMargin)) {
+            attrs.append(.rightMargin)
+        }
+        if (self.contains(ConstraintAttributes.topMargin)) {
+            attrs.append(.topMargin)
+        }
+        if (self.contains(ConstraintAttributes.bottomMargin)) {
+            attrs.append(.bottomMargin)
+        }
+        if (self.contains(ConstraintAttributes.leadingMargin)) {
+            attrs.append(.leadingMargin)
+        }
+        if (self.contains(ConstraintAttributes.trailingMargin)) {
+            attrs.append(.trailingMargin)
+        }
+        if (self.contains(ConstraintAttributes.centerXWithinMargins)) {
+            attrs.append(.centerXWithinMargins)
+        }
+        if (self.contains(ConstraintAttributes.centerYWithinMargins)) {
+            attrs.append(.centerYWithinMargins)
+        }
         #endif
         
         return attrs
     }
 }
 
+
+// Description 里面, 各个操作符能够使用的原因.
 internal func + (left: ConstraintAttributes, right: ConstraintAttributes) -> ConstraintAttributes {
     return left.union(right)
 }
