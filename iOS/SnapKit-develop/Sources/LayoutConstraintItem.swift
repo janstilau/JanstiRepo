@@ -35,6 +35,8 @@ extension LayoutConstraintItem {
         
         return nil
     }
+    
+    // 将内部的 set 转化成为更加通用的数组交给外界使用.
     internal var constraints: [Constraint] {
         return self.constraintsSet.allObjects as! [Constraint]
     }
@@ -53,6 +55,7 @@ extension LayoutConstraintItem {
         }
     }
     
+    // 一个 Constraint, 将所有的相关的 NSLayoutConstraint 都存储了起来.
     private var constraintsSet: NSMutableSet {
         let constraintsSet: NSMutableSet
         

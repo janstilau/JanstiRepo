@@ -5,6 +5,9 @@ import AppKit
 #endif
 
 
+// 一个数据盒子.
+// 必须是引用类型, 这样, 各种 container 类才能使用自己的方法, 对 ConstraintDescription 的数据进行修改.
+// 暴露出 constraint, 提供了 Description 数据类, 到实际的 Constraint 的转化.
 public class ConstraintDescription {
     
     internal let item: LayoutConstraintItem // 可能是 View, 也可能是 layoutGuide

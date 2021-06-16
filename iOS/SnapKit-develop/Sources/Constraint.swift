@@ -197,6 +197,7 @@ public final class Constraint {
     
     // MARK: Public
     
+    //
     @available(*, deprecated, renamed:"activate()")
     public func install() {
         self.activate()
@@ -318,6 +319,7 @@ public final class Constraint {
             print("WARNING: SnapKit failed to get from item from constraint. Deactivate will be a no-op.")
             return
         }
+        // 每一额 Constraint 对象, 都是 Description 对象存储的信息的实际约束表现.
         let layoutConstraints = self.layoutConstraints
         NSLayoutConstraint.deactivate(layoutConstraints)
         item.remove(constraints: [self])

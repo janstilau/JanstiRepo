@@ -187,6 +187,8 @@ public class ConstraintMaker {
         }
     }
     
+    // remake 在进行新的 constraint 的设置之前, 会将 item 原有的 Constraint 都进行删除.
+    // 这种删除, 是建立在
     internal static func remakeConstraints(item: LayoutConstraintItem, closure: (_ make: ConstraintMaker) -> Void) {
         self.removeConstraints(item: item)
         self.makeConstraints(item: item, closure: closure)
@@ -212,7 +214,7 @@ public class ConstraintMaker {
     }
     
     /*
-        removeConstraints 会删除, 所有之前通过 Snapkit 设置的约束.
+        RemoveConstraints 会删除, 所有之前通过 Snapkit 设置的约束.
      
         Item.constraints 记录的是通过 SnapKit 添加到 View 上的约束.
         所以用 Xib 设置的约束, 不会在这里.
