@@ -48,6 +48,8 @@ extension ConstraintDirectionalInsets: ConstraintConstantTarget {
 
 extension ConstraintConstantTarget {
     
+    // 将各个属性的值, 抽取成为 CGFloat 的过程.
+    // 这里可以看到, 就算是 CGSize, CGPoint, UIEdgeInsets 这些值, 也是能够抽取成为对应属性需要的值的.
     internal func constraintConstantTargetValueFor(layoutAttribute: LayoutAttribute) -> CGFloat {
         if let value = self as? CGFloat {
             return value

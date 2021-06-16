@@ -177,6 +177,9 @@ public class ConstraintMaker {
         return constraints
     }
     
+    // makeConstraints 使用的是 activateIfNeeded(false)
+    // 只会将新生成的约束添加到 View 上, 不过影响之前的布局.
+    // 所以可能会产生冲突.
     internal static func makeConstraints(item: LayoutConstraintItem, closure: (_ make: ConstraintMaker) -> Void) {
         let constraints = prepareConstraints(item: item, closure: closure)
         for constraint in constraints {
@@ -190,17 +193,31 @@ public class ConstraintMaker {
     }
     
     internal static func updateConstraints(item: LayoutConstraintItem, closure: (_ make: ConstraintMaker) -> Void) {
+        // 如果, 当前 Item 上面, 没有添加过约束, 直接按照初始化处理就好了.
         guard item.constraints.count > 0 else {
             self.makeConstraints(item: item, closure: closure)
             return
         }
         
+        /*
+            通过新生成的约束, 去更新已有的约束.
+            在这个过程中, 只会修改 constant 的值.
+            所有, updateConstraints 里面, 不应该是设置新的约束, 而是修改原有约束的值.
+            如果想要用新的约束, 来影响 View, 应该使用的是 ReMakeConstraints.
+         */
         let constraints = prepareConstraints(item: item, closure: closure)
         for constraint in constraints {
             constraint.activateIfNeeded(updatingExisting: true)
         }
     }
     
+    /*
+        removeConstraints 会删除, 所有之前通过 Snapkit 设置的约束.
+     
+        Item.constraints 记录的是通过 SnapKit 添加到 View 上的约束.
+        所以用 Xib 设置的约束, 不会在这里.
+        使用 removeConstraints 来修改 Xib 产生的 View 是没有效果的.
+     */
     internal static func removeConstraints(item: LayoutConstraintItem) {
         let constraints = item.constraints
         for constraint in constraints {

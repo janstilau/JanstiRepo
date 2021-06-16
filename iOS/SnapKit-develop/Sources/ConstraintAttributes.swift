@@ -4,7 +4,8 @@ import UIKit
 import AppKit
 #endif
 
-
+// Snap 里面, 对于各种 autolayout 锚点的映射.
+// 最终, 这些会映射到 autolayout 的各种属性上.
 internal struct ConstraintAttributes : OptionSet, ExpressibleByIntegerLiteral {
     
     typealias IntegerLiteralType = UInt

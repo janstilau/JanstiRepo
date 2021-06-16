@@ -32,6 +32,8 @@ extension ConstraintBasicAttributesDSL {
     
     // MARK: Basics
     
+    // 以下的属性, 是放到 make 的括号里面的.
+    // 也就是, make 的 target. 
     public var left: ConstraintItem {
         return ConstraintItem(target: self.target, attributes: ConstraintAttributes.left)
     }

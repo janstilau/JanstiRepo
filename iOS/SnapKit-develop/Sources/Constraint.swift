@@ -6,6 +6,7 @@ import AppKit
 
 public final class Constraint {
     
+    // 调试信息.
     internal let sourceLocation: (String, UInt)
     internal let label: String?
     
@@ -23,6 +24,9 @@ public final class Constraint {
             self.updateConstantAndPriorityIfNeeded()
         }
     }
+    
+    
+    // 在 Constraint 生成的过程中, 会生成各个系统需要的 constraint 对象, 然后存储起来.
     public var layoutConstraints: [LayoutConstraint]
     
     public var isActive: Bool {
@@ -56,6 +60,7 @@ public final class Constraint {
                   multiplier: ConstraintMultiplierTarget,
                   constant: ConstraintConstantTarget,
                   priority: ConstraintPriorityTarget) {
+        // 首先, 是各种数据的存储的过程.
         self.from = from
         self.to = to
         self.relation = relation
@@ -65,6 +70,7 @@ public final class Constraint {
         self.constant = constant
         self.priority = priority
         self.layoutConstraints = []
+        
         
         // get attributes
         let layoutFromAttributes = self.from.attributes.layoutAttributes
@@ -76,10 +82,11 @@ public final class Constraint {
         // get relation
         let layoutRelation = self.relation.layoutRelation
         
+        // 遍历 From, 一般来说, target 只有一个值, 而 From 是串联值.
         for layoutFromAttribute in layoutFromAttributes {
             // get layout to attribute
             let layoutToAttribute: LayoutAttribute
-            #if os(iOS) || os(tvOS)
+            
             if layoutToAttributes.count > 0 {
                 if self.from.attributes == .edges && self.to.attributes == .margins {
                     switch layoutFromAttribute {
@@ -142,18 +149,12 @@ public final class Constraint {
                 if self.to.target == nil && (layoutFromAttribute == .centerX || layoutFromAttribute == .centerY) {
                     layoutToAttribute = layoutFromAttribute == .centerX ? .left : .top
                 } else {
+                    // 如果, to 没有设置 attribute, 就是 from 和 to 的 attribute 一致.
+                    // 例如, from 的 width.top.bottom,centerX, equalTo(TargetView)
+                    // to 没有设置 target 的任何 attribute, 那么就是, from 的各个 Attribute 和 to 的各个 Attribute 是一样的.
                     layoutToAttribute = layoutFromAttribute
                 }
             }
-            #else
-            if self.from.attributes == self.to.attributes {
-                layoutToAttribute = layoutFromAttribute
-            } else if layoutToAttributes.count > 0 {
-                layoutToAttribute = layoutToAttributes[0]
-            } else {
-                layoutToAttribute = layoutFromAttribute
-            }
-            #endif
             
             // get layout constant
             let layoutConstant: CGFloat = self.constant.constraintConstantTargetValueFor(layoutAttribute: layoutToAttribute)
@@ -162,11 +163,14 @@ public final class Constraint {
             var layoutTo: AnyObject? = self.to.target
             
             // use superview if possible
-            if layoutTo == nil && layoutToAttribute != .width && layoutToAttribute != .height {
+            if layoutTo == nil &&
+                layoutToAttribute != .width &&
+                layoutToAttribute != .height {
                 layoutTo = layoutFrom.superview
             }
             
             // create layout constraint
+            // 在这里, 来生成真正的 NSLayoutConstraint 对象.
             let layoutConstraint = LayoutConstraint(
                 item: layoutFrom,
                 attribute: layoutFromAttribute,
@@ -284,8 +288,8 @@ public final class Constraint {
             print("WARNING: SnapKit failed to get from item from constraint. Activate will be a no-op.")
             return
         }
-        let layoutConstraints = self.layoutConstraints
         
+        let layoutConstraints = self.layoutConstraints
         if updatingExisting {
             var existingLayoutConstraints: [LayoutConstraint] = []
             for constraint in item.constraints {
@@ -302,7 +306,9 @@ public final class Constraint {
                 updateLayoutConstraint.constant = self.constant.constraintConstantTargetValueFor(layoutAttribute: updateLayoutAttribute)
             }
         } else {
+            // 如果不用更新原有的约束, 直接将新生成的约束设置为生效就好了.
             NSLayoutConstraint.activate(layoutConstraints)
+            // 每个 View, 其实记录了当前正在作用到自己身上的 Constraint 的.
             item.add(constraints: [self])
         }
     }
