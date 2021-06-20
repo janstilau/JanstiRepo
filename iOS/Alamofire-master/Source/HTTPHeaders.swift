@@ -98,6 +98,7 @@ public struct HTTPHeaders {
         }
     }
     
+    // 最终, 和 Apple 的 Request 系统进行交互的方法.
     public var dictionary: [String: String] {
         let namesAndValues = headers.map { ($0.name, $0.value) }
         return Dictionary(namesAndValues, uniquingKeysWith: { _, last in last })

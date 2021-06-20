@@ -4,6 +4,7 @@ import Foundation
 // `URLSession` delegate protocols as well as various events from the lifetime of `Request` and its subclasses.
 
 // 一个特殊的协议, 这个协议, 可以将 URLSession 的各种事件统一的向一个监听者抛出.
+
 public protocol EventMonitor {
     /// The `DispatchQueue` onto which Alamofire's root `CompositeEventMonitor` will dispatch events. `.main` by default.
     var queue: DispatchQueue { get }
@@ -293,6 +294,7 @@ extension EventMonitor {
 // 一个 Composite 节点. 里面存放各个节点的 EventMonitor. 当触发对应的方法的时候, 迭代所有存储的子节点, 调用相应的方法.
 
 public final class CompositeEventMonitor: EventMonitor {
+    
     public let queue = DispatchQueue(label: "org.alamofire.compositeEventMonitor", qos: .utility)
     
     let monitors: [EventMonitor]
@@ -301,8 +303,6 @@ public final class CompositeEventMonitor: EventMonitor {
         self.monitors = monitors
     }
     
-    // 以下所有的对于 protocol 的实现, 都是调用了 performEvent, 闭包里面, 传入的参数是一个 EventMonitor 类型的.
-    // performEvent 会遍历所有存储的 EventMonitor, 调用相关的方法.
     func performEvent(_ event: @escaping (EventMonitor) -> Void) {
         queue.async {
             for monitor in self.monitors {

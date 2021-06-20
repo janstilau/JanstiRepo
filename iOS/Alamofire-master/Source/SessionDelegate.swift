@@ -3,24 +3,16 @@ import Foundation
 // Class which implements the various `URLSessionDelegate` methods to connect various Alamofire features.
 
 open class SessionDelegate: NSObject {
+    
     private let fileManager: FileManager
     
     weak var stateProvider: SessionStateProvider? // 这个协议, 由 Session 来实现了.
     var eventMonitor: EventMonitor?
     
-    /// Creates an instance from the given `FileManager`.
-    ///
-    /// - Parameter fileManager: `FileManager` to use for underlying file management, such as moving downloaded files.
-    ///                          `.default` by default.
     public init(fileManager: FileManager = .default) {
         self.fileManager = fileManager
     }
     
-    /// Internal method to find and cast requests while maintaining some integrity checking.
-    ///
-    /// - Parameters:
-    ///   - task: The `URLSessionTask` for which to find the associated `Request`.
-    ///   - type: The `Request` subclass type to cast any `Request` associate with `task`.
     func request<R: Request>(for task: URLSessionTask, as type: R.Type) -> R? {
         guard let provider = stateProvider else {
             assertionFailure("StateProvider is nil.")
@@ -51,6 +43,7 @@ protocol SessionStateProvider: AnyObject {
 
 extension SessionDelegate: URLSessionDelegate {
     open func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?) {
+        
         eventMonitor?.urlSession(session, didBecomeInvalidWithError: error)
         stateProvider?.cancelRequestsForSessionInvalidation(with: error)
     }

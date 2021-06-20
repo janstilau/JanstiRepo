@@ -2,10 +2,10 @@ import Foundation
 
 /*
  RawRepresentable 这个协议, 彻底的将原始值, 和类型值进行了区分.
+ 
  一个专门的类型, 表达一个含义, 虽然, Notification.Name 里面仅仅是一个 string, 但是它是一个专门的类型, 在各个 API 传入的时候, 都有类型的检查操作.
  专门建立一个 static 类型的全局量, 表示某个值, 和专门建立一个 原始类型的全局量, 表达这个值, 在使用上没有什么差别, 但是 类型值带有类型信息, 让使用者更加明确自己操作的是什么东西.
- extension 不仅仅是 category 的作用, 更多的是用于了区块的划分.
- 之前 category 没有办法添加静态量, 导致的问题是, 必须将这些量, 作为一个全局量进行使用, 用 extern 在头文件里面进行表示.
+ 
  extension 的引入, 将这些全局量, 归并到一个合适的区块里面.
  */
 public extension Request {

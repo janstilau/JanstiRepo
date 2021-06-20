@@ -12,8 +12,6 @@
  1. 用户很容易写错, 因为没有 IDE 的支持.
  2. 大小写怎么处理, 有空格怎么处理, 这都给 API 的设计者提供了难题, 而提供一个稳定的数据获取的 API, 能够略去大部分的烦恼问题.
  
- 在最终, 变换成为 HTTPRequest 的属性的时候, 还是用的 HTTPRequest 里面规定的数据类型, 也就是 String.
- 这里, 直接使用 HTTPMethod RawValue 方法就可以了. RawRepresentable 提供了稳定的抽象.
  */
 public struct HTTPMethod: RawRepresentable, Equatable, Hashable {
     /// `CONNECT` method.

@@ -592,7 +592,6 @@ public class Request {
         eventMonitor?.requestDidFinish(self)
     }
     
-    // 就和 RXSwfit 一样, 各种信号真正触发的时候, 很有可能是 subscribe 被调用的时候.
     /// Appends the response serialization closure to the instance.
     ///
     ///  - Note: This method will also `resume` the instance if `delegate.startImmediately` returns `true`.
@@ -612,6 +611,7 @@ public class Request {
             
             // 在这里, 当添加了 appendResponseSerializer 的时候, 才会真正的调用 resume 的方法.
             // 也就是, 当添加了网络的响应的时候, 就自动开启了网络请求.
+            // 如果 startImmediately 为 False, 那么就是必须调用 resume 才是真正的进行网络交互.
             if mutableState.state.canTransitionTo(.resumed) {
                 underlyingQueue.async { if self.delegate?.startImmediately == true { self.resume() } }
             }
@@ -1178,6 +1178,7 @@ public class DataRequest: Request {
         updateDownloadProgress()
     }
     
+    // 直到这里, 才真正的使用了 URLSession 来创建了一个网络任务.
     override func task(for request: URLRequest, using session: URLSession) -> URLSessionTask {
         let copiedRequest = request
         return session.dataTask(with: copiedRequest)

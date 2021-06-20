@@ -6,41 +6,37 @@ import Foundation
 open class Session {
     /*
      一个单例, 简单的网络请求使用, 里面使用默认的数据作为配置.
+     因为 swift 里面, static 的构建, 自动加入到了 once 中, 所以, 一定是单例对象.
      */
     public static let `default` = Session()
     
     /*
-     Session 这个类, 作为网络请求的管理者, 里面做了 Alamofire 的逻辑处理. 真正的网络请求, 还是要调用系统的 URLSession 进行处理.
+        Session 这个类, 作为网络请求的管理者, 里面做了 Alamofire 的逻辑处理. 真正的网络请求, 还是要调用系统的 URLSession 进行处理.
      */
     public let session: URLSession
-    /// Instance's `SessionDelegate`, which handles the `URLSessionDelegate` methods and `Request` interaction.
+    /*
+        Session 里面, 主要是做的各个网络任务的状态管理.
+        真正面对 URLSession 的回调的时候, 是交给了 SessionDelegate 做分发操作.
+        而在 SessionDelegate 内部, 又进行了分发的操作.
+     */
     public let delegate: SessionDelegate
-    /// Root `DispatchQueue` for all internal callbacks and state update. **MUST** be a serial queue.
-    /// rootQueue 都是调用的 async
-    public let rootQueue: DispatchQueue
     
     /*
-     Session 里面的各个队列, 是为各个 DataRequest 来服务的. 各个 DataRequest, 会保存这些 Queue, 将各自的任务添加到这些 Queue 里面.
-     Session 提供了各个工具的来源, 避免各个 DataRequest 直接面对线程相关的资源, 减少复杂度的同时, 也解决了资源的分配.
+        所有的, 对于 Session 内部状态的修改, 都是在 rootQueue 中.
+        使用 DispatchQueue 的好处在于, Queue 的 Serial 可以保证, 数据的线程安全.
+        Async 的特性, 可以使得各种方法的调用, 仅仅是进行任务的提交, 真正的任务, 可以在线程池里面在进行修改.
      */
+    public let rootQueue: DispatchQueue
     
-    /// Value determining whether this instance automatically calls `resume()` on all created `Request`s.
+    
     // 这个值, 控制了当 DataRequest 接收到 response 的 Handler 的时候, 是否立马开启 dataTask
     public let startRequestsImmediately: Bool
-    /// `DispatchQueue` on which `URLRequest`s are created asynchronously. By default this queue uses `rootQueue` as its
-    /// `target`, but a separate queue can be used if request creation is determined to be a bottleneck. Always profile
-    /// and test before introducing an additional queue.
+    
     // 这个 Queue, 主要是用来, 做 Request 的初始化操作了.
-    // 之所以这样说, 是 Session 里面, 各种数据的准备, 其实都是异步的.
-    // 一项事情做完, 触发后续的任务, 仅仅是将后续任务的调用, 扔到一个 queue 里面.
-    // 有线程池自己调用相关的任务.
-    // 而相关任务被调用, 代表着网络的请求流程, 还在继续.
     public let requestQueue: DispatchQueue
-    /// `DispatchQueue` passed to all `Request`s on which they perform their response serialization. By default this
-    /// queue uses `rootQueue` as its `target` but a separate queue can be used if response serialization is determined
-    /// to be a bottleneck. Always profile and test before introducing an additional queue.
     // 用于 Response 的反序列化的队列.
     public let serializationQueue: DispatchQueue
+    
     
     /*
      Alamofire 将交互过程中, 各个模块都按照协议, 定义了相关的成员变量.
@@ -74,41 +70,6 @@ open class Session {
     /// Completion events awaiting `URLSessionTaskMetrics`.
     var waitingCompletions: [URLSessionTask: () -> Void] = [:]
     
-    
-    
-    
-    /// Creates a `Session` from a `URLSession` and other parameters.
-    ///
-    /// - Note: When passing a `URLSession`, you must create the `URLSession` with a specific `delegateQueue` value and
-    ///         pass the `delegateQueue`'s `underlyingQueue` as the `rootQueue` parameter of this initializer.
-    ///
-    /// - Parameters:
-    ///   - session:                  Underlying `URLSession` for this instance.
-    ///   - delegate:                 `SessionDelegate` that handles `session`'s delegate callbacks as well as `Request`
-    ///                               interaction.
-    ///   - rootQueue:                Root `DispatchQueue` for all internal callbacks and state updates. **MUST** be a
-    ///                               serial queue.
-    ///   - startRequestsImmediately: Determines whether this instance will automatically start all `Request`s. `true`
-    ///                               by default. If set to `false`, all `Request`s created must have `.resume()` called.
-    ///                               on them for them to start.
-    ///   - requestQueue:             `DispatchQueue` on which to perform `URLRequest` creation. By default this queue
-    ///                               will use the `rootQueue` as its `target`. A separate queue can be used if it's
-    ///                               determined request creation is a bottleneck, but that should only be done after
-    ///                               careful testing and profiling. `nil` by default.
-    ///   - serializationQueue:       `DispatchQueue` on which to perform all response serialization. By default this
-    ///                               queue will use the `rootQueue` as its `target`. A separate queue can be used if
-    ///                               it's determined response serialization is a bottleneck, but that should only be
-    ///                               done after careful testing and profiling. `nil` by default.
-    ///   - interceptor:              `RequestInterceptor` to be used for all `Request`s created by this instance. `nil`
-    ///                               by default.
-    ///   - serverTrustManager:       `ServerTrustManager` to be used for all trust evaluations by this instance. `nil`
-    ///                               by default.
-    ///   - redirectHandler:          `RedirectHandler` to be used by all `Request`s created by this instance. `nil` by
-    ///                               default.
-    ///   - cachedResponseHandler:    `CachedResponseHandler` to be used by all `Request`s created by this instance.
-    ///                               `nil` by default.
-    ///   - eventMonitors:            Additional `EventMonitor`s used by the instance. Alamofire always adds a
-    ///                               `AlamofireNotifications` `EventMonitor` to the array passed here. `[]` by default.
     /*
      参数名和成员变量名相同是很常见的事情, 调用 self.name = name 这种写法, 是很常见的事情.
      */
@@ -132,6 +93,7 @@ open class Session {
         self.delegate = delegate
         self.rootQueue = rootQueue
         self.startRequestsImmediately = startRequestsImmediately
+        // 如果, 没有设置 requestQueue 或者 serializationQueue, 那么就将创建一个以 RootQueue 为 target 的 Queue.
         self.requestQueue = requestQueue ?? DispatchQueue(label: "\(rootQueue.label).requestQueue", target: rootQueue)
         self.serializationQueue = serializationQueue ?? DispatchQueue(label: "\(rootQueue.label).serializationQueue", target: rootQueue)
         self.interceptor = interceptor
@@ -140,6 +102,7 @@ open class Session {
         self.cachedResponseHandler = cachedResponseHandler
         
         // defaultEventMonitors 就是 Notification Monitor.
+        // 将 Notification, 当做一个特殊的 Monitor 来进行处理, 使得抽象得到了统一.
         eventMonitor = CompositeEventMonitor(monitors: defaultEventMonitors + eventMonitors)
         
         delegate.eventMonitor = eventMonitor
@@ -162,13 +125,11 @@ open class Session {
                             eventMonitors: [EventMonitor] = []) {
         precondition(configuration.identifier == nil, "Alamofire does not support background URLSessionConfigurations.")
         
-        /*
-            在这里, 创建的系统的 URLSession, 将 delegate 设置为了 self.delegate
-            这就是为什么所有的网络交互, 会在 SessionDelegate 处理的原因. SessionDelegate 就是一个大号的分发器. 这个过程, 在 AFN 里面, 是 AFN Manager 承担的.
-         */
         let delegateQueue = OperationQueue(maxConcurrentOperationCount: 1,
                                            underlyingQueue: rootQueue,
                                            name: "org.alamofire.session.sessionDelegateQueue")
+        // 将, 传递过来的 delegate, 直接变为 URLSession 的 delegate.
+        // 这样, Apple 的有关网络的所有的回调, 才会被传输到 SessionDelegate 对象中去.
         let session = URLSession(configuration: configuration, delegate: delegate, delegateQueue: delegateQueue)
         
         self.init(session: session,
@@ -186,26 +147,24 @@ open class Session {
     
     deinit {
         finishRequestsForDeinit()
+        // Cancels all outstanding tasks and then invalidates the session.
         session.invalidateAndCancel()
+        /*
+         This method returns immediately without waiting for tasks to finish. Once a session is invalidated, new tasks cannot be created in the session, but existing tasks continue until completion. After the last task finishes and the session makes the last delegate call related to those tasks, the session calls the urlSession(_:didBecomeInvalidWithError:) method on its delegate, then breaks references to the delegate and callback objects. After invalidation, session objects cannot be reused.
+         session.finishTasksAndInvalidate()
+         */
     }
     
     // MARK: - Cancellation
     
-    /// Cancel all active `Request`s, optionally calling a completion handler when complete.
-    ///
-    /// - Note: This is an asynchronous operation and does not block the creation of future `Request`s. Cancelled
-    ///         `Request`s may not cancel immediately due internal work, and may not cancel at all if they are close to
-    ///         completion when cancelled.
-    ///
-    /// - Parameters:
-    ///   - queue:      `DispatchQueue` on which the completion handler is run. `.main` by default.
-    ///   - completion: Closure to be called when all `Request`s have been cancelled.
+    /*
+        取消当前的所有的 Request
+        从实现里面我们看到, 是将真正的 Cancel 操作, 交给了 Request 类里面了.
+        要习惯于这样的写法, 因为 Alamofire 里面, 都是这种异步操作.
+     */
     public func cancelAllRequests(completingOnQueue queue: DispatchQueue = .main,
                                   completion: (() -> Void)? = nil) {
         rootQueue.async {
-            // 队列的调度就是如此.
-            // 添加一个新的任务, 在任务里面, 完成业务逻辑, 然后将新的任务, 添加到目标 queue 里面.
-            // 这个方法, 就要求了 activeRequests 里面的值, 是合法的值.
             self.activeRequests.forEach { $0.cancel() }
             queue.async { completion?() }
         }
@@ -215,23 +174,20 @@ open class Session {
     // MARK: - DataRequest
     
     /*
-     RequestModifier 仅仅是一个 block 类型, 但是通过 typealias 的定义, 让他的逻辑含义, 更加的突出.
-     RequestModifier 就是给外界一个自定义的机会. 例如, 这个 Request 的 timeout 要长一点, 或者某个特定 URL 的 Request 里面, cotnent-type 要改变.
+        RequestModifier 仅仅是一个 block 类型, 但是通过 typealias 的定义, 让他的逻辑含义, 更加的突出.
+        RequestModifier 就是给外界一个自定义的机会. 例如, 这个 Request 的 timeout 要长一点, 或者某个特定 URL 的 Request 里面, cotnent-type 要改变.
      */
     public typealias RequestModifier = (inout URLRequest) throws -> Void
     
     /*
-     RequestConvertible 就是一个 实现了 URLRequestConvertible 的盒子.
-     这个盒子, 存储了所有构件 Request 的信息, 然后生成对应的 request.
-     
-     关于 Swfit 里面, Throw 相关的资料还是要看一下.
-     Throw, 就代表着这个函数是一个 Result 返回值的函数. 在调用的时候, 语法用强制的方式, 让开发者必须去处理 Fail 的情况.
+        RequestConvertible
+        是原始的, 通过 Paramter 这种方式, 构建 Request 的封装.
      */
     struct RequestConvertible: URLRequestConvertible {
-        let url: URLConvertible
-        let method: HTTPMethod
-        let parameters: Parameters?
-        let encoding: ParameterEncoding
+        let url: URLConvertible // 获取到了 Url
+        let method: HTTPMethod // 获取到了 Method
+        let parameters: Parameters? // 获取到了所需的各种参数
+        let encoding: ParameterEncoding // 将 Url, 参数转化成为 Request 的工具.
         let headers: HTTPHeaders?
         let requestModifier: RequestModifier?
         
@@ -247,21 +203,6 @@ open class Session {
         }
     }
     
-    /// Creates a `DataRequest` from a `URLRequest` created using the passed components and a `RequestInterceptor`.
-    ///
-    /// - Parameters:
-    ///   - convertible:     `URLConvertible` value to be used as the `URLRequest`'s `URL`.  实际的 URL 地址
-    ///   - method:          `HTTPMethod` for the `URLRequest`. `.get` by default. 实际的 HTTP 方法.
-    ///   - parameters:      `Parameters` (a.k.a. `[String: Any]`) value to be encoded into the `URLRequest`. `nil` by
-    ///                      default. 各种参数信息
-    ///   - encoding:        `ParameterEncoding` to be used to encode the `parameters` value into the `URLRequest`.
-    ///                      `URLEncoding.default` by default. 各种参数, 如何序列化到 Request 的功能
-    ///   - headers:         `HTTPHeaders` value to be added to the `URLRequest`. `nil` by default. 各种 header 信息.
-    ///   - interceptor:     `RequestInterceptor` value to be used by the returned `DataRequest`. `nil` by default.
-    ///   - requestModifier: `RequestModifier` which will be applied to the `URLRequest` created from the provided
-    ///                      parameters. `nil` by default. 一个闭包, 用于对于 request 进行个性化定制.
-    ///
-    /// - Returns:       The created `DataRequest`.
     open func request(_ convertible: URLConvertible,
                       method: HTTPMethod = .get,
                       parameters: Parameters? = nil,
@@ -275,12 +216,6 @@ open class Session {
                                              encoding: encoding,
                                              headers: headers,
                                              requestModifier: requestModifier)
-        
-        /*
-         Session 有两种 request 方法, 一种是提供各种原始信息. 一种是直接提供一个 URLRequestConvertible
-         可以看到, 提供原始材料的这种, 还是在内部构建了一个 RequestConvertible.
-         所以, 整个 Session 的内部, 其实是建立在 RequestConvertible 的基础上进行的运转.
-         */
         return request(convertible, interceptor: interceptor)
     }
     
@@ -1049,9 +984,8 @@ open class Session {
     
     func performSetupOperations(for request: Request,
                                 convertible: URLRequestConvertible) {
+        
         dispatchPrecondition(condition: .onQueue(requestQueue))
-        
-        
         
         /*
          首选, 通过 URLRequestConvertible 创建出一个 URLRequest 出来.

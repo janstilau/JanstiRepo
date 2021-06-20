@@ -7,7 +7,8 @@ public typealias Parameters = [String: Any]
     这个协议, 就是将一个 URLRequest, 以及参数进行 encoding, 生成最终的 URLRequest 的对象.
  */
 public protocol ParameterEncoding {
-    func encode(_ urlRequest: URLRequestConvertible, with parameters: Parameters?) throws -> URLRequest
+    func encode(_ urlRequest: URLRequestConvertible,
+                with parameters: Parameters?) throws -> URLRequest
 }
 
 // MARK: -

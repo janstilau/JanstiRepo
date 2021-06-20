@@ -24,7 +24,7 @@ class ImagePickerController: ViewController {
         cameraButton.isEnabled = UIImagePickerController.isSourceTypeAvailable(.camera)
 
         /*
-         所有的, 对于 cocoaControl 都有着关于 rx 的处理.
+            所有的, 对于 cocoaControl 都有着关于 rx 的处理.
          */
         cameraButton.rx.tap
             /*
