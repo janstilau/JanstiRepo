@@ -43,11 +43,11 @@ public struct ControlProperty<PropertyType> : ControlPropertyType {
     public typealias Element = PropertyType
 
     /*
-     存储的 Publisher, 已经和 UIControl 相关联.
+        存储的 Publisher, 已经和 UIControl 相关联.
      */
     let values: Observable<PropertyType>
     /*
-     存储的 Observer, 已经和 UIControl 相关联.
+        存储的 Observer, 已经和 UIControl 相关联.
      */
     let valueSink: AnyObserver<PropertyType>
 
@@ -58,7 +58,8 @@ public struct ControlProperty<PropertyType> : ControlPropertyType {
     /// - parameter valueSink: Observer that enables binding values to control property.
     /// - returns: Control property created with a observable sequence of values and an observer that enables binding values
     /// to property.
-    public init<Values: ObservableType, Sink: ObserverType>(values: Values, valueSink: Sink) where Element == Values.Element, Element == Sink.Element {
+    public init<Values: ObservableType,
+                Sink: ObserverType>(values: Values, valueSink: Sink) where Element == Values.Element, Element == Sink.Element {
         self.values = values.subscribe(on: ConcurrentMainScheduler.instance)
         self.valueSink = valueSink.asObserver()
     }
@@ -100,6 +101,7 @@ public struct ControlProperty<PropertyType> : ControlPropertyType {
     /// - In case next element is received, it is being set to control value.
     /// - In case error is received, DEBUG buids raise fatal error, RELEASE builds log event to standard output.
     /// - In case sequence completes, nothing happens.
+    // 这里, 是将 UITextFiled.rx.test 当做 Observer 使用的逻辑
     public func on(_ event: Event<Element>) {
         switch event {
         case .error(let error):

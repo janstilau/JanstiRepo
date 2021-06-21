@@ -22,12 +22,16 @@ class SimpleValidationViewController : ViewController {
     @IBOutlet weak var passwordValidOutlet: UILabel!
 
     @IBOutlet weak var doSomethingOutlet: UIButton!
-
+    
+    
+    @IBOutlet weak var centerInputField: UITextField!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         usernameValidOutlet.text = "Username has to be at least \(minimalUsernameLength) characters"
         passwordValidOutlet.text = "Password has to be at least \(minimalPasswordLength) characters"
+        
 
         let usernameValid = usernameOutlet.rx.text.orEmpty
             .map {

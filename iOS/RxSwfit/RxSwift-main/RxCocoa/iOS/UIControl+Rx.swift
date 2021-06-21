@@ -12,14 +12,10 @@ import RxSwift
 import UIKit
 
 extension Reactive where Base: UIControl {
-    /// Reactive wrapper for target action pattern.
-    ///
-    /// - parameter controlEvents: Filter for observed event types.
     
     /*
-        从这里我们看出, Create 里面存储的, 是 subscibe 调用的时候, Publisher 应该如何根据 Observer 做参数执行的逻辑.
-        有可能是, 直接 observer.on 这样调用了.
-        也有可能是, 继续将 observer 进行封装, 像这里, 就是将 observer 作为了 UIControl 的点击事件信号的后续节点.
+        controlEvent 表示的是, 发生了该事件.
+        controlProperty 表示的是, 发生了该事件, 通过 get 获取信号里面的值, 通过 set 来处理信号里面的值.
      */
     public func controlEvent(_ controlEvents: UIControl.Event) -> ControlEvent<()> {
         let source: Observable<Void> = Observable.create {
@@ -47,16 +43,12 @@ extension Reactive where Base: UIControl {
         return ControlEvent(events: source)
     }
 
-    /// Creates a `ControlProperty` that is triggered by target/action pattern value updates.
-    ///
-    /// - parameter controlEvents: Events that trigger value update sequence elements.
-    /// - parameter getter: Property value getter.
-    /// - parameter setter: Property value setter.
     public func controlProperty<T>(
-        editingEvents: UIControl.Event,
-        getter: @escaping (Base) -> T,
-        setter: @escaping (Base, T) -> Void
+        editingEvents: UIControl.Event, // event 表示, 这个 UIControl 作为 Publisher 的时候, 什么 Event 会触发信号.
+        getter: @escaping (Base) -> T, // getter 表示, 在 UIControl 触发信号之后, 应该如何获取 Element 的值, 发送到后面的节点.
+        setter: @escaping (Base, T) -> Void // setter 表示, 在作为 Observer 接受到信号之后, 应该执行什么样的操作, 来处理这个信号.
     ) -> ControlProperty<T> {
+        
         // Source 是一个 Publisher, 每次 Control 的 Event 发生之后, 就会发生信号.
         let source: Observable<T> = Observable.create { [weak weakControl = base] observer in
                 guard let control = weakControl else {
@@ -75,23 +67,26 @@ extension Reactive where Base: UIControl {
                     }
                 }
                 
+                // ControlTarget 的生命周期, 会被 Disposables.create 的返回值引用着.
+                // 如果, 使用者没有使用这个值. ControlTarget 就会发生内存泄漏. 因为 ControlTarget 的自己的循环引用不会消失.
                 return Disposables.create(with: controlTarget.dispose)
             }
             .take(until: deallocated)
 
         let bindingObserver = Binder(base, binding: setter)
-
-        return ControlProperty<T>(values: source, valueSink: bindingObserver)
+        return ControlProperty<T>(values: source,
+                                  valueSink: bindingObserver)
     }
 
     /// This is a separate method to better communicate to public consumers that
     /// an `editingEvent` needs to fire for control property to be updated.
     internal func controlPropertyWithDefaultEvents<T>(
-        editingEvents: UIControl.Event = [.allEditingEvents, .valueChanged],
+        editingEvents: UIControl.Event = [.allEditingEvents,
+                                          .valueChanged],
         getter: @escaping (Base) -> T,
         setter: @escaping (Base, T) -> Void
         ) -> ControlProperty<T> {
-        // 返回一个 ControlProperty
+        
         return controlProperty(
             editingEvents: editingEvents,
             getter: getter,

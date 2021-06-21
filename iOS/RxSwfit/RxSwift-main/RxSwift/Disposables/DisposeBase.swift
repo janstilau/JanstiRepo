@@ -6,7 +6,7 @@
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
-/// Base class for all disposables.
+// 这个类, 主要是为了内部的资源管理 Debug
 public class DisposeBase {
     init() {
 #if TRACE_RESOURCES

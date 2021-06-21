@@ -18,7 +18,8 @@ extension Reactive where Base: UITextField {
         value
     }
     
-    /// Reactive wrapper for `text` property.
+    // ControlPropertyWithDefaultEvents 是 UIControl 的方法.
+    // UIControl 封装了事件处理相关的逻辑.
     public var value: ControlProperty<String?> {
         return base.rx.controlPropertyWithDefaultEvents(
             getter: { textField in
