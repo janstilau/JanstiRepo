@@ -15,6 +15,10 @@
  // Read as: Reactive Extension where Base is a SomeType
  extension Reactive where Base: SomeType {
  // 2. Put any specific reactive extension for SomeType here
+ 
+ 这里面, 讲的很明白, 这种 rx.someMethod 的好处.
+ 1. 一个切入点, 之后再这个切入点之后, 才是 rx 相关的扩展.
+ 1. 类型相关的扩展. 根据 Base 的 Type, 进行特定 Type 的扩展.
  }
 
  With this approach we can have more specialized methods and properties using
@@ -56,10 +60,15 @@ public protocol ReactiveCompatible {
     var rx: Reactive<ReactiveBase> { get set }
 }
 
+
+
 extension ReactiveCompatible {
     /// Reactive extensions.
     public static var rx: Reactive<Self>.Type {
         get { Reactive<Self>.self }
+        /*
+            为了可以调用 mutating 方法, 一定要写 rx 的 sest 方法.
+         */
         // this enables using Reactive to "mutate" base type
         // swiftlint:disable:next unused_setter_value
         set { }
