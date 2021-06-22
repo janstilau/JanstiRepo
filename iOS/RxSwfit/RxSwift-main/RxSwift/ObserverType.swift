@@ -6,7 +6,9 @@
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
-/// Supports push-style iteration over an observable sequence.
+/*
+    ObserverType 代表的抽象就是, 它能够处理各种抽象的事件.
+ */
 public protocol ObserverType {
     /// The type of elements in sequence that observer can observe.
     associatedtype Element

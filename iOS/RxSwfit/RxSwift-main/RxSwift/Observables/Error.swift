@@ -14,6 +14,10 @@ extension ObservableType {
 
      - returns: The observable sequence that terminates with specified error.
      */
+    /*
+        ObservableType 的静态方法里面, 生成特殊的对象.
+        ErrorProducer 的 subscribe 方法里面, 将自己收集的 error 当做 error 信号发射出去.
+     */
     public static func error(_ error: Swift.Error) -> Observable<Element> {
         ErrorProducer(error: error)
     }

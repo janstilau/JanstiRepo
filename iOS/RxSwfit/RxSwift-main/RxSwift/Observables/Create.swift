@@ -17,9 +17,13 @@ extension ObservableType {
      - parameter subscribe: Implementation of the resulting observable sequence's `subscribe` method.
      - returns: The observable sequence with the specified implementation for the `subscribe` method.
      */
+    
     /*
-     这个 create 里面的闭包, 可以认为是事件的生成过程.
-     每次 subscribe 的时候, 都会把 observer 传递进来.
+        create 里面, 返回的是一个 Producer. Producer 是不可以 Cancle 的.
+        只有 Producer 调用了 subscribe 之后, 才是返回了 Disposable 对象, 这个对象才能取消序列的生成过程.
+     
+        Producer 仅仅要求了, 他可以调用 subscribe 这个接口.
+        但是, 调用这个接口, 到底是只有一个 Producer, 还是每一次都有一个 Producer, 是不同的 Producer 设计者应该考虑的事情.
      */
     public static func create(_ subscribe: @escaping (AnyObserver<Element>) -> Disposable) -> Observable<Element> {
         // AnonymousObservable 是一个 Producer.
@@ -43,10 +47,6 @@ final private class AnonymousObservableSink<Observer: ObserverType>: Sink<Observ
     }
 
     func on(_ event: Event<Element>) {
-        #if DEBUG
-            self.synchronizationTracker.register(synchronizationErrorMessage: .default)
-            defer { self.synchronizationTracker.unregister() }
-        #endif
         switch event {
         case .next:
             if load(self.isStopped) == 1 {
@@ -66,9 +66,12 @@ final private class AnonymousObservableSink<Observer: ObserverType>: Sink<Observ
     }
 }
 
-// AnonymousObservable, 作为一个 Producer, 仅仅是把事件生成的逻辑进行了存储.
-// 当, AnonymousObservable.subscribe 的时候, 生成了一个 AnonymousObservableSink,
-// 在 sink.run(self), 将存储的事件生成的逻辑调用了一次.
+/*
+    各种 Any 开头的类型, 基本都是存储一个闭包.
+    这个闭包的签名, 就是这个类型的 init 方法接受值, 和根据这个值最终输出的逻辑封装.
+    我们平时定义一个类型, 是将 input->output 的逻辑封装到类里面.
+    而这种 Any 开头的类型, 就是想要自定义这部分逻辑.
+ */
 final private class AnonymousObservable<Element>: Producer<Element> {
     
     typealias SubscribeHandler = (AnyObserver<Element>) -> Disposable
@@ -81,7 +84,6 @@ final private class AnonymousObservable<Element>: Producer<Element> {
 
     override func run<Observer: ObserverType>(_ observer: Observer, cancel: Cancelable) -> (sink: Disposable, subscription: Disposable) where Observer.Element == Element {
         let sink = AnonymousObservableSink(observer: observer, cancel: cancel)
-        // 这里, 主动调用了 run, 而 run, 则是将之前存储的事件生成 callback 调用一遍了.
         let subscription = sink.run(self)
         return (sink: sink, subscription: subscription)
     }

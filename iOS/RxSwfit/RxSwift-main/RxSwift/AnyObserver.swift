@@ -9,6 +9,10 @@
 /// A type-erased `ObserverType`.
 ///
 /// Forwards operations to an arbitrary underlying observer with the same `Element` type, hiding the specifics of the underlying observer type.
+
+/*
+    AnyObserver 的核心, 就是 observer 这个闭包. 也就是如何处理 Event 事件.
+ */
 public struct AnyObserver<Element> : ObserverType {
     /// Anonymous event handler type.
     public typealias EventHandler = (Event<Element>) -> Void
@@ -25,6 +29,7 @@ public struct AnyObserver<Element> : ObserverType {
     /// Construct an instance whose `on(event)` calls `observer.on(event)`
     ///
     /// - parameter observer: Observer that receives sequence events.
+    // 之所以, 可以接受一个 Observer. 是因为在 init 方法里面, 对于 observer 做了抽取.
     public init<Observer: ObserverType>(_ observer: Observer) where Observer.Element == Element {
         self.observer = observer.on
     }
