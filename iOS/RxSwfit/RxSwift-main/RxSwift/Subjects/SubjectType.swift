@@ -1,11 +1,7 @@
-//
-//  SubjectType.swift
-//  RxSwift
-//
-//  Created by Krunoslav Zaher on 3/1/15.
-//  Copyright © 2015 Krunoslav Zaher. All rights reserved.
-//
 
+/*
+    Subject 既可以当做 Publisher, 又可以当做是 Subsriber
+ */
 /// Represents an object that is both an observable sequence as well as an observer.
 public protocol SubjectType : ObservableType {
     /// The type of the observer that represents this subject.

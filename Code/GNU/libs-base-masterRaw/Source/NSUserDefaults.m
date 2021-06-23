@@ -1177,22 +1177,6 @@ newLanguages(NSArray *oldNames)
 - (NSString*) description
 {
     NSMutableString *desc = nil;
-    
-    [_lock lock];
-    NS_DURING
-    {
-        desc = [NSMutableString stringWithFormat: @"%@", [super description]];
-        [desc appendFormat: @" SearchList: %@", _searchList];
-        [desc appendFormat: @" Persistent: %@", _persDomains];
-        [desc appendFormat: @" Temporary: %@", _tempDomains];
-        [_lock unlock];
-    }
-    NS_HANDLER
-    {
-        [_lock unlock];
-        [localException raise];
-    }
-    NS_ENDHANDLER
     return desc;
 }
 

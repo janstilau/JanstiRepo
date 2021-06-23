@@ -31,7 +31,9 @@ public protocol SchedulerType: ImmediateSchedulerType {
     - parameter action: Action to be executed.
     - returns: The disposable object used to cancel the scheduled action (best effort).
     */
-    func scheduleRelative<StateType>(_ state: StateType, dueTime: RxTimeInterval, action: @escaping (StateType) -> Disposable) -> Disposable
+    func scheduleRelative<StateType>(_ state: StateType,
+                                     dueTime: RxTimeInterval,
+                                     action: @escaping (StateType) -> Disposable) -> Disposable
  
     /**
     Schedules a periodic piece of work.
@@ -42,7 +44,10 @@ public protocol SchedulerType: ImmediateSchedulerType {
     - parameter action: Action to be executed.
     - returns: The disposable object used to cancel the scheduled action (best effort).
     */
-    func schedulePeriodic<StateType>(_ state: StateType, startAfter: RxTimeInterval, period: RxTimeInterval, action: @escaping (StateType) -> StateType) -> Disposable
+    func schedulePeriodic<StateType>(_ state: StateType,
+                                     startAfter: RxTimeInterval,
+                                     period: RxTimeInterval,
+                                     action: @escaping (StateType) -> StateType) -> Disposable
 }
 
 extension SchedulerType {

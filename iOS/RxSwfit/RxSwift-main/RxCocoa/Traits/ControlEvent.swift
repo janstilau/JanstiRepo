@@ -15,7 +15,7 @@ public protocol ControlEventType : ObservableType {
     func asControlEvent() -> ControlEvent<Element>
 }
 
-/**
+/*
     A trait for `Observable`/`ObservableType` that represents an event on a UI element.
 
     Properties:

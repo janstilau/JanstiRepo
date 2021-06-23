@@ -22,8 +22,6 @@ extension DispatchQueueConfiguration {
             if cancel.isDisposed {
                 return
             }
-
-
             cancel.setDisposable(action(state))
         }
 

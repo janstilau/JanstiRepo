@@ -96,7 +96,8 @@ public class SerialDispatchQueueScheduler : SchedulerType {
     - parameter action: Action to be executed.
     - returns: The disposable object used to cancel the scheduled action (best effort).
     */
-    public final func schedule<StateType>(_ state: StateType, action: @escaping (StateType) -> Disposable) -> Disposable {
+    public final func schedule<StateType>(_ state: StateType,
+                                          action: @escaping (StateType) -> Disposable) -> Disposable {
         self.scheduleInternal(state, action: action)
     }
 

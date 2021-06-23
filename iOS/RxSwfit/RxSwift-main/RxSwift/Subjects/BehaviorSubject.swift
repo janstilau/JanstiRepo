@@ -15,6 +15,7 @@ public final class BehaviorSubject<Element>
     , ObserverType
     , SynchronizedUnsubscribeType
     , Cancelable {
+    
     public typealias SubjectObserverType = BehaviorSubject<Element>
 
     typealias Observers = AnyObserver<Element>.s
@@ -25,6 +26,8 @@ public final class BehaviorSubject<Element>
         self.lock.performLocked { self.observers.count > 0 }
     }
     
+    
+    // 自带一把锁做线程控制.
     let lock = RecursiveLock()
     
     // state
@@ -32,10 +35,6 @@ public final class BehaviorSubject<Element>
     private var element: Element
     private var observers = Observers()
     private var stoppedEvent: Event<Element>?
-
-    #if DEBUG
-        private let synchronizationTracker = SynchronizationTracker()
-    #endif
 
     /// Indicates whether the subject has been disposed.
     public var isDisposed: Bool {
@@ -47,17 +46,16 @@ public final class BehaviorSubject<Element>
     /// - parameter value: Initial value sent to observers when no other value has been received by the subject yet.
     public init(value: Element) {
         self.element = value
-
-        #if TRACE_RESOURCES
-            _ = Resources.incrementTotal()
-        #endif
     }
     
     /// Gets the current value or throws an error.
     ///
     /// - returns: Latest value.
     public func value() throws -> Element {
-        self.lock.lock(); defer { self.lock.unlock() }
+        self.lock.lock()
+        defer { self.lock.unlock() }
+        
+        
         if self.isDisposed {
             throw RxError.disposed(object: self)
         }
@@ -65,8 +63,7 @@ public final class BehaviorSubject<Element>
         if let error = self.stoppedEvent?.error {
             // intentionally throw exception
             throw error
-        }
-        else {
+        } else {
             return self.element
         }
     }
@@ -75,10 +72,6 @@ public final class BehaviorSubject<Element>
     ///
     /// - parameter event: Event to send to the observers.
     public func on(_ event: Event<Element>) {
-        #if DEBUG
-            self.synchronizationTracker.register(synchronizationErrorMessage: .default)
-            defer { self.synchronizationTracker.unregister() }
-        #endif
         dispatch(self.synchronized_on(event), event)
     }
 
