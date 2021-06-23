@@ -18,6 +18,11 @@ extension ObservableType {
      - parameter scheduler: Scheduler to send elements on. If `nil`, elements are sent immediately on subscription.
      - returns: The observable sequence whose elements are pulled from the given arguments.
      */
+    
+    /*
+        ObservableType 的 of 方法, 是新建一个对象, 这个对象是 Producer.
+        ObservableSequence 所做的仅仅是信息的收集工作, 然后将数据, 传递给真正的 Sink 对象里面, 进行业务的处理.
+     */
     public static func of(_ elements: Element ..., scheduler: ImmediateSchedulerType = CurrentThreadScheduler.instance) -> Observable<Element> {
         ObservableSequence(elements: elements, scheduler: scheduler)
     }
@@ -72,6 +77,12 @@ final private class ObservableSequenceSink<Sequence: Swift.Sequence, Observer: O
     }
 }
 
+/*
+    ObservableSequence 不像是 Empty, Just 那样逻辑简单, 并且, 传递过来的数据, 可能会复用.
+    所以变为了一个 Producer, 将 iter sequence 的逻辑, 转交给了 Sink 对象.
+ */
+
+//
 final private class ObservableSequence<Sequence: Swift.Sequence>: Producer<Sequence.Element> {
     fileprivate let elements: Sequence
     fileprivate let scheduler: ImmediateSchedulerType

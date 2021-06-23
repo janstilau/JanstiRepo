@@ -11,6 +11,8 @@
  Sink 的功能:
  1. 状态控制. 在内部一个 atomic Int, 表示当前自己的资源是否已经释放了
  2. 记录下一个 observer. 这个在自己完成功能的 transfom 之后, 将自己加工好的值, 传递给下一个节点.
+    这里是使用了 forward 的方法. 而不是 subscribe.
+    主要的区别是, 这是一个一对一的关系. Sink 作为 Observer, 接受信号, 完成自己的业务上的加工, 然后转交给后面的 Observer. 
  3. Cancelable 的记录, 自己本身是一个 Disposable, 在外界需要取消的时候, 调用记录的 Cancelable, 完成取消的操作. 释放自己管理的资源.
  */
 class Sink<Observer: ObserverType>: Disposable {
@@ -33,10 +35,6 @@ class Sink<Observer: ObserverType>: Disposable {
 
     // 这个方法, 是将 Sink 中, 已经转化的事件, 传递到记录的原始的 observer 的过程.
     final func forwardOn(_ event: Event<Observer.Element>) {
-        #if DEBUG
-            self.synchronizationTracker.register(synchronizationErrorMessage: .default)
-            defer { self.synchronizationTracker.unregister() }
-        #endif
         if isFlagSet(self.disposed, 1) {
             return
         }

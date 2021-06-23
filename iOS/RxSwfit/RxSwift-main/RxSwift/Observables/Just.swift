@@ -72,6 +72,7 @@ final private class JustScheduled<Element>: Producer<Element> {
     }
 }
 
+// Just Producer 的 subscribe 逻辑就是, 传递一次 Element, 然后就 Complete
 final private class Just<Element>: Producer<Element> {
     private let element: Element
     

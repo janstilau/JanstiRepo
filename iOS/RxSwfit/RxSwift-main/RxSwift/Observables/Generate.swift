@@ -47,7 +47,6 @@ final private class GenerateSink<Sequence, Observer: ObserverType>: Sink<Observe
                 if try self.parent.condition(self.state) {
                     let result = try self.parent.resultSelector(self.state)
                     self.forwardOn(.next(result))
-                    
                     recurse(false)
                 }
                 else {
@@ -63,6 +62,10 @@ final private class GenerateSink<Sequence, Observer: ObserverType>: Sink<Observe
     }
 }
 
+/*
+    数据的收集类.
+    注意 final 的使用, 注意 private 的使用.
+ */
 final private class Generate<Sequence, Element>: Producer<Element> {
     fileprivate let initialState: Sequence
     fileprivate let condition: (Sequence) throws -> Bool

@@ -8,7 +8,7 @@
 
 /*
  一个特殊的类型.
- subscribte 直接就是发送一个 complete 信号给后面的流.
+ Subscribte 直接就是发送一个 complete 信号给后面的流.
  */
 extension ObservableType {
     /**
@@ -25,6 +25,8 @@ extension ObservableType {
 
 final private class EmptyProducer<Element>: Producer<Element> {
     override func subscribe<Observer: ObserverType>(_ observer: Observer) -> Disposable where Observer.Element == Element {
+        // 在添加监听器的时候, 直接调用了监听器的 complete 处理函数.
+        // 返回一个 NoDisposable 对象.
         observer.on(.completed)
         return Disposables.create()
     }
