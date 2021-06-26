@@ -17,8 +17,8 @@
  */
 class Sink<Observer: ObserverType>: Disposable {
     
-    fileprivate let observer: Observer
-    fileprivate let cancel: Cancelable
+    let observer: Observer // 信号处理完, 应该交付的下游.
+    let cancel: Cancelable
     private let disposed = AtomicInt(0)
 
     #if DEBUG
@@ -26,9 +26,6 @@ class Sink<Observer: ObserverType>: Disposable {
     #endif
 
     init(observer: Observer, cancel: Cancelable) {
-#if TRACE_RESOURCES
-        _ = Resources.incrementTotal()
-#endif
         self.observer = observer
         self.cancel = cancel
     }
@@ -53,15 +50,10 @@ class Sink<Observer: ObserverType>: Disposable {
         fetchOr(self.disposed, 1)
         self.cancel.dispose()
     }
-
-    deinit {
-#if TRACE_RESOURCES
-       _ =  Resources.decrementTotal()
-#endif
-    }
 }
 
 // 这个类, 就是 sink 里面存储的原始的 observer, 将原始的 forwarder 暴露出去, 那么 Sink 也就不起作用了.
+
 final class SinkForward<Observer: ObserverType>: ObserverType {
     typealias Element = Observer.Element 
 
@@ -77,7 +69,7 @@ final class SinkForward<Observer: ObserverType>: ObserverType {
             self.forward.observer.on(event)
         case .error, .completed:
             self.forward.observer.on(event)
-            self.forward.cancel.dispose()
+            self.forward.cancel.dispose() // 当接收到 error, complete 之后, 直接调用了 cancle.
         }
     }
 }

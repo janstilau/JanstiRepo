@@ -8,18 +8,17 @@
 
 import RxSwift
 
-/// Protocol that enables extension of `ControlProperty`.
 public protocol ControlPropertyType : ObservableType, ObserverType {
 
-    /// - returns: `ControlProperty` interface
     func asControlProperty() -> ControlProperty<Element>
 }
 
-/**
+/*
     Trait for `Observable`/`ObservableType` that represents property of UI element.
  
     Sequence of values only represents initial control value and user initiated value changes.
     Programmatic value changes won't be reported.
+    Programmatic value changes 是因为, textFiled.text = "Hello World" 这种方式, 直接就跳过了 ControlTarget 的 Event 触发了, 那么也就不会触发后面的信号处理了.
 
     It's properties are:
 
@@ -39,16 +38,21 @@ public protocol ControlPropertyType : ObservableType, ObserverType {
     **In case `values` observable sequence that is being passed into initializer doesn't satisfy all enumerated
     properties, please don't use this trait.**
 */
+/*
+    ControlProperty 本身是对于 UIKit 的各种属性的封装. PropertyType 一般是 UIControl 的属性值类型.
+    例如 UITextFiled.rx.text 就是一个 ControlProperty<String>
+ 
+    本身这个类, 并没有太多的逻辑在里面, 仅仅是存储了 Publisher 和 Subscriber, 然后进行 delegate 而已.
+ */
 public struct ControlProperty<PropertyType> : ControlPropertyType {
     public typealias Element = PropertyType
 
     /*
-        存储的 Publisher, 已经和 UIControl 相关联.
+     ControlProperty 本身可以充当两个角色, 一个是 Publisher, 一个是 Subscriber.
+     Publisher 的实现是交给了 values, 各种 subscribe 调用的时候, 是 values.subscribe.
+     Subscripber 的实现是交给了 valueSink.
      */
     let values: Observable<PropertyType>
-    /*
-        存储的 Observer, 已经和 UIControl 相关联.
-     */
     let valueSink: AnyObserver<PropertyType>
 
     /// Initializes control property with a observable sequence that represents property values and observer that enables
@@ -68,6 +72,7 @@ public struct ControlProperty<PropertyType> : ControlPropertyType {
     ///
     /// - parameter observer: Observer to subscribe to property values.
     /// - returns: Disposable object that can be used to unsubscribe the observer from receiving control property values.
+    // Subscribe 返回的 disposable, 是为了取消订阅这件事.
     public func subscribe<Observer: ObserverType>(_ observer: Observer) -> Disposable where Observer.Element == Element {
         self.values.subscribe(observer)
     }
@@ -101,7 +106,7 @@ public struct ControlProperty<PropertyType> : ControlPropertyType {
     /// - In case next element is received, it is being set to control value.
     /// - In case error is received, DEBUG buids raise fatal error, RELEASE builds log event to standard output.
     /// - In case sequence completes, nothing happens.
-    // 这里, 是将 UITextFiled.rx.test 当做 Observer 使用的逻辑
+    // 直接把信号的处理逻辑, 交给了 valueSink 进行处理.
     public func on(_ event: Event<Element>) {
         switch event {
         case .error(let error):
@@ -114,12 +119,18 @@ public struct ControlProperty<PropertyType> : ControlPropertyType {
     }
 }
 
+/*
+    orEmpty: 这件事, 主要是将 String 变为 ""
+    作为系统来说, text = nil 表示没有输入值, "" 表示输入过值, 但是全部删除了.
+    这在编码的角度来看, 经常是完全一致的. 所以, 将 Publisher 发出的信号从 String? 变为 String 是非常有效的一个做法.
+ */
+
+// 扩展是给 ControlPropertyType 添加功能, 而不是 ControlProperty.
 extension ControlPropertyType where Element == String? {
     /// Transforms control property of type `String?` into control property of type `String`.
     public var orEmpty: ControlProperty<String> {
         
         let original: ControlProperty<String?> = self.asControlProperty()
-
         let values: Observable<String> = original.values.map { $0 ?? "" }
         let valueSink: AnyObserver<String> = original.valueSink.mapObserver { $0 }
         return ControlProperty<String>(values: values, valueSink: valueSink)

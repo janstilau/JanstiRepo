@@ -131,6 +131,9 @@ extension Reactive where Base: AnyObject {
     
     - returns: Observable sequence of object deallocated events.
     */
+    /*
+        创建一个 Publisher, 这其实是 RAII 的一种体现. 在从属的对象 deinit 的时候, 会调用 DeallocObservable 的 deinit 方法, 在那里, 会发射 Void, Complete 两个信号出来.
+     */
     public var deallocated: Observable<Void> {
         return self.synchronized {
             if let deallocObservable = objc_getAssociatedObject(self.base, &deallocatedSubjectContext) as? DeallocObservable {
@@ -138,8 +141,8 @@ extension Reactive where Base: AnyObject {
             }
 
             let deallocObservable = DeallocObservable()
-
             objc_setAssociatedObject(self.base, &deallocatedSubjectContext, deallocObservable, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            
             return deallocObservable.subject
         }
     }
@@ -334,7 +337,7 @@ extension Reactive where Base: AnyObject {
 
 #endif
 
-
+// 一个特殊的类型, 使用 RAII 技术, 触发信号.
 private final class DeallocObservable {
     let subject = ReplaySubject<Void>.create(bufferSize:1)
 
@@ -541,6 +544,8 @@ private let deallocSelector = NSSelectorFromString("dealloc")
 
 extension Reactive where Base: AnyObject {
     func synchronized<T>( _ action: () -> T) -> T {
+        // objc_sync_enter, objc_sync_exit 是一个类似于 @synchronized 的功能.
+        //
         objc_sync_enter(self.base)
         let result = action()
         objc_sync_exit(self.base)

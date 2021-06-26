@@ -20,7 +20,6 @@ import RxSwift
     typealias Control = Cocoa.NSControl
 #endif
 
-// This should be only used from `MainScheduler`
 final class ControlTarget: RxTarget {
     
     typealias Callback = (Control) -> Void
@@ -32,7 +31,6 @@ final class ControlTarget: RxTarget {
     var callback: Callback? // 监听到事件之后的回调
     
     init(control: Control, controlEvents: UIControl.Event, callback: @escaping Callback) {
-        MainScheduler.ensureRunningOnMainThread()
 
         self.control = control
         self.controlEvents = controlEvents
@@ -43,7 +41,6 @@ final class ControlTarget: RxTarget {
         control.addTarget(self, action: selector, for: controlEvents)
     }
 
-    // 这个封装最大意义就在这里. 一个中间层, 将 Control 的 UI 事件, 通过这个中间层, 链接到 callback 里面. 而这个中间层, 是引用循环保持内存一直存在的.
     @objc func eventHandler(_ sender: Control!) {
         if let callback = self.callback,
            let control = self.control {

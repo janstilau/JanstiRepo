@@ -15,6 +15,7 @@ protocol CombineLatestProtocol: AnyObject {
 class CombineLatestSink<Observer: ObserverType>
     : Sink<Observer>
     , CombineLatestProtocol {
+    
     typealias Element = Observer.Element 
    
     let lock = RecursiveLock()

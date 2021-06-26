@@ -9,6 +9,11 @@
 /// Represents an Action-based disposable.
 ///
 /// When dispose method is called, disposal action will be dereferenced.
+
+/*
+    相比较于 Any 存储一个 Block 来泛化操作之外, Disposable 还有一个需求, 就是每个 Block 其实只能被调用一次.
+    所以在里面, 有一个 disposed 的 AtomicInt 存在, 作为只调用一次的判断.
+ */
 private final class AnonymousDisposable : DisposeBase, Cancelable {
     
     public typealias DisposeAction = () -> Void
@@ -38,11 +43,12 @@ private final class AnonymousDisposable : DisposeBase, Cancelable {
     /// Calls the disposal action if and only if the current instance hasn't been disposed yet.
     ///
     /// After invoking disposal action, disposal action will be dereferenced.
+    // fetchOr 本身会修改自己的值, 并且返回原来的值.
+    // 这里, 保证了 self.disposeAction 只会被调用一次.
     fileprivate func dispose() {
         if fetchOr(self.disposed, 1) == 0 {
             if let action = self.disposeAction {
                 self.disposeAction = nil
-                // 释放的操作, 保证了只会执行一次.
                 action()
             }
         }
@@ -50,10 +56,6 @@ private final class AnonymousDisposable : DisposeBase, Cancelable {
 }
 
 extension Disposables {
-
-    /// Constructs a new disposable with the given action used for disposal.
-    ///
-    /// - parameter dispose: Disposal action which will be run upon calling `dispose`.
     public static func create(with dispose: @escaping () -> Void) -> Cancelable {
         AnonymousDisposable(disposeAction: dispose)
     }

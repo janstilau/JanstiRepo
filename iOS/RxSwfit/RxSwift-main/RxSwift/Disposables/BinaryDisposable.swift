@@ -34,6 +34,8 @@ private final class BinaryDisposable : DisposeBase, Cancelable {
     /// Calls the disposal action if and only if the current instance hasn't been disposed yet.
     ///
     /// After invoking disposal action, disposal action will be dereferenced.
+    
+    // 各种 dispose 回调, 都保证了只调用一次. 
     func dispose() {
         if fetchOr(self.disposed, 1) == 0 {
             self.disposable1?.dispose()

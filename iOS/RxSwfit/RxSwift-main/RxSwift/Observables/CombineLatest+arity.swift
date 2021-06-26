@@ -78,6 +78,7 @@ final class CombineLatestSink2_<E1, E2, Observer: ObserverType> : CombineLatestS
                                               index: 0,
                                               setLatestValue: { (e: E1) -> Void in self.latestElement1 = e },
                                               this: subscription1)
+        
         let observer2 = CombineLatestObserver(lock: self.lock, parent: self, index: 1, setLatestValue: { (e: E2) -> Void in self.latestElement2 = e }, this: subscription2)
 
          subscription1.setDisposable(self.parent.source1.subscribe(observer1))
@@ -95,10 +96,11 @@ final class CombineLatestSink2_<E1, E2, Observer: ObserverType> : CombineLatestS
 }
 
 /*
- 专门的一个类, 来应对两个参数的 Combine 的效果.
+    专门的一个类, 来应对两个参数的 Combine 的效果.
  */
 
 final class CombineLatest2<E1, E2, Result> : Producer<Result> {
+    
     typealias ResultSelector = (E1, E2) throws -> Result
 
     let source1: Observable<E1>

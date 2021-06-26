@@ -10,6 +10,7 @@
     Binder 本身是一个 Observer, 在信号来临之后, 会调用存储的闭包, 来处理信号.
  */
 public struct Binder<Value>: ObserverType {
+    
     public typealias Element = Value
     
     private let binding: (Event<Value>) -> Void

@@ -11,6 +11,10 @@ import Foundation
 import RxSwift
 
 // RxTarget 最最主要的作用, 就是循环引用自己, 然后在外界要有一个明确的时间点, 调用这个对象的切断循环引用的方法.
+/*
+    自身的循环引用的只有在 init 方法里面, 和 dispose 方法里面进行改变了.
+    
+ */
 class RxTarget : NSObject
                , Disposable {
     
@@ -18,18 +22,10 @@ class RxTarget : NSObject
     
     override init() {
         super.init()
-        // 在这里, 特意进行一次引用循环. 这样, 如果不进行 dispose 的调用, 就会发生内存泄漏了.
         self.retainSelf = self
     }
     
-    // 在 dispose 里面, 进行引用循环的打破
     func dispose() {
         self.retainSelf = nil
     }
-
-#if TRACE_RESOURCES
-    deinit {
-        _ = Resources.decrementTotal()
-    }
-#endif
 }

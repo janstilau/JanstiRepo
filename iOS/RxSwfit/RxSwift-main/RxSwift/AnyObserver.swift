@@ -29,7 +29,6 @@ public struct AnyObserver<Element> : ObserverType {
     /// Construct an instance whose `on(event)` calls `observer.on(event)`
     ///
     /// - parameter observer: Observer that receives sequence events.
-    // 之所以, 可以接受一个 Observer. 是因为在 init 方法里面, 对于 observer 做了抽取.
     public init<Observer: ObserverType>(_ observer: Observer) where Observer.Element == Element {
         self.observer = observer.on
     }

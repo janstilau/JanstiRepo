@@ -52,6 +52,7 @@ public class CurrentThreadScheduler : ImmediateSchedulerType {
         return key.pointee
     }()
 
+    // 一个特殊的值, 作为 pthread_setspecific 的 value 存在.
     private static var scheduleInProgressSentinel: UnsafeRawPointer = { () -> UnsafeRawPointer in
         return UnsafeRawPointer(UnsafeMutablePointer<Int>.allocate(capacity: 1))
     }()
@@ -71,7 +72,8 @@ public class CurrentThreadScheduler : ImmediateSchedulerType {
             return pthread_getspecific(CurrentThreadScheduler.isScheduleRequiredKey) == nil
         }
         set(isScheduleRequired) {
-            if pthread_setspecific(CurrentThreadScheduler.isScheduleRequiredKey, isScheduleRequired ? nil : scheduleInProgressSentinel) != 0 {
+            if pthread_setspecific(CurrentThreadScheduler.isScheduleRequiredKey,
+                                   isScheduleRequired ? nil : scheduleInProgressSentinel) != 0 {
                 rxFatalError("pthread_setspecific failed")
             }
         }

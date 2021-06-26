@@ -26,9 +26,6 @@ extension Reactive where Base: UITextField {
                 textField.text
             },
             setter: { textField, value in
-                // This check is important because setting text value always clears control state
-                // including marked text selection which is imporant for proper input 
-                // when IME input method is used.
                 if textField.text != value {
                     textField.text = value
                 }
@@ -43,9 +40,6 @@ extension Reactive where Base: UITextField {
                 textField.attributedText
             },
             setter: { textField, value in
-                // This check is important because setting text value always clears control state
-                // including marked text selection which is imporant for proper input
-                // when IME input method is used.
                 if textField.attributedText != value {
                     textField.attributedText = value
                 }

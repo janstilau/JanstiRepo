@@ -6,9 +6,15 @@
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
+
+/*
+    最常见的一个 Operator, 将信号的 Element 类型, 转变为 Result 类型.
+    Element 是当前的 Publisher 信号中的元素类型, Result 是 Map 的结果类型.
+    在实际使用的时候, Result 直接根据闭包里面的返回值类型推导出来.
+ */
 extension ObservableType {
 
-    /**
+    /*
      Projects each element of an observable sequence into a new form.
 
      - seealso: [map operator on reactivex.io](http://reactivex.io/documentation/operators/map.html)
@@ -36,14 +42,19 @@ final private class MapSink<SourceType, Observer: ObserverType>: Sink<Observer>,
         super.init(observer: observer, cancel: cancel)
     }
 
+    /*
+        Map Sink 的责任, 就是当做 Observer, 在接受到信号之后, 将数据通过 Map 进行处理之后, 直接交给下游.
+        如果中途发生了意外, 调用 dispose.
+     
+        所有的 Sink, 在 complete, error, 都主动调用了 dispose, 这也就是为什么只要接受了这两种信号, 资源就会被回收的原因了.
+     */
     func on(_ event: Event<SourceType>) {
         switch event {
         case .next(let element):
             do {
                 let mappedElement = try self.transform(element)
                 self.forwardOn(.next(mappedElement))
-            }
-            catch let e {
+            } catch let e {
                 self.forwardOn(.error(e))
                 self.dispose()
             }
@@ -58,11 +69,12 @@ final private class MapSink<SourceType, Observer: ObserverType>: Sink<Observer>,
 }
 
 final private class Map<SourceType, ResultType>: Producer<ResultType> {
+    
     typealias Transform = (SourceType) throws -> ResultType
 
-    private let source: Observable<SourceType>
+    private let source: Observable<SourceType> // 信息收集, 原有的 Publisher
 
-    private let transform: Transform
+    private let transform: Transform // 信息收集, Map 的 Transform 到底是什么逻辑.
 
     init(source: Observable<SourceType>, transform: @escaping Transform) {
         self.source = source

@@ -25,7 +25,7 @@ extension ObservableType {
         }
     }
 
-    /**
+    /*
      Creates new subscription and sends elements to observer(s).
      In this form, it's equivalent to the `subscribe` method, but it better conveys intent, and enables
      writing more consistent binding code.

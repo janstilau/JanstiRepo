@@ -138,7 +138,8 @@ extension ObservableType {
 
      - returns: An observable sequence that contains the elements of a sequence produced by multicasting the source sequence.
      */
-    public func share(replay: Int = 0, scope: SubjectLifetimeScope = .whileConnected)
+    public func share(replay: Int = 0,
+                      scope: SubjectLifetimeScope = .whileConnected)
         -> Observable<Element> {
         switch scope {
         case .forever:
@@ -159,6 +160,7 @@ extension ObservableType {
 private final class ShareReplay1WhileConnectedConnection<Element>
     : ObserverType
     , SynchronizedUnsubscribeType {
+    
     typealias Observers = AnyObserver<Element>.s
     typealias DisposeKey = Observers.KeyType
 
@@ -206,13 +208,13 @@ private final class ShareReplay1WhileConnectedConnection<Element>
     }
 
     final func synchronized_subscribe<Observer: ObserverType>(_ observer: Observer) -> Disposable where Observer.Element == Element {
+        
         self.lock.performLocked {
+            // 当新的 Observer 到来的时候, 会将存储的 Element 发送给新到来的 Observer.
             if let element = self.element {
                 observer.on(.next(element))
             }
-
             let disposeKey = self.observers.insert(observer.on)
-
             return SubscriptionDisposable(owner: self, key: disposeKey)
         }
     }
@@ -245,15 +247,11 @@ private final class ShareReplay1WhileConnectedConnection<Element>
 
         return false
     }
-
-    #if TRACE_RESOURCES
-        deinit {
-            _ = Resources.decrementTotal()
-        }
-    #endif
 }
 
-// optimized version of share replay for most common case
+/*
+    这个类的逻辑, 仅仅是 Connection
+ */
 final private class ShareReplay1WhileConnected<Element>
     : Observable<Element> {
 
@@ -308,6 +306,7 @@ final private class ShareReplay1WhileConnected<Element>
 private final class ShareWhileConnectedConnection<Element>
     : ObserverType
     , SynchronizedUnsubscribeType {
+    
     typealias Observers = AnyObserver<Element>.s
     typealias DisposeKey = Observers.KeyType
 
@@ -325,10 +324,6 @@ private final class ShareWhileConnectedConnection<Element>
     init(parent: Parent, lock: RecursiveLock) {
         self.parent = parent
         self.lock = lock
-
-        #if TRACE_RESOURCES
-            _ = Resources.incrementTotal()
-        #endif
     }
 
     // 取得所有的注册 Observer, 向他们统一的发送消息.
@@ -356,10 +351,10 @@ private final class ShareWhileConnectedConnection<Element>
         self.subscription.setDisposable(self.parent.source.subscribe(self))
     }
 
+    // 向 Connection 里面, 添加 Observer, 就是将 Observer 添加到存储的数据结构里面.
     final func synchronized_subscribe<Observer: ObserverType>(_ observer: Observer) -> Disposable where Observer.Element == Element {
         self.lock.performLocked {
             let disposeKey = self.observers.insert(observer.on)
-
             return SubscriptionDisposable(owner: self, key: disposeKey)
         }
     }
@@ -400,7 +395,10 @@ private final class ShareWhileConnectedConnection<Element>
     #endif
 }
 
-// optimized version of share replay for most common case
+/*
+    所谓的 Share, 其实就是找了一个引用对象, 去管理所有的注册.
+    当收到信号之后, 调用所有的注册的 On 方法. 这里就是 Connection 这个类.
+ */
 final private class ShareWhileConnected<Element>
     : Observable<Element> {
 
@@ -420,7 +418,6 @@ final private class ShareWhileConnected<Element>
         self.lock.lock()
         let connection = self.synchronized_subscribe(observer)
         let count = connection.observers.count
-
         let disposable = connection.synchronized_subscribe(observer)
         self.lock.unlock()
 
@@ -437,8 +434,7 @@ final private class ShareWhileConnected<Element>
 
         if let existingConnection = self.connection {
             connection = existingConnection
-        }
-        else {
+        } else {
             connection = ShareWhileConnectedConnection<Element>(
                 parent: self,
                 lock: self.lock)

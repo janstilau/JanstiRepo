@@ -38,7 +38,6 @@ final class AddRef<Element> : Producer<Element> {
         let releaseDisposable = self.refCount.retain()
         let sink = AddRefSink(observer: observer, cancel: cancel)
         let subscription = Disposables.create(releaseDisposable, self.source.subscribe(sink))
-
         return (sink: sink, subscription: subscription)
     }
 }

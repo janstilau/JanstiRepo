@@ -7,13 +7,18 @@
 //
 
 extension ObservableType {
-    /**
+    /*
      Returns the elements from the source observable sequence until the other observable sequence produces an element.
 
      - seealso: [takeUntil operator on reactivex.io](http://reactivex.io/documentation/operators/takeuntil.html)
 
      - parameter other: Observable sequence that terminates propagation of elements of the source sequence.
      - returns: An observable sequence containing the elements of the source sequence up to the point the other sequence interrupted further propagation.
+     */
+    
+    /*
+        当后面的 Source 发射了一个信号之后, 就认为是 Complete 了.
+        一般来说, 后面的 Other 会在特定的场景发射信号.
      */
     public func take<Source: ObservableType>(until other: Source)
         -> Observable<Element> {
@@ -111,6 +116,7 @@ final private class TakeUntilSinkOther<Other, Observer: ObserverType>
     : ObserverType
     , LockOwnerType
     , SynchronizedOnType {
+    
     typealias Parent = TakeUntilSink<Other, Observer>
     typealias Element = Other
     
@@ -124,15 +130,13 @@ final private class TakeUntilSinkOther<Other, Observer: ObserverType>
     
     init(parent: Parent) {
         self.parent = parent
-#if TRACE_RESOURCES
-        _ = Resources.incrementTotal()
-#endif
     }
     
     func on(_ event: Event<Element>) {
         self.synchronizedOn(event)
     }
 
+    // 当监听到信号之后, 模拟信号发送, 调用 parent 的 dispose 方法.
     func synchronized_on(_ event: Event<Element>) {
         switch event {
         case .next:
@@ -153,14 +157,18 @@ final private class TakeUntilSinkOther<Other, Observer: ObserverType>
 #endif
 }
 
+
 final private class TakeUntilSink<Other, Observer: ObserverType>
     : Sink<Observer>
     , LockOwnerType
     , ObserverType
     , SynchronizedOnType {
+    
     typealias Element = Observer.Element 
     typealias Parent = TakeUntil<Element, Other>
     
+    // 这里其实不太明白, 为什么要使用 Parent, 而不是把所有的数据都传递过来.
+    // 不过, 这种传递之后, 处理管道会有 Parent 的引用, 多个管道通用了一份数据. 如果需要共享, 那么这种实现方式, 可以达到目的.
     private let parent: Parent
  
     let lock = RecursiveLock()
@@ -192,12 +200,17 @@ final private class TakeUntilSink<Other, Observer: ObserverType>
         let otherObserver = TakeUntilSinkOther(parent: self)
         let otherSubscription = self.parent.other.subscribe(otherObserver)
         otherObserver.subscription.setDisposable(otherSubscription)
+        
         let sourceSubscription = self.parent.source.subscribe(self)
         
         return Disposables.create(sourceSubscription, otherObserver.subscription)
     }
 }
 
+/*
+    Private 因为这个类, 根本就不会暴露出去.
+    仅仅是 Operator 的内部实现存在.
+ */
 final private class TakeUntil<Element, Other>: Producer<Element> {
     
     fileprivate let source: Observable<Element>
@@ -229,14 +242,17 @@ final private class TakeUntilPredicateSink<Observer: ObserverType>
         super.init(observer: observer, cancel: cancel)
     }
 
+    // 当接收到信号之后
     func on(_ event: Event<Element>) {
         switch event {
         case .next(let value):
+            // 条件没达成, 直接返回.
             if !self.running {
                 return
             }
 
             do {
+                // 每次都用 predicate 进行校验, 条件达成才会 forwardOn.
                 self.running = try !self.parent.predicate(value)
             } catch let e {
                 self.forwardOn(.error(e))
@@ -250,7 +266,8 @@ final private class TakeUntilPredicateSink<Observer: ObserverType>
                 if self.parent.behavior == .inclusive {
                     self.forwardOn(.next(value))
                 }
-
+                
+                // 如果条件不能达成, 直接 complete
                 self.forwardOn(.completed)
                 self.dispose()
             }

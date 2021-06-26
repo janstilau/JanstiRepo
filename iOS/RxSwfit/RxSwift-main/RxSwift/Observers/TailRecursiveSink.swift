@@ -139,6 +139,7 @@ class TailRecursiveSink<Sequence: Swift.Sequence, Observer: ObserverType>
         self.generators.removeAll(keepingCapacity: false)
     }
 
+    // Sink 也实现了 dispose, 是因为 Sink 的实现里面, 可能实现了特殊的逻辑, 需要调用 dispose 显式地进行相关资源的释放.
     override func dispose() {
         super.dispose()
         
