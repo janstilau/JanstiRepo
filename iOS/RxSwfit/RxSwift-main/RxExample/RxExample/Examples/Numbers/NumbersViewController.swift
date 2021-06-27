@@ -37,6 +37,7 @@ class NumbersViewController: ViewController {
             .bind(to: result.rx.text) // Bind 就是将 Publisher 的信号, 发送给 Observer, 其实就是 Subscribe
             .disposed(by: disposeBag)
         
+        
         number1.rx.text.orEmpty.subscribe { event in
             print("1 + \(event) ")
         }
@@ -82,6 +83,9 @@ class NumbersViewController: ViewController {
         print(leftAction)
         print(rightAction)
         print(leftAction == rightAction)
+        
+        
+        
     }
     
     @objc func btnDidCliced(_ sender: NSObject) {

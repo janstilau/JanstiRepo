@@ -79,7 +79,7 @@ class TailRecursiveSink<Sequence: Swift.Sequence, Observer: ObserverType>
                 return
             }
 
-            self.generators.removeLast()
+            self.generators.removeLast() // 每次注册进去的, 都会删除.
             
             var e = g
 
@@ -109,17 +109,12 @@ class TailRecursiveSink<Sequence: Swift.Sequence, Observer: ObserverType>
 
             if let nextGenerator = nextGenerator {
                 self.generators.append(nextGenerator)
-                #if DEBUG || TRACE_RESOURCES
-                    if maxTailRecursiveSinkStackSize < self.generators.count {
-                        maxTailRecursiveSinkStackSize = self.generators.count
-                    }
-                #endif
-            }
-            else {
+            } else {
                 next = nextCandidate
             }
         } while next == nil
 
+        // 当, 没有下一个 Publisher 的时候, 就会真正的传递 Complete 信号, 给下游节点.
         guard let existingNext = next else {
             self.done()
             return
@@ -127,6 +122,8 @@ class TailRecursiveSink<Sequence: Swift.Sequence, Observer: ObserverType>
 
         let disposable = SingleAssignmentDisposable()
         self.subscription.disposable = disposable
+        // 在这里, 才完成了 Source 的事件注册.
+        // 也就是, 各种 Publisher 并不是一起进行的注册, 只有前面的 Complete 之后, 才会注册后面的一个 Publisher.
         disposable.setDisposable(self.subscribeToNext(existingNext))
     }
 

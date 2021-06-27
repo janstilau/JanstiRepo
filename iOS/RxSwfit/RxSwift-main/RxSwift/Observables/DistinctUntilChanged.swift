@@ -96,6 +96,7 @@ final private class DistinctUntilChangedSink<Observer: ObserverType, Key>: Sink<
                     areEqual = try self.parent.comparer(currentKey, key)
                 }
                 
+                // 如果, 认为是相等的, 那么就不进行 forward 操作.
                 if areEqual {
                     return
                 }

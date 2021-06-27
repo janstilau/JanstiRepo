@@ -9,6 +9,11 @@
 
 // MARK: forEach
 
+/*
+    这个函数, 就是将 Event 事件, 转交给 Bag 里面的所有存储的 Observer.
+    Bag 具体的数据结构设计, 没有深究.
+ */
+
 @inline(__always)
 func dispatch<Element>(_ bag: Bag<(Event<Element>) -> Void>, _ event: Event<Element>) {
     bag._value0?(event)

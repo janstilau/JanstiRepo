@@ -15,6 +15,7 @@ public final class PublishSubject<Element>
     , Cancelable
     , ObserverType
     , SynchronizedUnsubscribeType {
+    
     public typealias SubjectObserverType = PublishSubject<Element>
 
     typealias Observers = AnyObserver<Element>.s

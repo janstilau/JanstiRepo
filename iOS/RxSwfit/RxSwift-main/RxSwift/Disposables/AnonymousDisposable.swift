@@ -18,6 +18,10 @@ private final class AnonymousDisposable : DisposeBase, Cancelable {
     
     public typealias DisposeAction = () -> Void
 
+    // Dispose 可能会被多次调用的, 比如添加到一个 CompositeDisposable 中.
+    // Schedule 里面, 定时器触发真正的 Action, CompositeDisposable 里面添加了 timer 的 disposable, Action 的 disposable.
+    // 然后将 CompositeDisposable 返回. 外界调用 CompositeDisposable 的 dispose, 会触发里面的所有 disposable.
+    // timer 触发的时候, 本身就自己触发了 dispose 方法了, 所以, 内部记录下自己已经触发的状态, 并且在触发之后, 主动释放 disposeAction. 这样, 就算以后再次被触发, 也不会有实际的操作, 不会有资源的泄漏.
     private let disposed = AtomicInt(0)
     private var disposeAction: DisposeAction?
 

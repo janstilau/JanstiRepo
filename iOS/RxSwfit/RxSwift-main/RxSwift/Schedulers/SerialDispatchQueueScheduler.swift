@@ -35,6 +35,7 @@ public class SerialDispatchQueueScheduler : SchedulerType {
         Date()
     }
 
+    // 所有的操作, 都是通过 DispatchQueueConfiguration 进行的调度.
     let configuration: DispatchQueueConfiguration
     
     /**

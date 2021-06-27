@@ -79,6 +79,11 @@ extension ObservableType {
     }
 }
 
+
+/*
+    连接两个 Publisher, 按照顺序, 处理里面的信号.
+ */
+
 final private class ConcatSink<Sequence: Swift.Sequence, Observer: ObserverType>
     : TailRecursiveSink<Sequence, Observer>
     , ObserverType where Sequence.Element: ObservableConvertibleType, Sequence.Element.Element == Observer.Element {
@@ -94,6 +99,7 @@ final private class ConcatSink<Sequence: Swift.Sequence, Observer: ObserverType>
             self.forwardOn(event)
         case .error:
             self.forwardOn(event)
+            // 只要一个发生了错误, 就调用 dispose 方法.
             self.dispose()
         case .completed:
             self.schedule(.moveNext)

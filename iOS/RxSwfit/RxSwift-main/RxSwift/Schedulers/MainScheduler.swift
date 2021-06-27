@@ -56,6 +56,7 @@ public final class MainScheduler : SerialDispatchQueueScheduler {
         #endif
     }
 
+    // Main Queue 直接接管了 scheduleInternal 的实现, 没有使用到 Configuaration.
     override func scheduleInternal<StateType>(_ state: StateType, action: @escaping (StateType) -> Disposable) -> Disposable {
         
         let previousNumberEnqueued = increment(self.numberEnqueued)

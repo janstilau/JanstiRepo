@@ -18,7 +18,9 @@ extension ObservableType {
      - parameter selector: A transform function to apply to each element.
      - returns: An observable sequence whose elements are the result of invoking the one-to-many transform function on each element of the input sequence.
      */
+    
     // selector 是将一个事件数据, 转化成为一个序列.
+    
     public func flatMap<Source: ObservableConvertibleType>(_ selector: @escaping (Element) throws -> Source)
         -> Observable<Source.Element> {
             return FlatMap(source: self.asObservable(), selector: selector)
@@ -263,8 +265,7 @@ private class MergeLimitedSink<SourceElement, SourceSequence: ObservableConverti
             if self.activeCount < self.maxConcurrent {
                 self.activeCount += 1
                 subscribe = true
-            }
-            else {
+            } else {
                 do {
                     let value = try self.performMap(element)
                     self.queue.enqueue(value)
@@ -341,9 +342,12 @@ private final class MergeBasicSink<Source: ObservableConvertibleType, Observer: 
 
 // MARK: flatMap
 
+// 真正实现异步操作串联的类.
 private final class FlatMapSink<SourceElement,
                                 SourceSequence: ObservableConvertibleType,
-                                Observer: ObserverType> : MergeSink<SourceElement, SourceSequence, Observer> where Observer.Element == SourceSequence.Element {
+                                Observer: ObserverType> :
+    MergeSink<SourceElement, SourceSequence, Observer> where Observer.Element == SourceSequence.Element {
+    
     typealias Selector = (SourceElement) throws -> SourceSequence
 
     private let selector: Selector
@@ -379,7 +383,8 @@ private final class FlatMapFirstSink<SourceElement, SourceSequence: ObservableCo
     }
 }
 
-private final class MergeSinkIter<SourceElement, SourceSequence: ObservableConvertibleType, Observer: ObserverType> : ObserverType where Observer.Element == SourceSequence.Element {
+private final class MergeSinkIter<SourceElement, SourceSequence: ObservableConvertibleType, Observer: ObserverType> :
+    ObserverType where Observer.Element == SourceSequence.Element {
     typealias Parent = MergeSink<SourceElement, SourceSequence, Observer>
     typealias DisposeKey = CompositeDisposable.DisposeKey
     typealias Element = Observer.Element
@@ -412,8 +417,7 @@ private final class MergeSinkIter<SourceElement, SourceSequence: ObservableConve
 
 
 /*
- 这个类, 是当父类使用的. 没有直接生成对象使用.
- Flat Map 的实现, 和这个基本没有差别.
+    这个之所以叫做是 Merge, 是因为它实现的是两个异步操作串联.
  */
 private class MergeSink<SourceElement, SourceSequence: ObservableConvertibleType, Observer: ObserverType>
     : Sink<Observer>
@@ -465,10 +469,11 @@ private class MergeSink<SourceElement, SourceSequence: ObservableConvertibleType
     }
     
     /*
-     每次, 当 FlatMap 得到新的值之后, 他并不将 element 进行操作变化, 转交到后面的节点.
-     而是创建一个新的 Publisher.
-     新的 Publisher 发送新的信号的时候, 还是回到了 FlatMap, 因为 FlatMap 里面记录了真正的 subScriber 的位置. 新的 Publisher 的信号, 还是回归到了原始的 Sublisher, 而不是每一个新创建的 Publisher 都会连接到原有的 subScriber 之上.
-     所以, 实际上, FlatMap 还是在整个的事件流转链条里面的.
+        每次, 当 FlatMap 得到新的值之后, 他并不将 element 进行操作变化, 而是创建一个新的 Publisher.
+        然后由一个 MergeSinkIter 来接受新的 Publisher 的信号.
+        MergeSinkIter 的 On 操作, 是将数据传回到 FlatMapSink 中, 使用 Forward 交给由  FlatMapSink 记录的后续 Subscriber.
+        在其他的 Sink 里面,  on 中做完本 Sink 的业务逻辑后, 直接调用 forward.
+        而在 FlatMap 里面, 则是由 MergeSinkIter 触发 Forward.
      */
     func on(_ event: Event<SourceElement>) {
         switch event {
@@ -536,6 +541,17 @@ private class MergeSink<SourceElement, SourceSequence: ObservableConvertibleType
 
 // MARK: Producers
 
+/*
+    这在 Promise 那个框架里面, 用的会比较多一点.
+    Firstly {
+        一个异步操作.
+    }.then {
+        一个异步操作.
+    }
+    
+    到了这里, 就是一个信号触发之后, 要产生另外一个事件序列, 由这个产生的事件序列, 来触发后面的操作.
+ 
+ */
 final private class FlatMap<SourceElement,
                             SourceSequence: ObservableConvertibleType>: Producer<SourceSequence.Element> {
     typealias Selector = (SourceElement) throws -> SourceSequence

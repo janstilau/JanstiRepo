@@ -11,11 +11,18 @@ import Foundation
 
 struct DispatchQueueConfiguration {
     let queue: DispatchQueue
+    // leeway 余地, 偏航.
     let leeway: DispatchTimeInterval
 }
 
+/*
+    schedule 这个方法, 主要就是为了 Action 的使用的. Action 返回一个 Disposable. 但是 Action 的调用, 要从原有的 Queue, 变为 Configuration 里面存储的 Queue.
+    如果, 任务执行时, 已经被 cancle 了, Action 也就不执行了.
+    action 执行完之后返回的 Disposable, 存储到 cancel 的内部, 这样外界调用 disposable, 里面的也能够被调用了
+ */
 extension DispatchQueueConfiguration {
-    func schedule<StateType>(_ state: StateType, action: @escaping (StateType) -> Disposable) -> Disposable {
+    func schedule<StateType>(_ state: StateType,
+                             action: @escaping (StateType) -> Disposable) -> Disposable {
         let cancel = SingleAssignmentDisposable()
 
         self.queue.async {
@@ -28,7 +35,9 @@ extension DispatchQueueConfiguration {
         return cancel
     }
 
-    func scheduleRelative<StateType>(_ state: StateType, dueTime: RxTimeInterval, action: @escaping (StateType) -> Disposable) -> Disposable {
+    func scheduleRelative<StateType>(_ state: StateType,
+                                     dueTime: RxTimeInterval,
+                                     action: @escaping (StateType) -> Disposable) -> Disposable {
         let deadline = DispatchTime.now() + dueTime
 
         let compositeDisposable = CompositeDisposable()
@@ -58,7 +67,8 @@ extension DispatchQueueConfiguration {
         timer.resume()
 
         _ = compositeDisposable.insert(cancelTimer)
-
+        // compositeDisposable 里面, 存储了定时器的 disposable, 存储了 action 的 disposable.
+        // 定时器触发时, 调用了 action, 并且主动触发 timer 的 disposable.
         return compositeDisposable
     }
 

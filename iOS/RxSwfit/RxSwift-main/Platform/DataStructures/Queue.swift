@@ -16,7 +16,7 @@ Complexity of `peek` is O(1).
 */
 
 /*
- 
+    Queue 是一个 Sequence, 仅仅暴露了遍历的接口, 实际 Queue 是什么数据结构, 封装到了内部.
  */
 struct Queue<T>: Sequence {
     /// Type of generator.

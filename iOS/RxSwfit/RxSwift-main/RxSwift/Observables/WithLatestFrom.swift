@@ -10,7 +10,6 @@
     First 的信号触发后, 会将 First 的 Value 值和 Second 之前触发的值合并到一次, 使用 resultSelector 转化成为新的值, 移交到后续的节点.
     Second 的信号, 仅仅是被 Sink 接受后进行存储. 在 First 的信号触发之后, 和 First 的值当做后续节点的原材料.
     Second 的信号, 不会触发整体的事件流转.
- 
  */
 
 
@@ -27,7 +26,9 @@ extension ObservableType {
      - returns: An observable sequence containing the result of combining each element of the self  with the latest element from the second source, if any, using the specified result selector function.
      */
     public func withLatestFrom<Source: ObservableConvertibleType, ResultType>(_ second: Source, resultSelector: @escaping (Element, Source.Element) throws -> ResultType) -> Observable<ResultType> {
-        WithLatestFrom(first: self.asObservable(), second: second.asObservable(), resultSelector: resultSelector)
+        WithLatestFrom(first: self.asObservable(),
+                       second: second.asObservable(),
+                       resultSelector: resultSelector)
     }
 
     /**
@@ -40,7 +41,7 @@ extension ObservableType {
      - returns: An observable sequence containing the result of combining each element of the self  with the latest element from the second source, if any, using the specified result selector function.
      */
     /*
-     将 resultSelector 固定为 $1, 那么 self 就是作为 second 的触发器了.
+        将 resultSelector 固定为 $1, 那么 self 就是作为 second 的触发器了.
      */
     public func withLatestFrom<Source: ObservableConvertibleType>(_ second: Source) -> Observable<Source.Element> {
         WithLatestFrom(first: self.asObservable(), second: second.asObservable(), resultSelector: { $1 })
@@ -71,6 +72,7 @@ final private class WithLatestFromSink<FirstType, SecondType, Observer: Observer
         let sndSubscription = SingleAssignmentDisposable()
         let sndO = WithLatestFromSecond(parent: self, disposable: sndSubscription)
         
+        // 创建了一个中间 Observer, 用来当做 Second 的 Observer. 它的主要的用途, 就是为了存储 Second Publisher 发射的信号.
         sndSubscription.setDisposable(self.parent.second.subscribe(sndO))
         /*
          First 会触发 Sink 的操作.
@@ -85,7 +87,7 @@ final private class WithLatestFromSink<FirstType, SecondType, Observer: Observer
     }
 
     /*
-     Sink 的 On 方法里面,
+        First 的信号, 触发了 On 操作, 在这个里面, 将FirstValue 的值, 和 Second 存储的 Latest 的值, 进行 resultSelector 的转化, 然后交给后面的节点.
      */
     func synchronized_on(_ event: Event<Element>) {
         switch event {
@@ -93,7 +95,6 @@ final private class WithLatestFromSink<FirstType, SecondType, Observer: Observer
             guard let latest = self.latest else { return }
             do {
                 let res = try self.parent.resultSelector(value, latest)
-                
                 self.forwardOn(.next(res))
             } catch let e {
                 self.forwardOn(.error(e))

@@ -129,6 +129,7 @@ private class ReplayBufferBase<Element>
             return Observers()
         }
         
+        // 在 On 方法里面, 有着对于数据的存储, 和剪枝操作.
         switch event {
         case .next(let element):
             self.addValueToBuffer(element)
@@ -205,6 +206,7 @@ private final class ReplayOne<Element> : ReplayBufferBase<Element> {
         
     }
     
+    // OneBuffer 就是将值存起来.
     override func addValueToBuffer(_ value: Element) {
         self.value = value
     }
@@ -228,6 +230,7 @@ private class ReplayManyBase<Element>: ReplayBufferBase<Element> {
         self.queue = Queue(capacity: queueSize + 1)
     }
     
+    // 多值就是把值存到 queue 里面.
     override func addValueToBuffer(_ value: Element) {
         self.queue.enqueue(value)
     }

@@ -31,19 +31,19 @@ public final class BehaviorSubject<Element>
     let lock = RecursiveLock()
     
     // state
-    private var disposed = false
+    private var disposed = false // 代表着, 自己被 dispose 了, 和 stoppedEvent 是两个概念.
     private var element: Element
+    // 存储了所有的 Observer 到自己的内部, 这是当做 Publisher 的基础.
+    // 当调用 Subscribe 的时候, 就是将新获得的 Observer 添加到这个成员变量里面.
     private var observers = Observers()
-    private var stoppedEvent: Event<Element>?
+    private var stoppedEvent: Event<Element>? // Optional, 即表示了已经停止, 也存储了触发停止状态的 Event 的数据.
 
     /// Indicates whether the subject has been disposed.
     public var isDisposed: Bool {
         self.disposed
     }
  
-    /// Initializes a new instance of the subject that caches its last value and starts with the specified value.
-    ///
-    /// - parameter value: Initial value sent to observers when no other value has been received by the subject yet.
+    // 必须要有一个值. 当 Observer 添加的时候, 将这个值, 传递给 Observer.
     public init(value: Element) {
         self.element = value
     }
@@ -71,10 +71,16 @@ public final class BehaviorSubject<Element>
     /// Notifies all subscribed observers about next event.
     ///
     /// - parameter event: Event to send to the observers.
+    
+    /*
+        作为 Subject, 他接收到信号的基本操作, 就是将数据转交给存储的 Observers.
+     */
     public func on(_ event: Event<Element>) {
         dispatch(self.synchronized_on(event), event)
     }
 
+    // synchronized_on 这个函数, 实际的作用是, 提取可以处理事件的 Observers.
+    // 这里做的事情比较做, 还增加了对于 stoppedEvent 的记录. 不是太好的做法.
     func synchronized_on(_ event: Event<Element>) -> Observers {
         self.lock.lock(); defer { self.lock.unlock() }
         if self.stoppedEvent != nil || self.isDisposed {
@@ -99,6 +105,7 @@ public final class BehaviorSubject<Element>
         self.lock.performLocked { self.synchronized_subscribe(observer) }
     }
 
+    // 返回一个特殊的 Disposable, 这个 Disposable 的主要作用, 是 Observer 从存储的 Observers 中删除.
     func synchronized_subscribe<Observer: ObserverType>(_ observer: Observer) -> Disposable where Observer.Element == Element {
         if self.isDisposed {
             observer.on(.error(RxError.disposed(object: self)))
