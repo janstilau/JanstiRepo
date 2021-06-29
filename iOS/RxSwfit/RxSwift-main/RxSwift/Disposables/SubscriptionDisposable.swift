@@ -6,6 +6,7 @@
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
+// 一个特殊的数据结构, 可以用 key 来从 Owner 里面取消注册. Weak 来引用.
 struct SubscriptionDisposable<T: SynchronizedUnsubscribeType> : Disposable {
     private let key: T.DisposeKey
     private weak var owner: T?

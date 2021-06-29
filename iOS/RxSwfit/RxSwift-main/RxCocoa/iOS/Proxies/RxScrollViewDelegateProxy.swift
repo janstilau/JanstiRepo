@@ -54,6 +54,7 @@ open class RxScrollViewDelegateProxy
     }
 
     /// Optimized version used for observing content offset changes.
+    // 这里, 是懒加载生成了 ContentOffsetChanged PublisheObject
     internal var contentOffsetPublishSubject: PublishSubject<()> {
         if let subject = _contentOffsetPublishSubject {
             return subject
@@ -61,13 +62,13 @@ open class RxScrollViewDelegateProxy
 
         let subject = PublishSubject<()>()
         _contentOffsetPublishSubject = subject
-
         return subject
     }
     
     // MARK: delegate methods
 
     /// For more information take a look at `DelegateProxyType`.
+    // 在这里, UIScrollView 的 相关代理被调用, 然后就是给相关的 Publisher 对象进行信号的接收.
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if let subject = _contentOffsetBehaviorSubject {
             subject.on(.next(scrollView.contentOffset))

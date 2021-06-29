@@ -53,6 +53,9 @@ public protocol ControlEventType : ObservableType {
 
 
 
+// ControlEvent 不仅仅是 UIControl 事件的包装.
+// TableView 被点击, ScrollView 滚动 等等, 都算做是事件, 并且会传递相应的 IndexPath, 或者 Void 值.
+
 public struct ControlEvent<PropertyType> : ControlEventType {
     public typealias Element = PropertyType
 

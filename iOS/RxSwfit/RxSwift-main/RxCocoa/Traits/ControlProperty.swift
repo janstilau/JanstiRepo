@@ -44,6 +44,7 @@ public protocol ControlPropertyType : ObservableType, ObserverType {
  
     本身这个类, 并没有太多的逻辑在里面, 仅仅是存储了 Publisher 和 Subscriber, 然后进行 delegate 而已.
  */
+
 public struct ControlProperty<PropertyType> : ControlPropertyType {
     public typealias Element = PropertyType
 
@@ -132,7 +133,13 @@ extension ControlPropertyType where Element == String? {
         
         let original: ControlProperty<String?> = self.asControlProperty()
         let values: Observable<String> = original.values.map { $0 ?? "" }
+        // valueSink 对应的是 subscribe 应该怎么处理信号.
+        // MapObserver 里面, 传入的是 tranform, $0 表示的就是, 没有 transform, 直接将原始值写入进入.
         let valueSink: AnyObserver<String> = original.valueSink.mapObserver { $0 }
+        
+        // OrEmpty 的结果就是:
+        // get 如果是 nil, 转化为 ""
+        // set 直接将 newValue 交给自己的下游.
         return ControlProperty<String>(values: values, valueSink: valueSink)
     }
 }

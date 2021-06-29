@@ -54,17 +54,14 @@ extension AnyObserver {
 }
 
 extension ObserverType {
-    /// Erases type of observer and returns canonical observer.
-    ///
-    /// - returns: type erased observer.
+   
+    // asObserver 返回一个 AnyObserver
+    // AnyObserver 会存储 ObserverType 的 on 方法
     public func asObserver() -> AnyObserver<Element> {
         AnyObserver(self)
     }
 
-    /// Transforms observer of type R to type E using custom transform method.
-    /// Each event sent to result observer is transformed and sent to `self`.
-    ///
-    /// - returns: observer that transforms events.
+    // 返回一个 AnyObserver, 里面的闭包, 是 self.on, event 通过 map 进行了转化.
     public func mapObserver<Result>(_ transform: @escaping (Result) throws -> Element) -> AnyObserver<Result> {
         AnyObserver { e in
             self.on(e.map(transform))

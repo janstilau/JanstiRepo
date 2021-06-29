@@ -6,10 +6,7 @@
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
-/// Represents a sequence event.
-///
-/// Sequence grammar: 
-/// **next\* (error | completed)**
+// 真正的原始定义就这一点, 其他的所有的功能, 都在 Extension 里面添加.
 @frozen public enum Event<Element> {
     /// Next element is produced.
     case next(Element)
@@ -69,6 +66,11 @@ extension Event {
     }
 }
 
+/*
+    Enum 的 Map 是一个常见的概念.
+    就是在某种类型的时候, 进行 map 里面的 transform 操作, 在另外一个类型的时候, 进行原始值的传递的工作.
+    根据闭包的返回值, 来确定函数的返回值, 这是一个非常常用的技巧.
+ */
 extension Event {
     /// Maps sequence elements using transform. If error happens during the transform, `.error`
     /// will be returned as value.

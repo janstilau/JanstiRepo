@@ -132,7 +132,8 @@ extension Reactive where Base: AnyObject {
     - returns: Observable sequence of object deallocated events.
     */
     /*
-        创建一个 Publisher, 这其实是 RAII 的一种体现. 在从属的对象 deinit 的时候, 会调用 DeallocObservable 的 deinit 方法, 在那里, 会发射 Void, Complete 两个信号出来.
+        创建一个特殊的类型, 和自己挂钩.
+        这个特殊的类型, 被 Self Retain 着, 然后 Self 消亡的时候, 会让这个特殊类型也消亡. 然后这个对象, 会发射一个信号.
      */
     public var deallocated: Observable<Void> {
         return self.synchronized {
@@ -142,7 +143,6 @@ extension Reactive where Base: AnyObject {
 
             let deallocObservable = DeallocObservable()
             objc_setAssociatedObject(self.base, &deallocatedSubjectContext, deallocObservable, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-            
             return deallocObservable.subject
         }
     }
@@ -337,13 +337,11 @@ extension Reactive where Base: AnyObject {
 
 #endif
 
-// 一个特殊的类型, 使用 RAII 技术, 触发信号.
+// 这个类型的唯一的作用, 就是在自己死亡的时候, 发射一个信号出来.
 private final class DeallocObservable {
     let subject = ReplaySubject<Void>.create(bufferSize:1)
-
     init() {
     }
-
     deinit {
         self.subject.on(.next(()))
         self.subject.on(.completed)
@@ -543,9 +541,9 @@ private let deallocSelector = NSSelectorFromString("dealloc")
 // MARK: AnyObject + Reactive
 
 extension Reactive where Base: AnyObject {
+    // 这种, 通过 Action 的返回值, 确定函数的返回值的写法, 是非常普遍的.
     func synchronized<T>( _ action: () -> T) -> T {
         // objc_sync_enter, objc_sync_exit 是一个类似于 @synchronized 的功能.
-        //
         objc_sync_enter(self.base)
         let result = action()
         objc_sync_exit(self.base)

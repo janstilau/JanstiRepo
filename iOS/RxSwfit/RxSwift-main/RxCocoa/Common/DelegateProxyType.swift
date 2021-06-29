@@ -11,7 +11,7 @@
     import Foundation
     import RxSwift
 
-/**
+/*
 `DelegateProxyType` protocol enables using both normal delegates and Rx observable sequences with
 views that can have only one delegate/datasource registered.
 
@@ -179,7 +179,6 @@ extension DelegateProxyType {
     ///         }
     ///     }
     public static func proxy(for object: ParentObject) -> Self {
-        MainScheduler.ensureRunningOnMainThread()
 
         let maybeProxy = self.assignedProxy(for: object)
 

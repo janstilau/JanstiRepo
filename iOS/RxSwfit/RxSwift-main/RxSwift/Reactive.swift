@@ -27,6 +27,12 @@
  `Binder`s are also automatically synthesized using `@dynamicMemberLookup` for writable reference properties of the reactive base.
  */
 
+/*
+ 这个特性中文可以叫动态查找成员。
+ 在使用@dynamicMemberLookup标记了对象后（对象、结构体、枚举、protocol），实现了subscript(dynamicMember member: String)方法后我们就可以访问到对象不存在的属性。
+ 如果访问到的属性不存在，就会调用到实现的 subscript(dynamicMember member: String)方法，key 作为 member 传入这个方法。
+ */
+
 @dynamicMemberLookup
 public struct Reactive<Base> {
     /// Base object to extend.

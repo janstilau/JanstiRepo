@@ -17,6 +17,7 @@ extension ObservableType {
      - parameter on: Action to invoke for each event in the observable sequence.
      - returns: Subscription object used to unsubscribe from the observable sequence.
      */
+    
     // 之所以, 可以使用闭包作为 subscribe 的参数, 是因为这里新建了一个 Any 独享.
     public func subscribe(_ on: @escaping (Event<Element>) -> Void) -> Disposable {
         let observer = AnonymousObserver { e in
@@ -83,27 +84,21 @@ extension ObservableType {
         onCompleted: (() -> Void)? = nil,
         onDisposed: (() -> Void)? = nil
     ) -> Disposable {
+        
+        
+            // 为了能够接收到 dispose 信号, 这里做了一层中间件.
             let disposable: Disposable
             
             if let disposed = onDisposed {
                 disposable = Disposables.create(with: disposed)
-            }
-            else {
+            } else {
                 disposable = Disposables.create()
             }
             
-            #if DEBUG
-                let synchronizationTracker = SynchronizationTracker()
-            #endif
-            
             let callStack = Hooks.recordCallStackOnError ? Hooks.customCaptureSubscriptionCallstack() : []
             
+        // 当, 信号接收到停止信号的时候, dispose 可以被调用.
             let observer = AnonymousObserver<Element> { event in
-                
-                #if DEBUG
-                    synchronizationTracker.register(synchronizationErrorMessage: .default)
-                    defer { synchronizationTracker.unregister() }
-                #endif
                 
                 switch event {
                 case .next(let value):
@@ -111,8 +106,7 @@ extension ObservableType {
                 case .error(let error):
                     if let onError = onError {
                         onError(error)
-                    }
-                    else {
+                    } else {
                         Hooks.defaultErrorHandler(callStack, error)
                     }
                     disposable.dispose()
@@ -121,6 +115,7 @@ extension ObservableType {
                     disposable.dispose()
                 }
             }
+        // 当, 外界主动取消订阅的时候, dispose 可以被调用.
             return Disposables.create(
                 self.asObservable().subscribe(observer),
                 disposable

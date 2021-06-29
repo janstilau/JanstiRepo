@@ -10,6 +10,7 @@ import Dispatch
 
 extension DispatchQueue {
     
+    // 为 MainQueue 添加了特殊的 Key.  根据这个 Key 来判断是不是主线程.
     private static var token: DispatchSpecificKey<()> = {
         let key = DispatchSpecificKey<()>()
         DispatchQueue.main.setSpecific(key: key, value: ())

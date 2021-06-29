@@ -20,6 +20,7 @@ class SimpleTableViewExampleViewController : ViewController, UITableViewDelegate
             (0..<20).map { "\($0)" }
         )
 
+        tableView.rx.didScroll
         items
             .bind(to: tableView.rx.items(cellIdentifier: "Cell", cellType: UITableViewCell.self)) { (row, element, cell) in
                 cell.textLabel?.text = "\(element) @ row \(row)"

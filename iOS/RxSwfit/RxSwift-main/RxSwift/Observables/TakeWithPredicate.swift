@@ -183,6 +183,9 @@ final private class TakeUntilSink<Other, Observer: ObserverType>
         self.synchronizedOn(event)
     }
 
+    /*
+        TakeSink 仅仅是将信号, 转交给自己的下游.
+     */
     func synchronized_on(_ event: Event<Element>) {
         switch event {
         case .next:
@@ -197,10 +200,13 @@ final private class TakeUntilSink<Other, Observer: ObserverType>
     }
     
     func run() -> Disposable {
+        // 将 TakeUntilSinkOther 纳入到监听的事件管道里面.
+        // 将 Self 传递了进入, 当监听的事件发生的时候, TakeUntilSinkOther 会调用 self 的 dispose 方法.
         let otherObserver = TakeUntilSinkOther(parent: self)
         let otherSubscription = self.parent.other.subscribe(otherObserver)
         otherObserver.subscription.setDisposable(otherSubscription)
         
+        // 把自己纳入到事件管道里面.
         let sourceSubscription = self.parent.source.subscribe(self)
         
         return Disposables.create(sourceSubscription, otherObserver.subscription)

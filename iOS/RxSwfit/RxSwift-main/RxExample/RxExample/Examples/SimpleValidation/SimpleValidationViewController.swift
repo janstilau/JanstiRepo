@@ -37,7 +37,8 @@ class SimpleValidationViewController : ViewController {
             .map {
                 $0.count >= minimalUsernameLength
             }
-            .share(replay: 1) // without this map would be executed once for each binding, rx is stateless by default
+            .share(replay: 1)
+        // without this map would be executed once for each binding, rx is stateless by default
 
         let passwordValid = passwordOutlet.rx.text.orEmpty
             .map { $0.count >= minimalPasswordLength }
@@ -46,6 +47,10 @@ class SimpleValidationViewController : ViewController {
         let everythingValid = Observable.combineLatest(usernameValid, passwordValid) { $0 && $1 }
             .share(replay: 1)
 
+        /*
+            rx 本身是没有 isEnabled 的定义的.
+            这里是利用了 keyPath 这种特性.
+         */
         usernameValid
             .bind(to: passwordOutlet.rx.isEnabled)
             .disposed(by: disposeBag)

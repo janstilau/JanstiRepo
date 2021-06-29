@@ -60,6 +60,7 @@ final private class ObserveOn<Element>: Producer<Element> {
     }
 
     override func run<Observer: ObserverType>(_ observer: Observer, cancel: Cancelable) -> (sink: Disposable, subscription: Disposable) where Observer.Element == Element {
+        // 当上游的信号发生的时候, 会交给 ObserveOnSink 处理, 那个时候, 会真正触发线程的调度工作.
         let sink = ObserveOnSink(scheduler: self.scheduler, observer: observer, cancel: cancel)
         let subscription = self.source.subscribe(sink)
         return (sink: sink, subscription: subscription)
@@ -96,15 +97,20 @@ final private class ObserveOnSink<Observer: ObserverType>: ObserverBase<Observer
 
     init(scheduler: ImmediateSchedulerType, observer: Observer, cancel: Cancelable) {
         self.scheduler = scheduler
-        self.observer = observer
+        self.observer = observer // 后继节点.
         self.cancel = cancel
     }
 
-    // 是把相应的信号, 装到了自己的 queue 里面.
+    /*
+        当事件到达了之后, 将事件存到了队列里面. 这个存入的过程, 是要加锁的.
+        然后, 在相应的线程, 开启队列中数据的处理. 就是在相应的队列里面, 取出相应的数据, 然后调用这个数据的处理方法.
+        这里, 就是交给自己记录的 observer 处理这个 event.
+     */
     override func onCore(_ event: Event<Element>) {
         let shouldStart = self.lock.performLocked { () -> Bool in
+            
+            // 把相应的信号, 装到了自己的 queue 里面.
             self.queue.enqueue(event)
-
             switch self.state {
             case .stopped:
                 self.state = .running

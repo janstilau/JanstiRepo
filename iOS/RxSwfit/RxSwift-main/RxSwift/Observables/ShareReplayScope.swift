@@ -151,12 +151,14 @@ extension ObservableType {
             switch replay {
             case 0: return ShareWhileConnected(source: self.asObservable())
             case 1: return ShareReplay1WhileConnected(source: self.asObservable())
+                
             default: return self.multicast(makeSubject: { ReplaySubject.create(bufferSize: replay) }).refCount()
             }
         }
     }
 }
 
+// 这个 Connection, 会在每次信号过来之后, 存储当前的 Element.
 private final class ShareReplay1WhileConnectedConnection<Element>
     : ObserverType
     , SynchronizedUnsubscribeType {
@@ -250,14 +252,16 @@ private final class ShareReplay1WhileConnectedConnection<Element>
 }
 
 /*
-    这个类的逻辑, 仅仅是 Connection
+    Share 的逻辑就是, 找一个 Connection 当做 Source 的 observer.
+    每次注册, 都是将 Observer 存储在 Connection 内部维护
+    然后每次信号给 Connection, Connection 都将维护的 Observer 取出来, 调用 on 方法.
  */
 final private class ShareReplay1WhileConnected<Element>
     : Observable<Element> {
 
     fileprivate typealias Connection = ShareReplay1WhileConnectedConnection<Element>
 
-    fileprivate let source: Observable<Element>
+    fileprivate let source: Observable<Element> // 信号的发射源.
 
     private let lock = RecursiveLock()
 
@@ -276,7 +280,7 @@ final private class ShareReplay1WhileConnected<Element>
         self.lock.unlock()
         
         if count == 0 {
-            connection.connect()
+            connection.connect() // 将 Source 的下游, 注册给 Connection.
         }
 
         return disposable
@@ -286,10 +290,10 @@ final private class ShareReplay1WhileConnected<Element>
     private func synchronized_subscribe<Observer: ObserverType>(_ observer: Observer) -> Connection where Observer.Element == Element {
         let connection: Connection
 
+        // 懒加载.
         if let existingConnection = self.connection {
             connection = existingConnection
-        }
-        else {
+        } else {
             connection = ShareReplay1WhileConnectedConnection<Element>(
                 parent: self,
                 lock: self.lock)
@@ -301,7 +305,7 @@ final private class ShareReplay1WhileConnected<Element>
 }
 
 /*
- 这个类, 很像是 Subject.
+    这个 Connection, 没有了存储上一个 Element 的能力了.
  */
 private final class ShareWhileConnectedConnection<Element>
     : ObserverType
@@ -395,10 +399,6 @@ private final class ShareWhileConnectedConnection<Element>
     #endif
 }
 
-/*
-    所谓的 Share, 其实就是找了一个引用对象, 去管理所有的注册.
-    当收到信号之后, 调用所有的注册的 On 方法. 这里就是 Connection 这个类.
- */
 final private class ShareWhileConnected<Element>
     : Observable<Element> {
 
