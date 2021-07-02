@@ -115,6 +115,7 @@ public final class BehaviorSubject<Element>
             return Disposables.create()
         }
         
+        // 这里, 如果是 Stop 了, 没有把存储的值发送给新的 Subscriber.
         if let stoppedEvent = self.stoppedEvent {
             observer.on(stoppedEvent)
             return Disposables.create()

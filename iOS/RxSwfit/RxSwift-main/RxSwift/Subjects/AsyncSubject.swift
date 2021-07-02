@@ -114,14 +114,16 @@ public final class AsyncSubject<Element>
         self.lock.performLocked { self.synchronized_subscribe(observer) }
     }
 
+    // 
     func synchronized_subscribe<Observer: ObserverType>(_ observer: Observer) -> Disposable where Observer.Element == Element {
         if let stoppedEvent = self.stoppedEvent {
+            // Swich 可以直接进行 case 的比对, 而不管里面的关联值.
             switch stoppedEvent {
             case .next:
                 observer.on(stoppedEvent)
                 observer.on(.completed)
             case .completed:
-                observer.on(stoppedEvent)
+                observer.on(.completed)
             case .error:
                 observer.on(stoppedEvent)
             }

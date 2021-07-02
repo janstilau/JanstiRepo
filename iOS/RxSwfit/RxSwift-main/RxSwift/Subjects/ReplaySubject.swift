@@ -148,12 +148,13 @@ private class ReplayBufferBase<Element>
      
         let anyObserver = observer.asObserver()
         
+        // 将, 自己存储的所有值, 发送给新的 Subscriber
         self.replayBuffer(anyObserver)
+        // 并且, 如果已经是 stop 了, 会把 stop event 也发送下去.
         if let stoppedEvent = self.stoppedEvent {
             observer.on(stoppedEvent)
             return Disposables.create()
-        }
-        else {
+        } else {
             let key = self.observers.insert(observer.on)
             return SubscriptionDisposable(owner: self, key: key)
         }
@@ -205,6 +206,7 @@ private final class ReplayOne<Element> : ReplayBufferBase<Element> {
         self.value = value
     }
 
+    // One 的 RelayBuffer 就是将存储的一个值, on 发送下去.
     override func replayBuffer<Observer: ObserverType>(_ observer: Observer) where Observer.Element == Element {
         if let value = self.value {
             observer.on(.next(value))
@@ -229,6 +231,7 @@ private class ReplayManyBase<Element>: ReplayBufferBase<Element> {
         self.queue.enqueue(value)
     }
 
+    // Many 就是将自己存储在 Queue 的所有值, on 发送下去.
     override func replayBuffer<Observer: ObserverType>(_ observer: Observer) where Observer.Element == Element {
         for item in self.queue {
             observer.on(.next(item))
