@@ -36,10 +36,6 @@ public class ReplaySubject<Element>
     }
     fileprivate var observers = Observers()
 
-    #if DEBUG
-        fileprivate let synchronizationTracker = SynchronizationTracker()
-    #endif
-
     func unsubscribe(_ key: DisposeKey) {
         rxAbstractMethod()
     }
@@ -112,10 +108,6 @@ private class ReplayBufferBase<Element>
     }
     
     override func on(_ event: Event<Element>) {
-        #if DEBUG
-            self.synchronizationTracker.register(synchronizationErrorMessage: .default)
-            defer { self.synchronizationTracker.unregister() }
-        #endif
         dispatch(self.synchronized_on(event), event)
     }
 
@@ -196,6 +188,8 @@ private class ReplayBufferBase<Element>
 }
 
 private final class ReplayOne<Element> : ReplayBufferBase<Element> {
+    
+    // 和 Behavior 的区别在于, 它的 Element 是 on 的 next 信号处理中添加的, 有可能没有值.
     private var value: Element?
     
     override init() {

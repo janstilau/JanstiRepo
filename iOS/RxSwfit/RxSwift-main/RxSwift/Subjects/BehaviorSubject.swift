@@ -32,7 +32,7 @@ public final class BehaviorSubject<Element>
     
     // state
     private var disposed = false // 代表着, 自己被 dispose 了, 和 stoppedEvent 是两个概念.
-    private var element: Element
+    private var element: Element // 必然会有一个值, 初始化的时候, 就 init 了.
     // 存储了所有的 Observer 到自己的内部, 这是当做 Publisher 的基础.
     // 当调用 Subscribe 的时候, 就是将新获得的 Observer 添加到这个成员变量里面.
     private var observers = Observers()
@@ -51,6 +51,8 @@ public final class BehaviorSubject<Element>
     /// Gets the current value or throws an error.
     ///
     /// - returns: Latest value.
+    
+    // 必然会有一个值, 但是如果状态不对, 抛出错误.
     public func value() throws -> Element {
         self.lock.lock()
         defer { self.lock.unlock() }
@@ -89,6 +91,7 @@ public final class BehaviorSubject<Element>
         
         switch event {
         case .next(let element):
+            // 在 Next 信号里面, 不断地更新存储的 Element
             self.element = element
         case .error, .completed:
             self.stoppedEvent = event

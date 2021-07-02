@@ -37,18 +37,13 @@ public final class AsyncSubject<Element>
             self.isStopped = self.stoppedEvent != nil
         }
     }
+    
+    // 真正的存储数据的地方, 一个 Optinal, 因为可能没有 Next 信号, 直接 Complete 了.
     private var lastElement: Element?
-
-    #if DEBUG
-        private let synchronizationTracker = SynchronizationTracker()
-    #endif
 
 
     /// Creates a subject.
     public override init() {
-        #if TRACE_RESOURCES
-            _ = Resources.incrementTotal()
-        #endif
         super.init()
     }
 
@@ -56,10 +51,7 @@ public final class AsyncSubject<Element>
     ///
     /// - parameter event: Event to send to the observers.
     public func on(_ event: Event<Element>) {
-        #if DEBUG
-            self.synchronizationTracker.register(synchronizationErrorMessage: .default)
-            defer { self.synchronizationTracker.unregister() }
-        #endif
+        // On 方法, 会在 synchronized_on 进行 事件和 Observers 的筛选, 然后根据筛选结果, 进行 dispatch.
         let (observers, event) = self.synchronized_on(event)
         switch event {
         case .next:
@@ -74,36 +66,45 @@ public final class AsyncSubject<Element>
 
     func synchronized_on(_ event: Event<Element>) -> (Observers, Event<Element>) {
         self.lock.lock(); defer { self.lock.unlock() }
+        
         if self.isStopped {
             return (Observers(), .completed)
         }
 
         switch event {
         case .next(let element):
+            // 如果, 是 Next, 那么将 Next 的值存储起来, 然后返回空的 Observer.
             self.lastElement = element
             return (Observers(), .completed)
+            
+            
         case .error:
+            // 如果 Error, 那么清空 Observers, 也不会向 Observer 发射信号.
             self.stoppedEvent = event
-
             let observers = self.observers
             self.observers.removeAll()
-
             return (observers, event)
+            
+            
         case .completed:
 
+            // 如果是 Complete.
             let observers = self.observers
             self.observers.removeAll()
-
+            // 如果, 原来存储了 element, 才会真正在 On 里面处理 Next 事件.
             if let lastElement = self.lastElement {
                 self.stoppedEvent = .next(lastElement)
                 return (observers, .next(lastElement))
-            }
-            else {
+            } else {
                 self.stoppedEvent = event
                 return (observers, .completed)
             }
         }
     }
+    
+    /*
+        后面的逻辑, 四种 Subject 都有.
+     */
 
     /// Subscribes an observer to the subject.
     ///
@@ -144,11 +145,5 @@ public final class AsyncSubject<Element>
     public func asObserver() -> AsyncSubject<Element> {
         self
     }
-
-    #if TRACE_RESOURCES
-    deinit {
-        _ = Resources.decrementTotal()
-    }
-    #endif
 }
 
