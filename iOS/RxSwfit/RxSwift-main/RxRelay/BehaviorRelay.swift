@@ -29,6 +29,7 @@ public final class BehaviorRelay<Element>: ObservableType {
     }
 
     /// Current value of behavior subject
+    // Behaviour, 可以进行取值.
     public var value: Element {
         // this try! is ok because subject can't error out or be disposed
         return try! self.subject.value()

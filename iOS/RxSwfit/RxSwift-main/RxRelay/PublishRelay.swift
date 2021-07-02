@@ -15,6 +15,7 @@ public final class PublishRelay<Element>: ObservableType {
     private let subject: PublishSubject<Element>
     
     // Accepts `event` and emits it to subscribers
+    // 只可以接受 next 信号, 可以直接操作数据了, 不用调用 on,Next 了.
     public func accept(_ event: Element) {
         self.subject.onNext(event)
     }

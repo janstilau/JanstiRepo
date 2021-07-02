@@ -20,6 +20,10 @@ public protocol ObserverType {
 }
 
 /// Convenience API extensions to provide alternate next, error, completed events
+
+/*
+    以下三个简便的方法, 仅仅是在方法内部, 去构建相对应的 Enum 数据而已.
+ */
 extension ObserverType {
     
     /// Convenience method equivalent to `on(.next(element: Element))`

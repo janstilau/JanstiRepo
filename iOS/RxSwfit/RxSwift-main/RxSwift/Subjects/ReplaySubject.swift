@@ -213,6 +213,7 @@ private final class ReplayOne<Element> : ReplayBufferBase<Element> {
         }
     }
 
+    // 会将 OneValue 设置为 nil.
     override func synchronized_dispose() {
         super.synchronized_dispose()
         self.value = nil
@@ -238,6 +239,7 @@ private class ReplayManyBase<Element>: ReplayBufferBase<Element> {
         }
     }
 
+    // 会清空 Queue 里面的数据
     override func synchronized_dispose() {
         super.synchronized_dispose()
         self.queue = Queue(capacity: 0)

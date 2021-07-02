@@ -11,6 +11,9 @@ import RxSwift
 /// ReplayRelay is a wrapper for `ReplaySubject`.
 ///
 /// Unlike `ReplaySubject` it can't terminate with an error or complete.
+
+// Relay 不是一个 Subscriber, 所以, 它的值, 都是主动调用 accept 进行的修改.
+// 这个类型, 可以当做是信号的源头.
 public final class ReplayRelay<Element>: ObservableType {
     private let subject: ReplaySubject<Element>
 
