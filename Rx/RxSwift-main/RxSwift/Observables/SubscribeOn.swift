@@ -6,7 +6,13 @@
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
-// 这是 Publisher 的一个方法, 将自身的实现逻辑, 封装到了特定的调度器里面.
+/*
+    Subscribe 指的是, 将 subscript 这个行为, 放到特定的 scheduler 里面进行处理.
+    SubscribeSink 在接受到后面的信号的时候, 仅仅是做 Forward 的操作.
+    SubscribeOn 的意义在于, 在 RelaySubject 进行 Subscribe 的同时, 其实会将原有的一些数据当做信号发射出去的.
+    而这种发射, 会在当前 subscribe 所在的线程进行. 所以, SubscribeOn 会影响到这部分的
+    而 ObserveOn 指的是, 每次信号来临之后, 都会进行调度. 将 forward 这个行为, 经过 scheduler 的调度才去触发.
+ */
 extension ObservableType {
     /**
      Wraps the source sequence in order to run its subscription and unsubscription logic on the specified
@@ -87,6 +93,8 @@ final private class SubscribeOnSink<Ob: ObservableType, Observer: ObserverType>:
     }
 }
 
+
+// Producer 收集信息.
 final private class SubscribeOn<Ob: ObservableType>: Producer<Ob.Element> {
     let source: Ob
     let scheduler: ImmediateSchedulerType

@@ -6,6 +6,12 @@
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
+
+/*
+    Do 函数里面做的, 仅仅是信息收集的工作.
+    然后在 subscribe, dispose, 信号接收之后, 调用相应的回调.
+    数据原封不动的传递到后面的节点.
+ */
 extension ObservableType {
     /**
      Invokes an action for each event in the observable sequence, and propagates all observer messages through the result sequence.
@@ -23,9 +29,18 @@ extension ObservableType {
      - parameter onDispose: Action to invoke after subscription to source observable has been disposed for any reason. It can be either because sequence terminates for some reason or observer subscription being disposed.
      - returns: The source sequence with the side-effecting behavior applied.
      */
-    // Swift 的 argument Label 的好处就在这里体现了优势. 配置 DefaultValue 的使用, 可以让一个很长很复杂的函数, 变得外界可以轻松使用.
-    public func `do`(onNext: ((Element) throws -> Void)? = nil, afterNext: ((Element) throws -> Void)? = nil, onError: ((Swift.Error) throws -> Void)? = nil, afterError: ((Swift.Error) throws -> Void)? = nil, onCompleted: (() throws -> Void)? = nil, afterCompleted: (() throws -> Void)? = nil, onSubscribe: (() -> Void)? = nil, onSubscribed: (() -> Void)? = nil, onDispose: (() -> Void)? = nil)
+    public func `do`(onNext: ((Element) throws -> Void)? = nil,
+                     afterNext: ((Element) throws -> Void)? = nil,
+                     onError: ((Swift.Error) throws -> Void)? = nil,
+                     afterError: ((Swift.Error) throws -> Void)? = nil,
+                     onCompleted: (() throws -> Void)? = nil,
+                     afterCompleted: (() throws -> Void)? = nil,
+                     onSubscribe: (() -> Void)? = nil,
+                     onSubscribed: (() -> Void)? = nil,
+                     onDispose: (() -> Void)? = nil)
         -> Observable<Element> {
+        // 在构建 eventHandler 的时候, 是将所有的 case 都处理了.
+        // 只不过, 各个回调都是 optinal call/
             return Do(source: self.asObservable(), eventHandler: { e in
                 switch e {
                 case .next(let element):
@@ -62,7 +77,6 @@ final private class DoSink<Observer: ObserverType>: Sink<Observer>, ObserverType
         super.init(observer: observer, cancel: cancel)
     }
     
-    // On 方法, 仅仅是在 forward 的前后, 进行相关的自己业务调用而已.
     func on(_ event: Event<Element>) {
         do {
             try self.eventHandler(event)

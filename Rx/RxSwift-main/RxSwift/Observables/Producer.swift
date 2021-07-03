@@ -21,6 +21,13 @@
  
  */
 
+/*
+    Producer 是一个 Publisher, 也就是它是一个可以发出信号的装置.
+    而它产生的 Sink, 可能会是一个 Observer, 可以接受信号. 但是不会是一个 Publisher.
+ 
+    Sink 仅仅是将, 信号, 进行操作, 然后交给注册给自己的下游而已. 并不能注册新的 subscriber 使用.
+ */
+
 class Producer<Element>: Observable<Element> {
     override init() {
         super.init()

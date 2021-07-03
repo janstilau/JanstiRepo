@@ -18,7 +18,7 @@ extension ObservableType {
      - returns: Subscription object used to unsubscribe from the observable sequence.
      */
     
-    // 之所以, 可以使用闭包作为 subscribe 的参数, 是因为这里新建了一个 Any 独享.
+    // 之所以, 可以使用闭包作为 subscribe 的参数, 是因为这里新建了一个 Any 对象.
     public func subscribe(_ on: @escaping (Event<Element>) -> Void) -> Disposable {
         let observer = AnonymousObserver { e in
             on(e)
@@ -115,7 +115,8 @@ extension ObservableType {
                     disposable.dispose()
                 }
             }
-        // 当, 外界主动取消订阅的时候, dispose 可以被调用.
+            
+            //
             return Disposables.create(
                 self.asObservable().subscribe(observer),
                 disposable

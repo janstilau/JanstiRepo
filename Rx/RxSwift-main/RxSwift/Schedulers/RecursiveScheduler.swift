@@ -145,6 +145,7 @@ final class AnyRecursiveScheduler<State> {
 
 /// Type erased recursive scheduler.
 final class RecursiveImmediateScheduler<State> {
+    
     typealias Action =  (_ state: State, _ recurse: (State) -> Void) -> Void
     
     private var lock = SpinLock()

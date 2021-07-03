@@ -30,37 +30,41 @@ let bag = DisposeBag()
 let animal = BehaviorSubject(value: "[dog]")
 
 animal
-  .subscribeOn(MainScheduler.instance)
-  .dump()
-  .observeOn(globalScheduler)
-  .dumpingSubscription()
-  .addDisposableTo(bag)
+    .subscribeOn(MainScheduler.instance)
+    .dump()
+    .observeOn(globalScheduler)
+    .dumpingSubscription()
+    .addDisposableTo(bag)
 
 let fruit = Observable<String>.create { observer in
-  observer.onNext("[apple]")
-  sleep(2)
-  observer.onNext("[pineapple]")
-  sleep(2)
-  observer.onNext("[strawberry]")
-  return Disposables.create()
+    observer.onNext("[apple]")
+    sleep(2) // 调用了系统的 Sleep 方法进行线程休眠.
+    observer.onNext("[pineapple]")
+    sleep(2) // 调用了系统的 Sleep 方法进行线程休眠.
+    observer.onNext("[strawberry]")
+    return Disposables.create()
 }
 
-fruit
-  .subscribeOn(globalScheduler)
-  .dump()
-  .observeOn(MainScheduler.instance)
-  .dumpingSubscription()
-  .addDisposableTo(bag)
+fruit // Publisher
+    .subscribeOn(globalScheduler) // SubscribeSink
+    .dump() // DoSink
+    .observeOn(MainScheduler.instance) // ObserverSink
+    .dumpingSubscription() // End Subscriber.
+    .addDisposableTo(bag)
+
+// SubscribeSink 在 subscribe 的时候, 会进行 schedule 的调度, 将 source.subcribe(self) 这个动作进行调度.
+// 而 SubscribeSink 自身的 on 方法, 仅仅是进行 forward.
+// ObserverSink 在接受到信号的时候, 会进行 schedule 的调度, 将信号数据在另外的一个线程, 传递给 End
 
 let animalsThread = Thread() {
-  sleep(3)
-  animal.onNext("[cat]")
-  sleep(3)
-  animal.onNext("[tiger]")
-  sleep(3)
-  animal.onNext("[fox]")
-  sleep(3)
-  animal.onNext("[leopard]")
+    sleep(3)
+    animal.onNext("[cat]")
+    sleep(3)
+    animal.onNext("[tiger]")
+    sleep(3)
+    animal.onNext("[fox]")
+    sleep(3)
+    animal.onNext("[leopard]")
 }
 
 animalsThread.name = "Animals Thread"

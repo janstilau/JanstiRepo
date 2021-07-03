@@ -36,6 +36,7 @@ import Foundation
 ///
 /// This scheduler is also sometimes called `trampoline scheduler`.
 public class CurrentThreadScheduler : ImmediateSchedulerType {
+    
     typealias ScheduleQueue = RxMutableBox<Queue<ScheduledItemType>>
 
     /// The singleton instance of the current thread scheduler.
@@ -44,11 +45,9 @@ public class CurrentThreadScheduler : ImmediateSchedulerType {
     private static var isScheduleRequiredKey: pthread_key_t = { () -> pthread_key_t in
         let key = UnsafeMutablePointer<pthread_key_t>.allocate(capacity: 1)
         defer { key.deallocate() }
-                                                               
         guard pthread_key_create(key, nil) == 0 else {
             rxFatalError("isScheduleRequired key creation failed")
         }
-
         return key.pointee
     }()
 
@@ -90,9 +89,9 @@ public class CurrentThreadScheduler : ImmediateSchedulerType {
     - returns: The disposable object used to cancel the scheduled action (best effort).
     */
     public func schedule<StateType>(_ state: StateType, action: @escaping (StateType) -> Disposable) -> Disposable {
+        
         if CurrentThreadScheduler.isScheduleRequired {
             CurrentThreadScheduler.isScheduleRequired = false
-
             let disposable = action(state)
 
             defer {
@@ -119,8 +118,7 @@ public class CurrentThreadScheduler : ImmediateSchedulerType {
         let queue: RxMutableBox<Queue<ScheduledItemType>>
         if let existingQueue = existingQueue {
             queue = existingQueue
-        }
-        else {
+        } else {
             queue = RxMutableBox(Queue<ScheduledItemType>(capacity: 1))
             CurrentThreadScheduler.queue = queue
         }

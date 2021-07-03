@@ -30,6 +30,7 @@ class PhotosViewController: UICollectionViewController {
   let bag = DisposeBag()
 
   // MARK: public properties
+    // 暴露出去的, 仅仅是一个 Observable, 而不是一个具体的 Object
   var selectedPhotos: Observable<UIImage> {
     return selectedPhotosSubject.asObservable()
   }
@@ -77,6 +78,7 @@ class PhotosViewController: UICollectionViewController {
 
     cell.representedAssetIdentifier = asset.localIdentifier
     imageManager.requestImage(for: asset, targetSize: thumbnailSize, contentMode: .aspectFill, options: nil, resultHandler: { image, _ in
+        // 普通的异步取图的逻辑.
       if cell.representedAssetIdentifier == asset.localIdentifier {
         cell.imageView.image = image
       }
@@ -95,6 +97,7 @@ class PhotosViewController: UICollectionViewController {
     imageManager.requestImage(for: asset, targetSize: view.frame.size, contentMode: .aspectFill, options: nil, resultHandler: { [weak self] image, info in
       guard let image = image, let info = info else { return }
 
+        // 如果, 点击了, 那么调用 selectedPhotosSubject 来触发信号.
       if let isThumbnail = info[PHImageResultIsDegradedKey as NSString] as? Bool, !isThumbnail {
         self?.selectedPhotosSubject.onNext(image)
       }

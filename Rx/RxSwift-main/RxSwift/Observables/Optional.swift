@@ -6,6 +6,12 @@
 //  Copyright © 2016 Krunoslav Zaher. All rights reserved.
 //
 
+/*
+    各个接口里面, 创建出来的是实际的类型.
+    这种实际的类型, 将各个操作的逻辑, 内含其中.
+    然后暴露给外界的是, 这个类型所属的抽象.
+    外界仅仅应该使用这个抽象的接口, 去进行调用.
+ */
 extension ObservableType {
     /**
      Converts a optional to an observable sequence.
@@ -61,7 +67,7 @@ final private class ObservableOptionalScheduledSink<Observer: ObserverType>: Sin
         }
     }
 }
-
+ 
 final private class ObservableOptionalScheduled<Element>: Producer<Element> {
     fileprivate let optional: Element?
     fileprivate let scheduler: ImmediateSchedulerType
@@ -78,6 +84,9 @@ final private class ObservableOptionalScheduled<Element>: Producer<Element> {
     }
 }
 
+/*
+    当有新的 subscriber 的时候, 抽取 Optinal 的值, 然后将值传递给 Subsciber, 然后发射一个 Complete 信号过去.
+ */
 final private class ObservableOptional<Element>: Producer<Element> {
     private let optional: Element?
     

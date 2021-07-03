@@ -49,11 +49,6 @@ public final class MainScheduler : SerialDispatchQueueScheduler {
 
     /// In case this method is running on a background thread it will throw an exception.
     public class func ensureRunningOnMainThread(errorMessage: String? = nil) {
-        #if !os(Linux) // isMainThread is not implemented in Linux Foundation
-            guard Thread.isMainThread else {
-                rxFatalError(errorMessage ?? "Running on background thread.")
-            }
-        #endif
     }
 
     // Main Queue 直接接管了 scheduleInternal 的实现, 没有使用到 Configuaration.

@@ -53,24 +53,16 @@ final private class ObserveOn<Element>: Producer<Element> {
     init(source: Observable<Element>, scheduler: ImmediateSchedulerType) {
         self.scheduler = scheduler
         self.source = source
-
-#if TRACE_RESOURCES
-        _ = Resources.incrementTotal()
-#endif
     }
 
     override func run<Observer: ObserverType>(_ observer: Observer, cancel: Cancelable) -> (sink: Disposable, subscription: Disposable) where Observer.Element == Element {
         // 当上游的信号发生的时候, 会交给 ObserveOnSink 处理, 那个时候, 会真正触发线程的调度工作.
-        let sink = ObserveOnSink(scheduler: self.scheduler, observer: observer, cancel: cancel)
+        let sink = ObserveOnSink(scheduler: self.scheduler,
+                                 observer: observer,
+                                 cancel: cancel)
         let subscription = self.source.subscribe(sink)
         return (sink: sink, subscription: subscription)
     }
-
-#if TRACE_RESOURCES
-    deinit {
-        _ = Resources.decrementTotal()
-    }
-#endif
 }
 
 enum ObserveOnState : Int32 {
@@ -108,7 +100,6 @@ final private class ObserveOnSink<Observer: ObserverType>: ObserverBase<Observer
      */
     override func onCore(_ event: Event<Element>) {
         let shouldStart = self.lock.performLocked { () -> Bool in
-            
             // 把相应的信号, 装到了自己的 queue 里面.
             self.queue.enqueue(event)
             switch self.state {
@@ -120,14 +111,15 @@ final private class ObserveOnSink<Observer: ObserverType>: ObserverBase<Observer
             }
         }
 
+        // 前面的仅仅做数据的存储工作, 然后使用 scheduler 进行消费行为的调度.
         if shouldStart {
-            // 在这里, 进行开启了消费队列的逻辑.
             self.scheduleDisposable.disposable = self.scheduler.scheduleRecursive((), action: self.run)
         }
     }
 
     // run, 不断的消费队列里面的内容.
     func run(_ state: (), _ recurse: (()) -> Void) {
+        // 从 queue 里面, 取出要处理的 event, 和 observers 来.
         let (nextEvent, observer) = self.lock.performLocked { () -> (Event<Element>?, Observer) in
             if !self.queue.isEmpty {
                 return (self.queue.dequeue(), self.observer)
@@ -143,8 +135,7 @@ final private class ObserveOnSink<Observer: ObserverType>: ObserverBase<Observer
             if nextEvent.isStopEvent {
                 self.dispose()
             }
-        }
-        else {
+        } else {
             return
         }
 

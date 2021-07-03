@@ -16,6 +16,9 @@ struct SubscriptionDisposable<T: SynchronizedUnsubscribeType> : Disposable {
         self.key = key
     }
 
+    // 这里, dispose 中, owner 是 optinal.
+    // 因为实际上, 可能会 Publisher 已经消亡了. 但是注册还存在着.
+    // 这在拿到另外一个对象的Publisher来进行 subscibe 是经常出现的. Publisher 的生命周期, 跟随着另外一个对象.
     func dispose() {
         self.owner?.synchronizedUnsubscribe(self.key)
     }

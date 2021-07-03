@@ -72,7 +72,8 @@ final private class JustScheduled<Element>: Producer<Element> {
     }
 }
 
-// Just Producer 的 subscribe 逻辑就是, 传递一次 Element, 然后就 Complete
+// Just 作为一个 Producer, subscribe 的时候, 仅仅是是发射一个 next 信号, 然后就是 complete 信号.
+// 没有 Sink 的操作其中.
 final private class Just<Element>: Producer<Element> {
     private let element: Element
     

@@ -9,6 +9,7 @@
 struct ScheduledItem<T>
     : ScheduledItemType
     , InvocableType {
+    
     typealias Action = (T) -> Disposable
     
     private let action: Action

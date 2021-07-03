@@ -35,6 +35,7 @@ extension DispatchQueueConfiguration {
         return cancel
     }
 
+    // 在什么时间点, 进行 action 的处理.
     func scheduleRelative<StateType>(_ state: StateType,
                                      dueTime: RxTimeInterval,
                                      action: @escaping (StateType) -> Disposable) -> Disposable {
@@ -72,6 +73,7 @@ extension DispatchQueueConfiguration {
         return compositeDisposable
     }
 
+    // 周期性的, 进行 action 的调用.
     func schedulePeriodic<StateType>(_ state: StateType, startAfter: RxTimeInterval, period: RxTimeInterval, action: @escaping (StateType) -> StateType) -> Disposable {
         let initial = DispatchTime.now() + startAfter
 
