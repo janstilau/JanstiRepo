@@ -550,7 +550,6 @@ private class MergeSink<SourceElement, SourceSequence: ObservableConvertibleType
     }
     
     到了这里, 就是一个信号触发之后, 要产生另外一个事件序列, 由这个产生的事件序列, 来触发后面的操作.
- 
  */
 final private class FlatMap<SourceElement,
                             SourceSequence: ObservableConvertibleType>: Producer<SourceSequence.Element> {

@@ -91,6 +91,9 @@ public class CurrentThreadScheduler : ImmediateSchedulerType {
     public func schedule<StateType>(_ state: StateType, action: @escaping (StateType) -> Disposable) -> Disposable {
         
         if CurrentThreadScheduler.isScheduleRequired {
+            /*
+              当, 正在进行取值调用的时候, 新加入的任务, 就不会立马调用了. 而是加入到队列中, 等待下次调用.
+             */
             CurrentThreadScheduler.isScheduleRequired = false
             let disposable = action(state)
 
@@ -113,6 +116,9 @@ public class CurrentThreadScheduler : ImmediateSchedulerType {
             return disposable
         }
 
+        // 如果, 不是立马进行调用, schedule 是把数据, 装到了对应的队列里面.
+        // 这里没有明白, 为什么会有这样的一个状态.
+        // 单线程环境下, 上面没有结束, 怎么进入到下面的状态.
         let existingQueue = CurrentThreadScheduler.queue
 
         let queue: RxMutableBox<Queue<ScheduledItemType>>

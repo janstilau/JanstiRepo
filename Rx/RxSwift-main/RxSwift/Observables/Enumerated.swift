@@ -21,6 +21,9 @@ extension ObservableType {
     }
 }
 
+/*
+    就是在自己的内部, 存储了一个 Index 的值, 然后在 on 的时候, 把这个值在发送出去.
+ */
 final private class EnumeratedSink<Element, Observer: ObserverType>: Sink<Observer>, ObserverType where Observer.Element == (index: Int, element: Element) {
     var index = 0
     
