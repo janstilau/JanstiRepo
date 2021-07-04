@@ -24,16 +24,21 @@ import UIKit
 import RxSwift
 
 extension UIViewController {
-  func alert(title: String, text: String?) -> Observable<Void> {
-    return Observable.create { [weak self] observer in
-      let alertVC = UIAlertController(title: title, message: text, preferredStyle: .alert)
-      alertVC.addAction(UIAlertAction(title: "Close", style: .default, handler: {_ in
-        observer.onCompleted()
-      }))
-      self?.present(alertVC, animated: true, completion: nil)
-      return Disposables.create {
-        self?.dismiss(animated: true, completion: nil)
-      }
+    /*
+        这种简单的异步操作, 用 rx 来建构一个信号源, 反而让事情变得复杂.
+     */
+    func alert(title: String, text: String?) -> Observable<Void> {
+        return Observable.create { [weak self] observer in
+            let alertVC = UIAlertController(title: title, message: text, preferredStyle: .alert)
+            alertVC.addAction(UIAlertAction(title: "Close", style: .default, handler: {_ in
+                observer.onCompleted()
+            }))
+            self?.present(alertVC, animated: true, completion: nil)
+            
+            // 各种 Disposale, 取消的逻辑里面, 就是注册行为的删除.
+            return Disposables.create {
+                self?.dismiss(animated: true, completion: nil)
+            }
+        }
     }
-  }
 }

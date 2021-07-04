@@ -124,7 +124,8 @@ final private class TakeCount<Element>: Producer<Element> {
 }
 
 // time version
-
+// Take Time 本身这个 Sink, 还是作为 Subscriber 存在的.
+// 在内部, 自己维护了一个倒计时, 在时间达到之后, 模拟一个 Complete 信号的接受.
 final private class TakeTimeSink<Element, Observer: ObserverType>
     : Sink<Observer>
     , LockOwnerType

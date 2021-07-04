@@ -83,12 +83,28 @@ class NumbersViewController: ViewController {
         print(leftAction)
         print(rightAction)
         print(leftAction == rightAction)
-        
-        
-        
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        btnDidCliced(NSObject())
     }
     
     @objc func btnDidCliced(_ sender: NSObject) {
+        let publisher = Observable<String>.create { observer in
+            observer.onNext("1")
+            observer.onNext("2")
+            observer.onCompleted()
+            return Disposables.create()
+        }
+        let sharePublisher = publisher.share()
+        sharePublisher.subscribe { event in
+            print("1")
+            print(event)
+        }
+        sharePublisher.subscribe { event in
+            print("2")
+            print(event)
+        }
         
     }
 }

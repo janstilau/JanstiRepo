@@ -15,6 +15,8 @@ extension ObservableType {
      - returns: An observable sequence whose elements are the result of filtering the transform function for each element of the source.
 
      */
+    
+    // 要使用这个 Operator, 提供的 Block, 必须是 Result? 类型的才可以.
     public func compactMap<Result>(_ transform: @escaping (Element) throws -> Result?)
         -> Observable<Result> {
         CompactMap(source: self.asObservable(), transform: transform)
@@ -34,6 +36,7 @@ final private class CompactMapSink<SourceType, Observer: ObserverType>: Sink<Obs
         super.init(observer: observer, cancel: cancel)
     }
 
+     
     func on(_ event: Event<SourceType>) {
         switch event {
         case .next(let element):

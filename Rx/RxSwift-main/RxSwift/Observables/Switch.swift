@@ -89,14 +89,13 @@ private class SwitchSink<SourceType, Source: ObservableConvertibleType, Observer
         rxAbstractMethod()
     }
     
-    /*
-     当有了新的 Publisher 之后, self.latest 的 id 值发生变化, 正式因为如此, 原始的 Publisher 才失去的作用.
-     */
     @inline(__always)
-    final private func nextElementArrived(element: Element) -> (Int, Observable<Source.Element>)? {
-        self.lock.lock(); defer { self.lock.unlock() }
+    final private func nextElementArrived(
+        element: Element) -> (Int, Observable<Source.Element>)? {
         
+        self.lock.lock(); defer { self.lock.unlock() }
         do {
+            // 每当接收到一个信号的数据之后, 通过之前存储的, Ele->Publisher Block 生成一个新的信号源.
             let observable = try self.performMap(element).asObservable()
             self.hasLatest = true
             self.latest = self.latest &+ 1
@@ -120,6 +119,8 @@ private class SwitchSink<SourceType, Source: ObservableConvertibleType, Observer
                 let d = SingleAssignmentDisposable()
                 self.innerSubscription.disposable = d
                 
+                // SwitchSinkIter 记录了 id, 作为新的 Publisher 的 Subscriber.
+                // 如果当前 id 没有变化,  在 SwitchSinkIter 内部, 才会在 on 里面, 处理新的信号.
                 let observer = SwitchSinkIter(parent: self, id: latest, this: d)
                 let disposable = observable.subscribe(observer)
                 d.setDisposable(disposable)
@@ -180,6 +181,7 @@ final private class SwitchSinkIter<SourceType, Source: ObservableConvertibleType
             return
         }
         
+        // 然后直接将数据, 转移到后面的 Subscriber 里面.
         switch event {
         case .next:
             self.parent.forwardOn(event)

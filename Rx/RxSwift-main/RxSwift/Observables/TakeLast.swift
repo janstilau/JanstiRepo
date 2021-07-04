@@ -30,6 +30,7 @@ final private class TakeLastSink<Observer: ObserverType>: Sink<Observer>, Observ
     
     private let parent: Parent
     
+    // 在这里, 存储了之前信号发射过来的时候的数据.
     private var elements: Queue<Element>
     
     init(parent: Parent, observer: Observer, cancel: Cancelable) {
@@ -49,6 +50,7 @@ final private class TakeLastSink<Observer: ObserverType>: Sink<Observer>, Observ
             self.forwardOn(event)
             self.dispose()
         case .completed:
+            // 当, complete 的时候, 才发射之前存储的数据.
             for e in self.elements {
                 self.forwardOn(.next(e))
             }

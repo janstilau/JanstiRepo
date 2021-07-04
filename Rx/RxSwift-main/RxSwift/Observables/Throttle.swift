@@ -72,8 +72,7 @@ final private class ThrottleSink<Observer: ObserverType>
 
             if let lastSendingTime = self.lastSentTime {
                 reducedScheduledTime = self.parent.dueTime.reduceWithSpanBetween(earlierDate: lastSendingTime, laterDate: now)
-            }
-            else {
+            } else {
                 reducedScheduledTime = .nanoseconds(0)
             }
 

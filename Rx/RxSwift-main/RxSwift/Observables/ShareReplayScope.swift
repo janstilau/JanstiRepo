@@ -346,12 +346,16 @@ private final class ShareWhileConnectedConnection<Element>
             return self.observers
         case .error, .completed:
             let observers = self.observers
+            // 当接收到了 StopEvent 的时候, 会把所有的 Subscriber 清空.
+            // 所以, 如果是在 subscrie 的时候, 发送了 complection 信号,  share 是没有多大用途的.
+            // 每次连接, 都是新建一条信号处理管道.
             self.synchronized_dispose()
             return observers
         }
     }
 
     final func connect() {
+        // 在这里, 将原始的 Pusblisher 注册 Subscriber 到 Connection 对象里面了.
         self.subscription.setDisposable(self.parent.source.subscribe(self))
     }
 

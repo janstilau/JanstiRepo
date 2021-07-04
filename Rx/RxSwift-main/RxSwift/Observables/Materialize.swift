@@ -7,7 +7,7 @@
 //
 
 extension ObservableType {
-    /**
+    /*
      Convert any Observable into an Observable of its events.
      - seealso: [materialize operator on reactivex.io](http://reactivex.io/documentation/operators/materialize-dematerialize.html)
      - returns: An observable sequence that wraps events in an Event<E>. The returned Observable never errors, but it does complete after observing all of the events of the underlying Observable.
@@ -19,6 +19,7 @@ extension ObservableType {
 
 private final class MaterializeSink<Element, Observer: ObserverType>: Sink<Observer>, ObserverType where Observer.Element == Event<Element> {
 
+    // Materialize 会将所有的信号, 都包装成为 next. next 里面的数据, 是原始的信号.
     func on(_ event: Event<Element>) {
         self.forwardOn(.next(event))
         if event.isStopEvent {
