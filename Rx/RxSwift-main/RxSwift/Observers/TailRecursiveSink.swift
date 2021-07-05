@@ -19,6 +19,7 @@ enum TailRecursiveSinkCommand {
 class TailRecursiveSink<Sequence: Swift.Sequence, Observer: ObserverType>
     : Sink<Observer>
     , InvocableWithValueType where Sequence.Element: ObservableConvertibleType, Sequence.Element.Element == Observer.Element {
+    
     typealias Value = TailRecursiveSinkCommand
     typealias Element = Observer.Element 
     typealias SequenceGenerator = (generator: Sequence.Iterator, remaining: IntMax?)

@@ -87,6 +87,7 @@ extension ObservableType {
 final private class ConcatSink<Sequence: Swift.Sequence, Observer: ObserverType>
     : TailRecursiveSink<Sequence, Observer>
     , ObserverType where Sequence.Element: ObservableConvertibleType, Sequence.Element.Element == Observer.Element {
+    
     typealias Element = Observer.Element 
     
     override init(observer: Observer, cancel: Cancelable) {
@@ -102,6 +103,7 @@ final private class ConcatSink<Sequence: Swift.Sequence, Observer: ObserverType>
             // 只要一个发生了错误, 就调用 dispose 方法.
             self.dispose()
         case .completed:
+            // 当, 察觉到了 Complete 之后, 就会进行 Publisher 的切换.
             self.schedule(.moveNext)
         }
     }
