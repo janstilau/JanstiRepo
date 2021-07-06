@@ -1,0 +1,407 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXFileReference section */
+		AAB5B4C62694B30A006AA7D3 /* diff-files.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "diff-files.c"; sourceTree = "<group>"; };
+		AAB5B4C72694B30A006AA7D3 /* rev-tree.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "rev-tree.c"; sourceTree = "<group>"; };
+		AAB5B4C82694B30A006AA7D3 /* rsh.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = rsh.c; sourceTree = "<group>"; };
+		AAB5B4C92694B30A006AA7D3 /* strbuf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = strbuf.h; sourceTree = "<group>"; };
+		AAB5B4CA2694B30A006AA7D3 /* diff.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = diff.c; sourceTree = "<group>"; };
+		AAB5B4CB2694B30A006AA7D3 /* local-pull.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "local-pull.c"; sourceTree = "<group>"; };
+		AAB5B4CC2694B30A006AA7D3 /* git.spec.in */ = {isa = PBXFileReference; lastKnownFileType = text; path = git.spec.in; sourceTree = "<group>"; };
+		AAB5B4CD2694B30A006AA7D3 /* quote.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = quote.h; sourceTree = "<group>"; };
+		AAB5B4CE2694B30A006AA7D3 /* git-reset-script */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "git-reset-script"; sourceTree = "<group>"; };
+		AAB5B4CF2694B30A006AA7D3 /* Documentation */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Documentation; sourceTree = "<group>"; };
+		AAB5B4D02694B30A006AA7D3 /* diffcore-pickaxe.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "diffcore-pickaxe.c"; sourceTree = "<group>"; };
+		AAB5B4D12694B30A006AA7D3 /* csum-file.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "csum-file.c"; sourceTree = "<group>"; };
+		AAB5B4D22694B30A006AA7D3 /* pack.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pack.h; sourceTree = "<group>"; };
+		AAB5B4D32694B30A006AA7D3 /* INSTALL */ = {isa = PBXFileReference; lastKnownFileType = text; path = INSTALL; sourceTree = "<group>"; };
+		AAB5B4D42694B30A006AA7D3 /* upload-pack.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "upload-pack.c"; sourceTree = "<group>"; };
+		AAB5B4D52694B30A006AA7D3 /* object.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = object.c; sourceTree = "<group>"; };
+		AAB5B4D62694B30A006AA7D3 /* git-add-script */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "git-add-script"; sourceTree = "<group>"; };
+		AAB5B4D72694B30A006AA7D3 /* ls-tree.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "ls-tree.c"; sourceTree = "<group>"; };
+		AAB5B4D82694B30A006AA7D3 /* tag.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tag.h; sourceTree = "<group>"; };
+		AAB5B4D92694B30A006AA7D3 /* pkt-line.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "pkt-line.h"; sourceTree = "<group>"; };
+		AAB5B4DA2694B30A006AA7D3 /* test-date.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "test-date.c"; sourceTree = "<group>"; };
+		AAB5B4DB2694B30A006AA7D3 /* git-prune-script */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "git-prune-script"; sourceTree = "<group>"; };
+		AAB5B4DC2694B30A006AA7D3 /* diff-helper.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "diff-helper.c"; sourceTree = "<group>"; };
+		AAB5B4DD2694B30A006AA7D3 /* convert-cache.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "convert-cache.c"; sourceTree = "<group>"; };
+		AAB5B4DE2694B30A006AA7D3 /* cat-file.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "cat-file.c"; sourceTree = "<group>"; };
+		AAB5B4DF2694B30A006AA7D3 /* gitk */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = gitk; sourceTree = "<group>"; };
+		AAB5B4E02694B30A006AA7D3 /* mozilla-sha1 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "mozilla-sha1"; sourceTree = "<group>"; };
+		AAB5B4E12694B30A006AA7D3 /* epoch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = epoch.h; sourceTree = "<group>"; };
+		AAB5B4E22694B30A006AA7D3 /* pull.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pull.h; sourceTree = "<group>"; };
+		AAB5B4E32694B30A006AA7D3 /* count-delta.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "count-delta.c"; sourceTree = "<group>"; };
+		AAB5B4E42694B30A006AA7D3 /* ls-files.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "ls-files.c"; sourceTree = "<group>"; };
+		AAB5B4E52694B30A006AA7D3 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		AAB5B4E62694B30A006AA7D3 /* diffcore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = diffcore.h; sourceTree = "<group>"; };
+		AAB5B4E72694B30A006AA7D3 /* blob.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = blob.h; sourceTree = "<group>"; };
+		AAB5B4E82694B30A006AA7D3 /* rev-parse.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "rev-parse.c"; sourceTree = "<group>"; };
+		AAB5B4E92694B30A006AA7D3 /* mktag.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = mktag.c; sourceTree = "<group>"; };
+		AAB5B4EA2694B30A006AA7D3 /* git-repack-script */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "git-repack-script"; sourceTree = "<group>"; };
+		AAB5B4EB2694B30A006AA7D3 /* delta.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = delta.h; sourceTree = "<group>"; };
+		AAB5B4EC2694B30A006AA7D3 /* git-cvsimport-script */ = {isa = PBXFileReference; lastKnownFileType = text.script.perl; path = "git-cvsimport-script"; sourceTree = "<group>"; };
+		AAB5B4ED2694B30A006AA7D3 /* hash-object.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "hash-object.c"; sourceTree = "<group>"; };
+		AAB5B4EE2694B30A006AA7D3 /* git-whatchanged */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "git-whatchanged"; sourceTree = "<group>"; };
+		AAB5B4EF2694B30A006AA7D3 /* diffcore-pathspec.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "diffcore-pathspec.c"; sourceTree = "<group>"; };
+		AAB5B4F02694B30A006AA7D3 /* ppc */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ppc; sourceTree = "<group>"; };
+		AAB5B4F12694B30A006AA7D3 /* apply.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = apply.c; sourceTree = "<group>"; };
+		AAB5B4F22694B30A006AA7D3 /* fsck-cache.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "fsck-cache.c"; sourceTree = "<group>"; };
+		AAB5B4F32694B30A006AA7D3 /* send-pack.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "send-pack.c"; sourceTree = "<group>"; };
+		AAB5B4F42694B30A006AA7D3 /* git-resolve-script */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "git-resolve-script"; sourceTree = "<group>"; };
+		AAB5B4F52694B30A006AA7D3 /* cache.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cache.h; sourceTree = "<group>"; };
+		AAB5B4F62694B30A006AA7D3 /* git-tag-script */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "git-tag-script"; sourceTree = "<group>"; };
+		AAB5B4F72694B30A006AA7D3 /* commit-tree.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "commit-tree.c"; sourceTree = "<group>"; };
+		AAB5B4F82694B30A006AA7D3 /* ssh-pull.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "ssh-pull.c"; sourceTree = "<group>"; };
+		AAB5B4F92694B30A006AA7D3 /* prune-packed.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "prune-packed.c"; sourceTree = "<group>"; };
+		AAB5B4FA2694B30A006AA7D3 /* tree.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tree.h; sourceTree = "<group>"; };
+		AAB5B4FB2694B30A006AA7D3 /* git-diff-script */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "git-diff-script"; sourceTree = "<group>"; };
+		AAB5B4FC2694B30A006AA7D3 /* git-cherry */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "git-cherry"; sourceTree = "<group>"; };
+		AAB5B4FD2694B30A006AA7D3 /* diffcore-rename.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "diffcore-rename.c"; sourceTree = "<group>"; };
+		AAB5B4FE2694B30A006AA7D3 /* commit.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = commit.c; sourceTree = "<group>"; };
+		AAB5B4FF2694B30A006AA7D3 /* check-files.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "check-files.c"; sourceTree = "<group>"; };
+		AAB5B5002694B30A006AA7D3 /* show-index.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "show-index.c"; sourceTree = "<group>"; };
+		AAB5B5012694B30A006AA7D3 /* usage.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = usage.c; sourceTree = "<group>"; };
+		AAB5B5022694B30A006AA7D3 /* write-tree.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "write-tree.c"; sourceTree = "<group>"; };
+		AAB5B5032694B30A006AA7D3 /* t */ = {isa = PBXFileReference; lastKnownFileType = folder; path = t; sourceTree = "<group>"; };
+		AAB5B5042694B30A006AA7D3 /* refs.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = refs.c; sourceTree = "<group>"; };
+		AAB5B5052694B30A006AA7D3 /* git-status-script */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "git-status-script"; sourceTree = "<group>"; };
+		AAB5B5062694B30A006AA7D3 /* update-cache.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "update-cache.c"; sourceTree = "<group>"; };
+		AAB5B5072694B30A006AA7D3 /* README */ = {isa = PBXFileReference; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
+		AAB5B5082694B30A006AA7D3 /* diff-cache.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "diff-cache.c"; sourceTree = "<group>"; };
+		AAB5B5092694B30A006AA7D3 /* csum-file.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "csum-file.h"; sourceTree = "<group>"; };
+		AAB5B50A2694B30A006AA7D3 /* clone-pack.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "clone-pack.c"; sourceTree = "<group>"; };
+		AAB5B50B2694B30A006AA7D3 /* init-db.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "init-db.c"; sourceTree = "<group>"; };
+		AAB5B50C2694B30A006AA7D3 /* gitenv.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = gitenv.c; sourceTree = "<group>"; };
+		AAB5B50D2694B30A006AA7D3 /* quote.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = quote.c; sourceTree = "<group>"; };
+		AAB5B50E2694B30A006AA7D3 /* pack-objects.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "pack-objects.c"; sourceTree = "<group>"; };
+		AAB5B50F2694B30A006AA7D3 /* git-relink-script */ = {isa = PBXFileReference; lastKnownFileType = text; path = "git-relink-script"; sourceTree = "<group>"; };
+		AAB5B5102694B30A006AA7D3 /* diff-delta.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "diff-delta.c"; sourceTree = "<group>"; };
+		AAB5B5112694B30A006AA7D3 /* git-log-script */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "git-log-script"; sourceTree = "<group>"; };
+		AAB5B5122694B30A006AA7D3 /* git-verify-tag-script */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "git-verify-tag-script"; sourceTree = "<group>"; };
+		AAB5B5132694B30A006AA7D3 /* diff.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = diff.h; sourceTree = "<group>"; };
+		AAB5B5142694B30A006AA7D3 /* COPYING */ = {isa = PBXFileReference; lastKnownFileType = text; path = COPYING; sourceTree = "<group>"; };
+		AAB5B5152694B30A006AA7D3 /* index.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = index.c; sourceTree = "<group>"; };
+		AAB5B5162694B30A006AA7D3 /* strbuf.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = strbuf.c; sourceTree = "<group>"; };
+		AAB5B5172694B30A006AA7D3 /* git-checkout-script */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "git-checkout-script"; sourceTree = "<group>"; };
+		AAB5B5182694B30A006AA7D3 /* git-push-script */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "git-push-script"; sourceTree = "<group>"; };
+		AAB5B5192694B30A006AA7D3 /* git-merge-one-file-script */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "git-merge-one-file-script"; sourceTree = "<group>"; };
+		AAB5B51A2694B30A006AA7D3 /* test-delta.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "test-delta.c"; sourceTree = "<group>"; };
+		AAB5B51B2694B30A006AA7D3 /* git-sh-setup-script */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "git-sh-setup-script"; sourceTree = "<group>"; };
+		AAB5B51C2694B30A006AA7D3 /* rsh.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = rsh.h; sourceTree = "<group>"; };
+		AAB5B51D2694B30A006AA7D3 /* git-external-diff-script */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "git-external-diff-script"; sourceTree = "<group>"; };
+		AAB5B51E2694B30A006AA7D3 /* diff-stages.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "diff-stages.c"; sourceTree = "<group>"; };
+		AAB5B51F2694B30A006AA7D3 /* stripspace.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = stripspace.c; sourceTree = "<group>"; };
+		AAB5B5202694B30A006AA7D3 /* pull.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pull.c; sourceTree = "<group>"; };
+		AAB5B5212694B30A006AA7D3 /* epoch.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = epoch.c; sourceTree = "<group>"; };
+		AAB5B5222694B30A006AA7D3 /* path.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = path.c; sourceTree = "<group>"; };
+		AAB5B5232694B30A006AA7D3 /* verify-pack.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "verify-pack.c"; sourceTree = "<group>"; };
+		AAB5B5242694B30A006AA7D3 /* pkt-line.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "pkt-line.c"; sourceTree = "<group>"; };
+		AAB5B5252694B30A006AA7D3 /* fetch-pack.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "fetch-pack.c"; sourceTree = "<group>"; };
+		AAB5B5262694B30A006AA7D3 /* checkout-cache.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "checkout-cache.c"; sourceTree = "<group>"; };
+		AAB5B5272694B30A006AA7D3 /* patch-id.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "patch-id.c"; sourceTree = "<group>"; };
+		AAB5B5282694B30A006AA7D3 /* tag.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tag.c; sourceTree = "<group>"; };
+		AAB5B5292694B30A006AA7D3 /* sha1_file.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = sha1_file.c; sourceTree = "<group>"; };
+		AAB5B52A2694B30A006AA7D3 /* merge-base.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "merge-base.c"; sourceTree = "<group>"; };
+		AAB5B52B2694B30A006AA7D3 /* diffcore-break.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "diffcore-break.c"; sourceTree = "<group>"; };
+		AAB5B52C2694B30A006AA7D3 /* patch-delta.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "patch-delta.c"; sourceTree = "<group>"; };
+		AAB5B52D2694B30A006AA7D3 /* export.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = export.c; sourceTree = "<group>"; };
+		AAB5B52E2694B30A006AA7D3 /* ssh-push.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "ssh-push.c"; sourceTree = "<group>"; };
+		AAB5B52F2694B30A006AA7D3 /* git-pull-script */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "git-pull-script"; sourceTree = "<group>"; };
+		AAB5B5302694B30A006AA7D3 /* object.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = object.h; sourceTree = "<group>"; };
+		AAB5B5312694B30A006AA7D3 /* merge-cache.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "merge-cache.c"; sourceTree = "<group>"; };
+		AAB5B5322694B30A006AA7D3 /* diff-tree.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "diff-tree.c"; sourceTree = "<group>"; };
+		AAB5B5332694B30A006AA7D3 /* date.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = date.c; sourceTree = "<group>"; };
+		AAB5B5342694B30A006AA7D3 /* connect.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = connect.c; sourceTree = "<group>"; };
+		AAB5B5352694B30A006AA7D3 /* tar-tree.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "tar-tree.c"; sourceTree = "<group>"; };
+		AAB5B5362694B30A006AA7D3 /* git-format-patch-script */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "git-format-patch-script"; sourceTree = "<group>"; };
+		AAB5B5372694B30A006AA7D3 /* git-commit-script */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "git-commit-script"; sourceTree = "<group>"; };
+		AAB5B5382694B30A006AA7D3 /* unpack-file.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "unpack-file.c"; sourceTree = "<group>"; };
+		AAB5B5392694B30A006AA7D3 /* blob.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = blob.c; sourceTree = "<group>"; };
+		AAB5B53A2694B30A006AA7D3 /* count-delta.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "count-delta.h"; sourceTree = "<group>"; };
+		AAB5B53B2694B30A006AA7D3 /* read-tree.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "read-tree.c"; sourceTree = "<group>"; };
+		AAB5B53C2694B30A006AA7D3 /* git-fetch-script */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "git-fetch-script"; sourceTree = "<group>"; };
+		AAB5B53D2694B30A006AA7D3 /* refs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = refs.h; sourceTree = "<group>"; };
+		AAB5B53E2694B30A006AA7D3 /* pack-check.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "pack-check.c"; sourceTree = "<group>"; };
+		AAB5B53F2694B30A006AA7D3 /* unpack-objects.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "unpack-objects.c"; sourceTree = "<group>"; };
+		AAB5B5402694B30A006AA7D3 /* git-shortlog */ = {isa = PBXFileReference; lastKnownFileType = text.script.perl; path = "git-shortlog"; sourceTree = "<group>"; };
+		AAB5B5412694B30A006AA7D3 /* git-rebase-script */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "git-rebase-script"; sourceTree = "<group>"; };
+		AAB5B5422694B30A006AA7D3 /* http-pull.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "http-pull.c"; sourceTree = "<group>"; };
+		AAB5B5432694B30A006AA7D3 /* rev-list.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "rev-list.c"; sourceTree = "<group>"; };
+		AAB5B5442694B30A006AA7D3 /* entry.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = entry.c; sourceTree = "<group>"; };
+		AAB5B5452694B30A006AA7D3 /* diffcore-order.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "diffcore-order.c"; sourceTree = "<group>"; };
+		AAB5B5462694B30A006AA7D3 /* git-apply-patch-script */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "git-apply-patch-script"; sourceTree = "<group>"; };
+		AAB5B5472694B30A006AA7D3 /* get-tar-commit-id.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "get-tar-commit-id.c"; sourceTree = "<group>"; };
+		AAB5B5482694B30A006AA7D3 /* git */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = git; sourceTree = "<group>"; };
+		AAB5B5492694B30A006AA7D3 /* git-clone-script */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "git-clone-script"; sourceTree = "<group>"; };
+		AAB5B54A2694B30A006AA7D3 /* commit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = commit.h; sourceTree = "<group>"; };
+		AAB5B54B2694B30A006AA7D3 /* receive-pack.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "receive-pack.c"; sourceTree = "<group>"; };
+		AAB5B54C2694B30A006AA7D3 /* read-cache.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "read-cache.c"; sourceTree = "<group>"; };
+		AAB5B54D2694B30A006AA7D3 /* tree.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tree.c; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		AAB5B4C02694B30A006AA7D3 = {
+			isa = PBXGroup;
+			children = (
+				AAB5B4F12694B30A006AA7D3 /* apply.c */,
+				AAB5B5392694B30A006AA7D3 /* blob.c */,
+				AAB5B4E72694B30A006AA7D3 /* blob.h */,
+				AAB5B4F52694B30A006AA7D3 /* cache.h */,
+				AAB5B4DE2694B30A006AA7D3 /* cat-file.c */,
+				AAB5B4FF2694B30A006AA7D3 /* check-files.c */,
+				AAB5B5262694B30A006AA7D3 /* checkout-cache.c */,
+				AAB5B50A2694B30A006AA7D3 /* clone-pack.c */,
+				AAB5B4F72694B30A006AA7D3 /* commit-tree.c */,
+				AAB5B4FE2694B30A006AA7D3 /* commit.c */,
+				AAB5B54A2694B30A006AA7D3 /* commit.h */,
+				AAB5B5342694B30A006AA7D3 /* connect.c */,
+				AAB5B4DD2694B30A006AA7D3 /* convert-cache.c */,
+				AAB5B5142694B30A006AA7D3 /* COPYING */,
+				AAB5B4E32694B30A006AA7D3 /* count-delta.c */,
+				AAB5B53A2694B30A006AA7D3 /* count-delta.h */,
+				AAB5B4D12694B30A006AA7D3 /* csum-file.c */,
+				AAB5B5092694B30A006AA7D3 /* csum-file.h */,
+				AAB5B5332694B30A006AA7D3 /* date.c */,
+				AAB5B4EB2694B30A006AA7D3 /* delta.h */,
+				AAB5B5082694B30A006AA7D3 /* diff-cache.c */,
+				AAB5B5102694B30A006AA7D3 /* diff-delta.c */,
+				AAB5B4C62694B30A006AA7D3 /* diff-files.c */,
+				AAB5B4DC2694B30A006AA7D3 /* diff-helper.c */,
+				AAB5B51E2694B30A006AA7D3 /* diff-stages.c */,
+				AAB5B5322694B30A006AA7D3 /* diff-tree.c */,
+				AAB5B4CA2694B30A006AA7D3 /* diff.c */,
+				AAB5B5132694B30A006AA7D3 /* diff.h */,
+				AAB5B52B2694B30A006AA7D3 /* diffcore-break.c */,
+				AAB5B5452694B30A006AA7D3 /* diffcore-order.c */,
+				AAB5B4EF2694B30A006AA7D3 /* diffcore-pathspec.c */,
+				AAB5B4D02694B30A006AA7D3 /* diffcore-pickaxe.c */,
+				AAB5B4FD2694B30A006AA7D3 /* diffcore-rename.c */,
+				AAB5B4E62694B30A006AA7D3 /* diffcore.h */,
+				AAB5B4CF2694B30A006AA7D3 /* Documentation */,
+				AAB5B5442694B30A006AA7D3 /* entry.c */,
+				AAB5B5212694B30A006AA7D3 /* epoch.c */,
+				AAB5B4E12694B30A006AA7D3 /* epoch.h */,
+				AAB5B52D2694B30A006AA7D3 /* export.c */,
+				AAB5B5252694B30A006AA7D3 /* fetch-pack.c */,
+				AAB5B4F22694B30A006AA7D3 /* fsck-cache.c */,
+				AAB5B5472694B30A006AA7D3 /* get-tar-commit-id.c */,
+				AAB5B5482694B30A006AA7D3 /* git */,
+				AAB5B4D62694B30A006AA7D3 /* git-add-script */,
+				AAB5B5462694B30A006AA7D3 /* git-apply-patch-script */,
+				AAB5B5172694B30A006AA7D3 /* git-checkout-script */,
+				AAB5B4FC2694B30A006AA7D3 /* git-cherry */,
+				AAB5B5492694B30A006AA7D3 /* git-clone-script */,
+				AAB5B5372694B30A006AA7D3 /* git-commit-script */,
+				AAB5B4EC2694B30A006AA7D3 /* git-cvsimport-script */,
+				AAB5B4FB2694B30A006AA7D3 /* git-diff-script */,
+				AAB5B51D2694B30A006AA7D3 /* git-external-diff-script */,
+				AAB5B53C2694B30A006AA7D3 /* git-fetch-script */,
+				AAB5B5362694B30A006AA7D3 /* git-format-patch-script */,
+				AAB5B5112694B30A006AA7D3 /* git-log-script */,
+				AAB5B5192694B30A006AA7D3 /* git-merge-one-file-script */,
+				AAB5B4DB2694B30A006AA7D3 /* git-prune-script */,
+				AAB5B52F2694B30A006AA7D3 /* git-pull-script */,
+				AAB5B5182694B30A006AA7D3 /* git-push-script */,
+				AAB5B5412694B30A006AA7D3 /* git-rebase-script */,
+				AAB5B50F2694B30A006AA7D3 /* git-relink-script */,
+				AAB5B4EA2694B30A006AA7D3 /* git-repack-script */,
+				AAB5B4CE2694B30A006AA7D3 /* git-reset-script */,
+				AAB5B4F42694B30A006AA7D3 /* git-resolve-script */,
+				AAB5B51B2694B30A006AA7D3 /* git-sh-setup-script */,
+				AAB5B5402694B30A006AA7D3 /* git-shortlog */,
+				AAB5B5052694B30A006AA7D3 /* git-status-script */,
+				AAB5B4F62694B30A006AA7D3 /* git-tag-script */,
+				AAB5B5122694B30A006AA7D3 /* git-verify-tag-script */,
+				AAB5B4EE2694B30A006AA7D3 /* git-whatchanged */,
+				AAB5B4CC2694B30A006AA7D3 /* git.spec.in */,
+				AAB5B50C2694B30A006AA7D3 /* gitenv.c */,
+				AAB5B4DF2694B30A006AA7D3 /* gitk */,
+				AAB5B4ED2694B30A006AA7D3 /* hash-object.c */,
+				AAB5B5422694B30A006AA7D3 /* http-pull.c */,
+				AAB5B5152694B30A006AA7D3 /* index.c */,
+				AAB5B50B2694B30A006AA7D3 /* init-db.c */,
+				AAB5B4D32694B30A006AA7D3 /* INSTALL */,
+				AAB5B4CB2694B30A006AA7D3 /* local-pull.c */,
+				AAB5B4E42694B30A006AA7D3 /* ls-files.c */,
+				AAB5B4D72694B30A006AA7D3 /* ls-tree.c */,
+				AAB5B4E52694B30A006AA7D3 /* Makefile */,
+				AAB5B52A2694B30A006AA7D3 /* merge-base.c */,
+				AAB5B5312694B30A006AA7D3 /* merge-cache.c */,
+				AAB5B4E92694B30A006AA7D3 /* mktag.c */,
+				AAB5B4E02694B30A006AA7D3 /* mozilla-sha1 */,
+				AAB5B4D52694B30A006AA7D3 /* object.c */,
+				AAB5B5302694B30A006AA7D3 /* object.h */,
+				AAB5B53E2694B30A006AA7D3 /* pack-check.c */,
+				AAB5B50E2694B30A006AA7D3 /* pack-objects.c */,
+				AAB5B4D22694B30A006AA7D3 /* pack.h */,
+				AAB5B52C2694B30A006AA7D3 /* patch-delta.c */,
+				AAB5B5272694B30A006AA7D3 /* patch-id.c */,
+				AAB5B5222694B30A006AA7D3 /* path.c */,
+				AAB5B5242694B30A006AA7D3 /* pkt-line.c */,
+				AAB5B4D92694B30A006AA7D3 /* pkt-line.h */,
+				AAB5B4F02694B30A006AA7D3 /* ppc */,
+				AAB5B4F92694B30A006AA7D3 /* prune-packed.c */,
+				AAB5B5202694B30A006AA7D3 /* pull.c */,
+				AAB5B4E22694B30A006AA7D3 /* pull.h */,
+				AAB5B50D2694B30A006AA7D3 /* quote.c */,
+				AAB5B4CD2694B30A006AA7D3 /* quote.h */,
+				AAB5B54C2694B30A006AA7D3 /* read-cache.c */,
+				AAB5B53B2694B30A006AA7D3 /* read-tree.c */,
+				AAB5B5072694B30A006AA7D3 /* README */,
+				AAB5B54B2694B30A006AA7D3 /* receive-pack.c */,
+				AAB5B5042694B30A006AA7D3 /* refs.c */,
+				AAB5B53D2694B30A006AA7D3 /* refs.h */,
+				AAB5B5432694B30A006AA7D3 /* rev-list.c */,
+				AAB5B4E82694B30A006AA7D3 /* rev-parse.c */,
+				AAB5B4C72694B30A006AA7D3 /* rev-tree.c */,
+				AAB5B4C82694B30A006AA7D3 /* rsh.c */,
+				AAB5B51C2694B30A006AA7D3 /* rsh.h */,
+				AAB5B4F32694B30A006AA7D3 /* send-pack.c */,
+				AAB5B5292694B30A006AA7D3 /* sha1_file.c */,
+				AAB5B5002694B30A006AA7D3 /* show-index.c */,
+				AAB5B4F82694B30A006AA7D3 /* ssh-pull.c */,
+				AAB5B52E2694B30A006AA7D3 /* ssh-push.c */,
+				AAB5B5162694B30A006AA7D3 /* strbuf.c */,
+				AAB5B4C92694B30A006AA7D3 /* strbuf.h */,
+				AAB5B51F2694B30A006AA7D3 /* stripspace.c */,
+				AAB5B5032694B30A006AA7D3 /* t */,
+				AAB5B5282694B30A006AA7D3 /* tag.c */,
+				AAB5B4D82694B30A006AA7D3 /* tag.h */,
+				AAB5B5352694B30A006AA7D3 /* tar-tree.c */,
+				AAB5B4DA2694B30A006AA7D3 /* test-date.c */,
+				AAB5B51A2694B30A006AA7D3 /* test-delta.c */,
+				AAB5B54D2694B30A006AA7D3 /* tree.c */,
+				AAB5B4FA2694B30A006AA7D3 /* tree.h */,
+				AAB5B5382694B30A006AA7D3 /* unpack-file.c */,
+				AAB5B53F2694B30A006AA7D3 /* unpack-objects.c */,
+				AAB5B5062694B30A006AA7D3 /* update-cache.c */,
+				AAB5B4D42694B30A006AA7D3 /* upload-pack.c */,
+				AAB5B5012694B30A006AA7D3 /* usage.c */,
+				AAB5B5232694B30A006AA7D3 /* verify-pack.c */,
+				AAB5B5022694B30A006AA7D3 /* write-tree.c */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXLegacyTarget section */
+		AAB5B4C52694B30A006AA7D3 /* git-0.99 */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(ACTION)";
+			buildConfigurationList = AAB5B54E2694B30A006AA7D3 /* Build configuration list for PBXLegacyTarget "git-0.99" */;
+			buildPhases = (
+			);
+			buildToolPath = /usr/bin/make;
+			buildWorkingDirectory = "/Users/liugq01/SelfCodeHub/JanstiRepo/Git/git-0.99";
+			dependencies = (
+			);
+			name = "git-0.99";
+			passBuildSettingsInEnvironment = 1;
+			productName = "git-0.99";
+		};
+/* End PBXLegacyTarget section */
+
+/* Begin PBXProject section */
+		AAB5B4C12694B30A006AA7D3 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+			};
+			buildConfigurationList = AAB5B4C42694B30A006AA7D3 /* Build configuration list for PBXProject "git-0.99" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = AAB5B4C02694B30A006AA7D3;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				AAB5B4C52694B30A006AA7D3 /* git-0.99 */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin XCBuildConfiguration section */
+		AAB5B4C22694B30A006AA7D3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx10.6;
+			};
+			name = Debug;
+		};
+		AAB5B4C32694B30A006AA7D3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				SDKROOT = macosx10.6;
+			};
+			name = Release;
+		};
+		AAB5B54F2694B30A006AA7D3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "git-0.99";
+			};
+			name = Debug;
+		};
+		AAB5B5502694B30A006AA7D3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "git-0.99";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		AAB5B4C42694B30A006AA7D3 /* Build configuration list for PBXProject "git-0.99" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AAB5B4C22694B30A006AA7D3 /* Debug */,
+				AAB5B4C32694B30A006AA7D3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AAB5B54E2694B30A006AA7D3 /* Build configuration list for PBXLegacyTarget "git-0.99" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AAB5B54F2694B30A006AA7D3 /* Debug */,
+				AAB5B5502694B30A006AA7D3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = AAB5B4C12694B30A006AA7D3 /* Project object */;
+}
