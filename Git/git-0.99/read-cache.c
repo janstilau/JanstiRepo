@@ -318,7 +318,7 @@ int add_cache_entry(struct cache_entry *ce, int option)
 		pos = cache_name_pos(ce->name, ntohs(ce->ce_flags));
 		pos = -pos-1;
 	}
-
+ 
 	/* Make sure the array is big enough .. */
 	if (active_nr == active_alloc) {
 		active_alloc = alloc_nr(active_alloc);

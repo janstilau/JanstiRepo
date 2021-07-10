@@ -1,42 +1,3 @@
-/****************************************************************************
-**
-** Copyright (C) 2016 The Qt Company Ltd.
-** Contact: https://www.qt.io/licensing/
-**
-** This file is part of the QtCore module of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:LGPL$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see https://www.qt.io/terms-conditions. For further
-** information use the contact form at https://www.qt.io/contact-us.
-**
-** GNU Lesser General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 3 as published by the Free Software
-** Foundation and appearing in the file LICENSE.LGPL3 included in the
-** packaging of this file. Please review the following information to
-** ensure the GNU Lesser General Public License version 3 requirements
-** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
-**
-** GNU General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 2.0 or (at your option) the GNU General
-** Public license version 3 or any later version approved by the KDE Free
-** Qt Foundation. The licenses are as published by the Free Software
-** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
-** included in the packaging of this file. Please review the following
-** information to ensure the GNU General Public License requirements will
-** be met: https://www.gnu.org/licenses/gpl-2.0.html and
-** https://www.gnu.org/licenses/gpl-3.0.html.
-**
-** $QT_END_LICENSE$
-**
-****************************************************************************/
-
 #include "qthreadpool.h"
 #include "qthreadpool_p.h"
 #include "qdeadlinetimer.h"
@@ -67,9 +28,9 @@ public:
 */
 
 
-/*!
-    \internal
-*/
+/*
+ * QThreadPoolThread 这个类, 就是用来不断地进行, 任务读取的那个类.
+ */
 QThreadPoolThread::QThreadPoolThread(QThreadPoolPrivate *manager)
     :manager(manager), runnable(nullptr)
 {
@@ -89,27 +50,17 @@ void QThreadPoolThread::run()
         do {
             if (r) {
                 const bool del = r->autoDelete();
-                Q_ASSERT(!del || r->ref == 1);
-
-
-                // run the task
                 locker.unlock();
-#ifndef QT_NO_EXCEPTIONS
+                // 取到了任务, 执行的时候, 释放锁.
                 try {
-#endif
                     r->run();
-#ifndef QT_NO_EXCEPTIONS
                 } catch (...) {
-                    qWarning("Qt Concurrent has caught an exception thrown from a worker thread.\n"
-                             "This is not supported, exceptions thrown in worker threads must be\n"
-                             "caught before control returns to Qt Concurrent.");
                     registerThreadInactive();
                     throw;
                 }
-#endif
-
                 if (del)
                     delete r;
+                // 执行完任务, 要再次取任务的时候, 获取锁.
                 locker.relock();
             }
 
@@ -117,11 +68,13 @@ void QThreadPoolThread::run()
             if (manager->tooManyThreadsActive())
                 break;
 
+            // 没任务了.
             if (manager->queue.isEmpty()) {
                 r = nullptr;
                 break;
             }
 
+            // 拿取最新的一个任务.
             QueuePage *page = manager->queue.first();
             r = page->pop();
 
@@ -137,6 +90,7 @@ void QThreadPoolThread::run()
             manager->waitingThreads.enqueue(this);
             registerThreadInactive();
             // wait for work, exiting after the expiry timeout is reached
+            // 这里被唤醒了, 下面会检查唤醒的原因.
             runnableReady.wait(locker.mutex(), QDeadlineTimer(manager->expiryTimeout));
             ++manager->activeThreads;
             if (manager->waitingThreads.removeOne(this))
@@ -180,6 +134,7 @@ bool QThreadPoolPrivate::tryStart(QRunnable *task)
     if (activeThreadCount() >= maxThreadCount)
         return false;
 
+    // 如果可以重用线程, 那么就唤醒睡眠的线程.
     if (waitingThreads.count() > 0) {
         // recycle an available thread
         enqueueTask(task);
@@ -187,6 +142,7 @@ bool QThreadPoolPrivate::tryStart(QRunnable *task)
         return true;
     }
 
+    // 这里, 重用了过期的线程.
     if (!expiredThreads.isEmpty()) {
         // restart an expired thread
         QThreadPoolThread *thread = expiredThreads.dequeue();
@@ -209,6 +165,7 @@ inline bool comparePriority(int priority, const QueuePage *p)
     return p->priority() < priority;
 }
 
+// 调度排队.
 void QThreadPoolPrivate::enqueueTask(QRunnable *runnable, int priority)
 {
     Q_ASSERT(runnable != nullptr);
@@ -247,6 +204,7 @@ void QThreadPoolPrivate::tryToStartMoreThreads()
     }
 }
 
+// 已经超过了最大的线程数. 返回.
 bool QThreadPoolPrivate::tooManyThreadsActive() const
 {
     const int activeThreadCount = this->activeThreadCount();
@@ -298,6 +256,10 @@ void QThreadPoolPrivate::reset()
     \internal
 
     Helper function only to be called from waitForDone(int)
+
+
+    Pool 消亡的时候, 会等待线程消亡. 在线程消亡的时候, 唤起这里.
+    每次唤醒之后, 再次判断, 是否没有所有的线程都消亡了.
 */
 bool QThreadPoolPrivate::waitForDone(const QDeadlineTimer &timer)
 {
@@ -388,6 +350,8 @@ bool QThreadPool::tryTake(QRunnable *runnable)
      runs it if found. This function does not return until the runnable
      has completed.
      */
+
+// 提前运行, 提高了优先级.
 void QThreadPoolPrivate::stealAndRunRunnable(QRunnable *runnable)
 {
     Q_Q(QThreadPool);

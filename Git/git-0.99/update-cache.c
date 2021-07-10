@@ -31,6 +31,9 @@ static inline long IS_ERR(const void *ptr)
 	return (unsigned long)ptr > (unsigned long)-1000L;
 }
 
+/*
+    将 Path 所指向的文件, 添加到 索引区里面.
+ */
 static int add_file_to_cache(char *path)
 {
 	int size, namelen, option, status;
@@ -39,6 +42,7 @@ static int add_file_to_cache(char *path)
 	int fd;
 	char *target;
 
+    // 获取一下文件的信息.
 	status = lstat(path, &st);
 	if (status < 0 || S_ISDIR(st.st_mode)) {
 		/* When we used to have "path" and now we want to add
@@ -55,6 +59,8 @@ static int add_file_to_cache(char *path)
 		}
 		return error("open(\"%s\"): %s", path, strerror(errno));
 	}
+    
+    
 	namelen = strlen(path);
 	size = cache_entry_size(namelen);
 	ce = xmalloc(size);
@@ -317,6 +323,12 @@ static int add_cacheinfo(char *arg1, char *arg2, char *arg3)
 
 static struct cache_file cache_file;
 
+
+
+/*
+    所谓的命令行参数, 就是不断的解析字符串, 然后将字符串里面的内容, 转化为程序里面的数据.
+    而每一次命令行的输入, 都是一个新的进程, 所以, 这里使用了很多的静态值, 存储了从字符串中, 转化的数据.
+ */
 int main(int argc, char **argv)
 {
 	int i, newfd, entries, has_errors = 0;
@@ -381,6 +393,7 @@ int main(int argc, char **argv)
 			}
 			die("unknown option %s", path);
 		}
+        
 		if (!verify_path(path)) {
 			fprintf(stderr, "Ignoring path %s\n", argv[i]);
 			continue;
@@ -393,6 +406,8 @@ int main(int argc, char **argv)
 		if (add_file_to_cache(path))
 			die("Unable to add %s to database", path);
 	}
+    
+    
 	if (write_cache(newfd, active_cache, active_nr) ||
 	    commit_index_file(&cache_file))
 		die("Unable to write new cachefile");

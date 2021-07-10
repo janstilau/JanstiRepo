@@ -1396,6 +1396,14 @@ static int apply_patch(int fd)
 	return 0;
 }
 
+/*
+ git-add
+ 
+ #!/bin/sh
+ git-update-cache --add -- "$@"
+
+ */
+
 int main(int argc, char **argv)
 {
 	int i;

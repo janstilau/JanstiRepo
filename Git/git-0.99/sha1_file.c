@@ -1045,6 +1045,11 @@ void * read_sha1_file(const unsigned char *sha1, char *type, unsigned long *size
 	return read_packed_sha1(sha1, type, size);
 }
 
+/*
+ sha1 是一个输出参数, 返回真正的 sha1 的值.
+ required_type 是用户输入的 sha1 值
+ size 是真正的 sha1 的长度.
+ */
 void *read_object_with_reference(const unsigned char *sha1,
 				 const char *required_type,
 				 unsigned long *size,
@@ -1056,22 +1061,26 @@ void *read_object_with_reference(const unsigned char *sha1,
 	unsigned char actual_sha1[20];
 
 	memcpy(actual_sha1, sha1, 20);
+    
 	while (1) {
 		int ref_length = -1;
 		const char *ref_type = NULL;
 
 		buffer = read_sha1_file(actual_sha1, type, &isize);
-		if (!buffer)
-			return NULL;
+		if (!buffer) return NULL;
+        
+        
 		if (!strcmp(type, required_type)) {
 			*size = isize;
 			if (actual_sha1_return)
 				memcpy(actual_sha1_return, actual_sha1, 20);
 			return buffer;
 		}
+        
+        
 		/* Handle references */
 		else if (!strcmp(type, "commit"))
-			ref_type = "tree ";
+            ref_type = "tree ";
 		else if (!strcmp(type, "tag"))
 			ref_type = "object ";
 		else {
