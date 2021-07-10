@@ -8,6 +8,8 @@ private protocol Lock {
 /*
     两个函数, 具有同样的逻辑.
     根据传入的参数是否有返回值, 调用不同的函数. 这是编译器完成的.
+ 
+    这个使用的非常广.
  */
 extension Lock {
     func around<T>(_ closure: () -> T) -> T {

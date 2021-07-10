@@ -22,13 +22,9 @@ import Foundation
 
 /*
     所有的回调, 都存在了这个类里面了.
-    实际上, 和 Session 打交道的各个过程, 还是没有存储在 DataRequest 里面, 而是在 Session Delegate 里面.
-    在 SessionDelegate 里面, 接收到系统 Session 的各种 Delegate 通知之后, 会找到对应的 DataRequest, 从 DataRequest 里面取值之后, 调用相应的回调.
+    在 Session 的各个回调方法里面, 会最终找到 Request 存储的各种方法, 进行调用.
     
-    所以, DataRequest 上的各个方法, 传递一个闭包进行, 仅仅是进行相关闭包的存储了. 到底什么时候执行, 还是要系统的 URLSesission 来进行控制.
- 
-    不过 URLSession 之前, 例如 创建 Request, Adapdat Request, 各种 Response 的反序列化, 反序列化后调用 Completion(Model) 这些, 都是要 DataRequest 自己控制的.
-    系统的 URLSession 的控制, 涉及不到上面描述的过程.
+    Request 的各种接受闭包的方法, 仅仅是存储. 最终, 是异步触发这些闭包的调用.
  */
 
 public class Request {
@@ -80,6 +76,12 @@ public class Request {
     /*
      这些都是不可变的数据, 需要在 init 方法里面指定.
      */
+    
+    /*
+        网络请求, 本身就是一个异步的事情.
+     `  序列化生成 Request, 网络交互, 反序列化, 失败重试, 最终调动业务回调. 所有的这些都是异步操作. 最终, 只要保证事情的先后顺序符合逻辑就可以.
+     */
+    
     /// `UUID` providing a unique identifier for the `Request`, used in the `Hashable` and `Equatable` conformances.
     // 唯一标识这个事情, 各种框架下, 都是使用了 UUID.
     // 由于 Swfit 默认参数和 ArgumentLabel, 这个值, 基本上可以不管生成逻辑.
@@ -88,15 +90,15 @@ public class Request {
     public let underlyingQueue: DispatchQueue
     /// The queue used for all serialization actions. By default it's a serial queue that targets `underlyingQueue`
     // 序列化, 反序列化的专门的队列.
-    // 可以看到, 由于网络请求是一个异步操作, 所以实际上, 所有的任务, 都是当做 Value 传来传去的.
-    // 各种回调, 都是将值插入到队列之后就不管了. 到底队列如何调度, 都是线程池自己的实现了.
+    //
     public let serializationQueue: DispatchQueue
     /// `EventMonitor` used for event callbacks.
     public let eventMonitor: EventMonitor?
     /// The `Request`'s interceptor.
     public let interceptor: RequestInterceptor?
+    
     /// The `Request`'s delegate.
-    // 一般来说, 这是 Alamofire.Session 对象, 在 Session 创建 DataRequest 的时候, 会把自己抽象为 RequestDelegate 传入到 DataRequest 里面.
+    // 这是 Alamofire.Session 对象, 在 Session 创建 DataRequest 的时候, 会把自己抽象为 RequestDelegate 传入到 DataRequest 里面.
     public private(set) weak var delegate: RequestDelegate?
     
     // MARK: - Mutable State
@@ -104,7 +106,6 @@ public class Request {
         这里面, 是各种 DataRequest 生成之后, 可以后续变化的数据.
         会被 PropertyMapper 进行包裹, 在线程安全的情况下运行.
      */
-    /// Type encapsulating all mutable state that may need to be accessed from anything other than the `underlyingQueue`.
     struct MutableState {
         /// State of the `Request`.
         var state: State = .initialized
@@ -165,11 +166,6 @@ public class Request {
     public var isCancelled: Bool { state == .cancelled }
     /// Returns whether `state` is `.finished`.
     public var isFinished: Bool { state == .finished }
-    
-    /*
-     MutableState 里面存放的数据, 应该提供简便的方法, 让外界进行 get, set. 不过, 在类内部, 要转接到 MutableState 进行管理.
-     */
-    
     
     /*
      相比较, completion 是一个可以添加多个的数组, ProgressHandler 只会有一个值. 存在了 mutableState 里面.
@@ -313,6 +309,7 @@ public class Request {
     
     /*
      Request 类, 提供了各种 API 供外界使用, 改变自身的状态.
+     这里也是函数式编程的编码风格, 动词相关的方法, 是存储数据, 而不是做事情.
      */
     // MARK: - Internal Event API
     

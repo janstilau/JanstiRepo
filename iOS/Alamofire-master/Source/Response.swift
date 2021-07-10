@@ -18,7 +18,7 @@ public struct DataResponse<Success, Failure: Error> {
     public let response: HTTPURLResponse?
     
     /// The data returned by the server.
-    public let data: Data?
+    public let data: Data? // 真正的网络交互的数据.
     
     /// The final metrics of the response.
     ///

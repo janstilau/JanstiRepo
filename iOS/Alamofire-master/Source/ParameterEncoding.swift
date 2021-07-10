@@ -109,6 +109,7 @@ public struct URLEncoding: ParameterEncoding {
     
     // MARK: Encoding
     
+    // 将, 参数注入到 URLRequest 的过程.
     public func encode(_ urlRequest: URLRequestConvertible,
                        with parameters: Parameters?) throws -> URLRequest {
         var urlRequest = try urlRequest.asURLRequest()

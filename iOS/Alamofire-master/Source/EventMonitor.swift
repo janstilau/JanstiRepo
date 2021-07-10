@@ -303,6 +303,8 @@ public final class CompositeEventMonitor: EventMonitor {
         self.monitors = monitors
     }
     
+    // 因为是闭包, 所以是一份数据.
+    // 将对于这份数据的处理, 添加到线程调度里面.
     func performEvent(_ event: @escaping (EventMonitor) -> Void) {
         queue.async {
             for monitor in self.monitors {
@@ -691,6 +693,10 @@ open class ClosureEventMonitor: EventMonitor {
         self.queue = queue
     }
     
+    
+    /*
+        一下对于协议的实现方法, 就是调用各个存储的闭包进行调用而已.
+     */
     open func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?) {
         sessionDidBecomeInvalidWithError?(session, error)
     }
