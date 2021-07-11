@@ -117,6 +117,7 @@ open class URLEncodedFormParameterEncoder: ParameterEncoder {
     }
     
     /// Returns an encoder with default parameters.
+    // 静态方法, 不一定是返回一个全局量, 也可能是工厂方法.
     public static var `default`: URLEncodedFormParameterEncoder { URLEncodedFormParameterEncoder() }
     
     /// The `URLEncodedFormEncoder` to use.

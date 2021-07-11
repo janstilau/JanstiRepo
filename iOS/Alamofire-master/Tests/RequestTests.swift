@@ -15,7 +15,7 @@ final class RequestResponseTestCase: BaseTestCase {
                 response = resp
                 expectation.fulfill()
             }
-
+            
         // 这里面会有 Runloop 卡掉当前的流程, 这样后面的代码逻辑才能正常运转.
         waitForExpectations(timeout: timeout, handler: nil)
 

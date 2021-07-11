@@ -180,8 +180,9 @@ open class Session {
     public typealias RequestModifier = (inout URLRequest) throws -> Void
     
     /*
-        RequestConvertible
-        是原始的, 通过 Paramter 这种方式, 构建 Request 的封装.
+        ParameterEncoding 提供的抽象, 是将 NSDict 填充到 Request 里面.
+        这个过程, 需要 RequestConvertible 进行封装.
+        然后让 RequestConvertible 来实现 URLRequestConvertible 的抽象.
      */
     struct RequestConvertible: URLRequestConvertible {
         let url: URLConvertible // 获取到了 Url
@@ -221,7 +222,11 @@ open class Session {
     
     
     
-    // 除了 AFN 那种提供 Parameter 方式进行网络的反问, Alamofire 提供了对于 Encodable 对象相关网络的访问
+    /*
+        ParameterEncoder 可以将一个 Encodable 的对象, 编码到了 NSUrlRequest 里面/
+        这个过程, 被 RequestEncodableConvertible 封装, 然后 RequestEncodableConvertible 实现
+        URLRequestConvertible 的抽象.
+     */
     struct RequestEncodableConvertible<Parameters: Encodable>: URLRequestConvertible {
         let url: URLConvertible
         let method: HTTPMethod
@@ -268,6 +273,12 @@ open class Session {
         return request(convertible, interceptor: interceptor)
     }
     
+    
+    
+    /*
+        无论, Request 是通过 URLEncode 生成的, 还是通过 Encoder 生成的. 最终都会来到这个方法.
+        这是 Session 生成 Request 的一个入口函数. 在这个入口函数里面, 将 Request 添加到自己的流程控制中.
+     */
     /// Creates a `DataRequest` from a `URLRequestConvertible` value and a `RequestInterceptor`.
     ///
     /// - Parameters:
@@ -943,10 +954,10 @@ open class Session {
         }
     }
     
+    /*
+        PerformRequest 里面, 都会走 performSetupOperations, 只不过是不同的 Request, 各有着自己独特的初始化操作.
+     */
     func performDataRequest(_ request: DataRequest) {
-        /*
-         dispatchPrecondition 的功能暂且搁置.
-         */
         dispatchPrecondition(condition: .onQueue(requestQueue))
         
         performSetupOperations(for: request, convertible: request.convertible)
@@ -988,7 +999,7 @@ open class Session {
         dispatchPrecondition(condition: .onQueue(requestQueue))
         
         /*
-         首选, 通过 URLRequestConvertible 创建出一个 URLRequest 出来.
+            首选, 通过 URLRequestConvertible 创建出一个 URLRequest 出来.
          */
         let initialRequest: URLRequest
         do {
@@ -1016,9 +1027,9 @@ open class Session {
                 let adaptedRequest = try result.get()
                 try adaptedRequest.validate()
                 
-                // 在改造结束后, 调用 didCreateURLRequest 进入下一个流程.
                 self.rootQueue.async {
                     request.didAdaptInitialRequest(initialRequest, to: adaptedRequest)
+                    // 在改造结束之后, 还是会使用 didCreateURLRequest 进入到下一个流程
                     self.didCreateURLRequest(adaptedRequest, for: request)
                 }
             } catch {
@@ -1028,7 +1039,8 @@ open class Session {
     }
     
     // MARK: - Task Handling
-    
+    // 所有的这些, 都是异步操作. 由上一个异步操作的结尾进行触发.
+    // 虽然在时间线上, 不是线性的, 但是在逻辑上, 是线性发生的.
     func didCreateURLRequest(_ urlRequest: URLRequest, for request: Request) {
         dispatchPrecondition(condition: .onQueue(rootQueue))
         

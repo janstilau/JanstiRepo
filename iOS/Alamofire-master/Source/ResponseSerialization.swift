@@ -166,6 +166,12 @@ public extension DownloadResponseSerializerProtocol where Self: DataResponseSeri
 
 // MARK: - Default
 
+/*
+    各种方法的调用, 其实仅仅是增加一个回调数据而已.
+    但是方法还是叫做 response, 而不是 addResponseHandler
+ `completionHandler: @escaping (AFDataResponse<Data?>) -> Void 里面, 其实没有做反序列化的处理.
+ */
+
 extension DataRequest {
     /// Adds a handler to be called once the request has finished.
     ///
@@ -175,11 +181,7 @@ extension DataRequest {
     ///
     /// - Returns:             The request.
     
-    /*
-     各种方法的调用, 其实仅仅是增加一个回调数据而已.
-     但是方法还是叫做 response, 而不是 addResponseHandler
-     completionHandler: @escaping (AFDataResponse<Data?>) -> Void 里面, 其实没有做反序列化的处理.
-     */
+    // 注释也写的很明白, Add a handler, 是将数据添加到盒子里面, 最终, 还是返回这个盒子.
     @discardableResult
     public func response(queue: DispatchQueue = .main,
                          completionHandler: @escaping (AFDataResponse<Data?>) -> Void) -> Self {

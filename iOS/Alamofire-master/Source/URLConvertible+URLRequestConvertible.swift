@@ -43,9 +43,10 @@ extension URLComponents: URLConvertible {
 /*
  可以转化为 URLRequest 的协议
  
+ AF 的将 asURLRequest
+ 
  RequestConvertible 原始的 Parameter 的可转化对象
  RequestEncodableConvertible 符合 Coable 协议的可转化对象
- ParameterlessRequestConvertible Upload 下的可转化对象
  */
 public protocol URLRequestConvertible {
     // 实际上, URLSession 里面, 就是仅仅需要一个 request 而已.

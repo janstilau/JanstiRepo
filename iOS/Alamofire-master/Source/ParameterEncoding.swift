@@ -4,7 +4,8 @@ import Foundation
 public typealias Parameters = [String: Any]
 
 /*
-    这个协议, 就是将一个 URLRequest, 以及参数进行 encoding, 生成最终的 URLRequest 的对象.
+    Parameters 就是原始的 NSDict 的参数的形式.
+    这个抽象的能力就是, 给他一个 URLRequest, 以及一个 NSDict, 然后吐出来一个新的 URLRequest, 将 NSDict 编码到了 NSURLRequest 的内部.
  */
 public protocol ParameterEncoding {
     func encode(_ urlRequest: URLRequestConvertible,

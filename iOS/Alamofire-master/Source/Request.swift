@@ -571,7 +571,7 @@ public class Request {
     ///
     /// - Parameter error: The possible `Error` with which the instance will finish.
     /*
-     当 Finish 被调用的时候, 就是网络请求已经结束了, 下面应该是解析 data, 触发回调了.
+        当 Finish 被调用的时候, 就是网络请求已经结束了, 下面应该是解析 data, 触发回调了.
      */
     func finish(error: AFError? = nil) {
         dispatchPrecondition(condition: .onQueue(underlyingQueue))
@@ -594,6 +594,8 @@ public class Request {
     ///  - Note: This method will also `resume` the instance if `delegate.startImmediately` returns `true`.
     ///
     /// - Parameter closure: The closure containing the response serialization call.
+    // 当, 最终的 Response Handler 添加之后, 会启动网络的加载
+    // 这和 Subscibe 一样, 当最终的事件有了 Handler 的时候, 才会真正启动信号源的发射过程.
     func appendResponseSerializer(_ closure: @escaping () -> Void) {
         $mutableState.write { mutableState in
             mutableState.responseSerializers.append(closure)
@@ -610,7 +612,8 @@ public class Request {
             // 也就是, 当添加了网络的响应的时候, 就自动开启了网络请求.
             // 如果 startImmediately 为 False, 那么就是必须调用 resume 才是真正的进行网络交互.
             if mutableState.state.canTransitionTo(.resumed) {
-                underlyingQueue.async { if self.delegate?.startImmediately == true { self.resume() } }
+                underlyingQueue.async {
+                    if self.delegate?.startImmediately == true { self.resume() } }
             }
         }
     }
@@ -638,6 +641,9 @@ public class Request {
     func processNextResponseSerializer() {
         // 当, 没有 ResponseSerializer 之后, 就是要开启 ResponseCompletion 的处理了.
         guard let responseSerializer = nextResponseSerializer() else {
+            
+            
+            // 如果, 所有的 response serializer 都已经处理完成了, 就执行 Completion 的回调调用了.
             // Execute all response serializer completions and clear them
             var completions: [() -> Void] = []
             
@@ -854,10 +860,9 @@ public class Request {
      相比较于, Response 可以无限的增加闭包回调, Progress 只会有一个被使用.
      */
     @discardableResult
-    public func downloadProgress(queue: DispatchQueue = .main, // 默认 queue 是主进程. 所以使用的时候, 可以不在乎这个值.
+    public func downloadProgress(queue: DispatchQueue = .main,
                                  closure: @escaping ProgressHandler) -> Self {
         mutableState.downloadProgressHandler = (handler: closure, queue: queue)
-        
         return self
     }
     
@@ -1102,6 +1107,7 @@ public protocol RequestDelegate: AnyObject {
 
 /// `Request` subclass which handles in-memory `Data` download using `URLSessionDataTask`.
 /*
+    在 Request 的基础上, 增加了拼接 Data 的能力.
     DataRequest 是平时最常见的 Request. 将值存到自己的 内存 Data 里面.
  */
 public class DataRequest: Request {

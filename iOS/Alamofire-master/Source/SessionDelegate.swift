@@ -1,7 +1,9 @@
 import Foundation
 
 // Class which implements the various `URLSessionDelegate` methods to connect various Alamofire features.
-
+/*
+    Session 类, 不是 URLSession 的代理对象, 而是这个类.
+ */
 open class SessionDelegate: NSObject {
     
     private let fileManager: FileManager
