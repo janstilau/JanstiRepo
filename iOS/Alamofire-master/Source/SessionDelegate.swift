@@ -58,7 +58,9 @@ extension SessionDelegate: URLSessionDelegate {
  */
 extension SessionDelegate: URLSessionTaskDelegate {
     /// Result of a `URLAuthenticationChallenge` evaluation.
-    typealias ChallengeEvaluation = (disposition: URLSession.AuthChallengeDisposition, credential: URLCredential?, error: AFError?)
+    typealias ChallengeEvaluation = (disposition: URLSession.AuthChallengeDisposition,
+                                     credential: URLCredential?,
+                                     error: AFError?)
     
     open func urlSession(_ session: URLSession,
                          task: URLSessionTask,
@@ -70,8 +72,11 @@ extension SessionDelegate: URLSessionTaskDelegate {
         switch challenge.protectionSpace.authenticationMethod {
         case NSURLAuthenticationMethodServerTrust:
             evaluation = attemptServerTrustAuthentication(with: challenge)
-        case NSURLAuthenticationMethodHTTPBasic, NSURLAuthenticationMethodHTTPDigest, NSURLAuthenticationMethodNTLM,
-             NSURLAuthenticationMethodNegotiate, NSURLAuthenticationMethodClientCertificate:
+        case NSURLAuthenticationMethodHTTPBasic,
+             NSURLAuthenticationMethodHTTPDigest,
+             NSURLAuthenticationMethodNTLM,
+             NSURLAuthenticationMethodNegotiate,
+             NSURLAuthenticationMethodClientCertificate:
             evaluation = attemptCredentialAuthentication(for: challenge, belongingTo: task)
         default:
             evaluation = (.performDefaultHandling, nil, nil)
@@ -92,6 +97,9 @@ extension SessionDelegate: URLSessionTaskDelegate {
     func attemptServerTrustAuthentication(with challenge: URLAuthenticationChallenge) -> ChallengeEvaluation {
         let host = challenge.protectionSpace.host
         
+        /*
+            这个方法内部, 只会处理服务器信任证书相关的逻辑.
+         */
         guard challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust,
             let trust = challenge.protectionSpace.serverTrust
             else {
@@ -103,6 +111,7 @@ extension SessionDelegate: URLSessionTaskDelegate {
                 return (.performDefaultHandling, nil, nil)
             }
             
+            // 使用 TryCatch 的方法, 是因为, 如果 evaluate 出错的话, 这种方法可以将详细的 error 信息, 抛到上层.
             try evaluator.evaluate(trust, forHost: host)
             
             return (.useCredential, URLCredential(trust: trust), nil)
